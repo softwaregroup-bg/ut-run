@@ -1,0 +1,7 @@
+{
+  "name": "ut-run",
+  "version": "5.0.0",
+  "dependencies": {
+    "ut-bus": "~5.0.0"
+  }
+}
