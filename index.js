@@ -14,28 +14,33 @@
             if (this.bus) {
                 this.bus.register({
                     run:this.run.bind(this),
-                    load:this.load.bind(this)
+                    loadPort:this.loadPort.bind(this)
                 });
             }
         },
 
-        load:function(implementation, port, environment) {
+        loadPort:function(implementation, port, environment) {
             var config = new nconf.Provider({
               stores: {
                 user:{type: 'file', file: path.join(process.cwd(), 'impl', implementation, 'ports', port + '.' + (environment || 'dev') + '.json')},
-                global:{type: 'file', file: path.join(process.cwd(), 'impl', implementation, 'ports', port + '.json')}
+                global:{type: 'literal', store: require(path.join(process.cwd(), 'impl', implementation, 'ports', port + '.js'))}
               }
             }).get();
 
             this.config[port] = config;
+            return this.loadConfig(config);
 
+        },
+
+        loadConfig:function(config) {
             return this.wire({
                 port:{
-                    module:'ut-port-' + config.type,
+                    create:'ut-port-' + config.type,
                     init:'init',
                     properties:{
                         config:config,
-                        bus:{$ref:'bus'}
+                        bus:{$ref:'bus'},
+                        log:{$ref:'log'}
                     }
                 }
             }, {require:require});
@@ -45,5 +50,4 @@
         }
 
     };
-
 });}(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(require); }));
