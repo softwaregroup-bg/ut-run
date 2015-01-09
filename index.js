@@ -40,7 +40,7 @@
                     properties:{
                         config:config,
                         bus:{$ref:'bus'},
-                        log:{$ref:'log'}
+                        logFactory:{$ref:'log'}
                     }
                 }
             }, {require:require});
