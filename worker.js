@@ -3,17 +3,6 @@ var wire = require('wire');
 module.exports = wire({
     host: '0.0.0.0',
     port: 30001,
-    console: {
-        create: 'ut-port-console',
-        init: 'init',
-        properties: {
-            config: {
-                host: {$ref: 'host'},
-                port: {$ref: 'port'}
-            }
-        },
-        ready:'start'
-    },
     socketStream:{
         create: {
             module:'ut-log/socketStream',
@@ -49,7 +38,10 @@ module.exports = wire({
         init: 'init',
         properties: {
             serverPort: 3001,
-            clientPort: 3000
+            clientPort: 3000,
+            logLevel: 'trace',
+            id:'worker',
+            logFactory:{$ref:'log'}
         }
     },
     run: {
