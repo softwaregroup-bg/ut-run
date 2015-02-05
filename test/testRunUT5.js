@@ -7,12 +7,12 @@ var when = require('when');
 
 w.then(function(ctx) {
     return when.all([
-        ctx.run.loadPort('test', 'script', 'dev').then(function(ctx) {
+        ctx.run.loadPort('ut-test', 'script', 'dev').then(function(ctx) {
             ctx.port.start();
             script = ctx;
             return ctx;
         }),
-        ctx.run.loadPort('test', 'atm', 'dev').then(function(ctx) {
+        ctx.run.loadPort('ut-test', 'atm', 'dev').then(function(ctx) {
             ctx.port.start();
             atm = ctx;
             return ctx;
