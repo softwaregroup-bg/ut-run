@@ -2,6 +2,8 @@
 
     var nconf = require('nconf');
     var path = require('path');
+    var when = require('when');
+    var _ = require('lodash');
 
     return {
 
@@ -32,7 +34,26 @@
 
         },
 
+        loadImpl:function(implementation, config){
+            var ports =  (typeof implementation === 'string') ? require (implementation).ports : implementation.ports;
+            config = config || {};
+
+            return when.all(
+                ports.reduce(function(all, port){
+                    all.push(this.loadConfig(_.assign(port, config[port.id])));
+                    return all;
+                }.bind(this),[])
+            ).then(function(contexts){
+                    contexts.forEach(function(context){
+                        context.port.start();
+                    });
+                    return ports;
+                }
+            )
+        },
+
         loadConfig:function(config) {
+            console.log(config);
             return this.wire({
                 port:{
                     create:'ut-port-' + config.type,
