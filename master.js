@@ -21,10 +21,7 @@ module.exports = wire({
             serverPort:3000,
             clientPort:3001,
             id:'master'
-        }
+        },
+        ready:'start'
     }
-}, {require:require}).then(function(ctx) {
-    ctx.master.register([ctx.master.getRPC()]);
-    ctx.master.subscribe([ctx.master.getPublish()]);
-    return ctx;
-});
+}, {require:require});
