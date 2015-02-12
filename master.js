@@ -1,15 +1,13 @@
-var wire = require('wire');
+//(function(define) { define(function(require) {
 
-module.exports = wire({
-    host: '0.0.0.0',
-    port: 30001,
+module.exports = {
     console: {
         create: 'ut-port-console',
         init: 'init',
         properties: {
             config: {
-                host: {$ref: 'host'},
-                port: {$ref: 'port'}
+                host: {$ref: 'consoleHost'},
+                port: {$ref: 'consolePort'}
             }
         },
         ready:'start'
@@ -18,10 +16,12 @@ module.exports = wire({
         create:'ut-bus',
         init:'init',
         properties:{
-            serverPort:3000,
-            clientPort:3001,
+            serverPort: {$ref: 'serverPort'},
+            clientPort: {$ref: 'clientPort'},
             id:'master'
         },
         ready:'start'
     }
-}, {require:require});
+};
+
+//});})(typeof define === 'function' && define.amd ?  define : function(factory) { module.exports = factory(require); });

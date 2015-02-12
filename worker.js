@@ -1,14 +1,12 @@
-var wire = require('wire');
+//(function(define) { define(function(require) {
 
-module.exports = wire({
-    host: '0.0.0.0',
-    port: 30001,
+module.exports = {
     socketStream:{
         create: {
             module:'ut-log/socketStream',
             args:{
-                host: {$ref: 'host'},
-                port: {$ref: 'port'},
+                host: {$ref: 'consoleHost'},
+                port: {$ref: 'consolePort'},
                 objectMode: true
             }
         }
@@ -37,8 +35,8 @@ module.exports = wire({
         create: 'ut-bus',
         init: 'init',
         properties: {
-            serverPort: 3001,
-            clientPort: 3000,
+            serverPort: {$ref: 'clientPort'},
+            clientPort: {$ref: 'serverPort'},
             logLevel: 'trace',
             id:'worker',
             logFactory:{$ref:'log'}
@@ -52,4 +50,6 @@ module.exports = wire({
             wire: {$ref: 'wire!'}
         }
     }
-}, {require: require});
+};
+
+//});})(typeof define === 'function' && define.amd ?  define : function(factory) { module.exports = factory(require); });
