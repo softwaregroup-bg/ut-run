@@ -20,7 +20,7 @@ module.exports = {
             context.wire({worker: require('ut-run/worker')}).then(function(context) {
                 app = context;
                 context.worker.run.loadImpl(impl, config);
-            });
-        });
+            }).done();
+        }).done();
     }
 }
