@@ -2,7 +2,26 @@
   "name": "ut-run",
   "version": "5.0.0",
   "dependencies": {
-    "ut-bus": "~5.0.0"
+    "hoek": "~2.11.1",
+    "lodash": "~3.0.1",
+    "lynx": "^0.2.0",
+    "nconf": "~0.7.1",
+    "optimizer": "~1.8.0",
+    "ut-bus": "~5.0.0",
+    "ut-codec": "~5.0.0",
+    "ut-port-ftp": "~5.0.0",
+    "ut-port-sql": "~5.0.0",
+    "ut-port-tcp": "~5.0.0",
+    "ut-port-console": "~5.0.0",
+    "ut-port-couchbase": "~5.0.0",
+    "ut-port-file": "~5.0.0",
+    "ut-port-http": "~5.0.0",
+    "ut-port-httpserver": "~5.0.0",
+    "ut-port-performance": "~5.0.0",
+    "ut-port-schedule": "~5.0.0",
+    "ut-port-script": "~5.0.0",
+    "ut-port-smtp": "~5.0.0",
+    "ut-template": "~5.0.0"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
