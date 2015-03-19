@@ -4,7 +4,7 @@
   "dependencies": {
     "hoek": "~2.11.1",
     "lodash": "~3.0.1",
-    "lynx": "^0.2.0",
+    "lynx": "~0.2.0",
     "nconf": "~0.7.1",
     "optimizer": "~1.8.0",
     "ut-bus": "~5.0.0",
