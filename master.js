@@ -1,5 +1,3 @@
-//(function(define) { define(function(require) {
-
 module.exports = {
     console: {
         create: 'ut-port-console',
@@ -23,5 +21,3 @@ module.exports = {
         ready:'start'
     }
 };
-
-//});})(typeof define === 'function' && define.amd ?  define : function(factory) { module.exports = factory(require); });
