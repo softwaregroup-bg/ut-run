@@ -3,7 +3,7 @@ var path = require('path');
 var when = require('when');
 var _ = require('lodash');
 
-return {
+module.exports = {
 
     bus:null,
     config:null,
