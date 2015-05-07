@@ -7,7 +7,7 @@
  */
 module.exports = {
     start: function(impl, config) {
-        require('repl').start({useGlobal: true});
+        var repl = require('repl').start({prompt: '>'});
         require('when/monitor/console');
 
         require('wire')({
@@ -18,7 +18,7 @@ module.exports = {
             master: require('ut-run/master')
         }).then(function(context) {
             context.wire({worker: require('ut-run/worker')}).then(function(context) {
-                app = context;
+                repl.context.app = app = context;
                 context.worker.run.loadImpl(impl, config);
             }).done();
         }).done();
