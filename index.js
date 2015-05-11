@@ -47,6 +47,16 @@ module.exports = {
                 this.bus.registerLocal(module, moduleName);
             }.bind(this));
         }
+        
+        if (implementation.validations instanceof Object) {
+            Object.keys(implementation.validations).forEach(function (validationName) {
+                var module = implementation.modules[validationName];
+                var validation = implementation.validations[validationName];
+                module && Object.keys(validation).forEach(function (value) {
+                    _.assign(module[value], validation[value]);
+                });
+            });
+        }
 
         return when.all(
             ports.reduce(function(all, port) {
