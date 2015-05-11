@@ -39,6 +39,7 @@ module.exports = {
 
         var ports = implementation.ports;
         config = config || {};
+        this.bus.config = config;
 
         if (implementation.modules instanceof Object) {
             Object.keys(implementation.modules).forEach(function(moduleName) {
@@ -47,7 +48,7 @@ module.exports = {
                 this.bus.registerLocal(module, moduleName);
             }.bind(this));
         }
-        
+
         if (implementation.validations instanceof Object) {
             Object.keys(implementation.validations).forEach(function (validationName) {
                 var module = implementation.modules[validationName];
