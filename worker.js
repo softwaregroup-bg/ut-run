@@ -1,43 +1,10 @@
-//(function(define) { define(function(require) {
-
 module.exports = {
-    socketStream:{
-        create: {
-            module:'ut-log/socketStream',
-            args:{
-                host: {$ref: 'consoleHost'},
-                port: {$ref: 'consolePort'},
-                objectMode: true
-            }
-        }
-    },
-    log: {
-        create: {
-            module: 'ut-log',
-            args: {
-                type: 'bunyan',
-                name: 'bunyan_test',
-                streams: [
-                    {
-                        level: 'trace',
-                        stream: 'process.stdout'
-                    },
-                    {
-                        level: 'trace',
-                        stream: {$ref:'socketStream'},
-                        type: 'raw'
-                    }
-                ]
-            }
-        }
-    },
     bus: {
         create: 'ut-bus',
         init: 'init',
         properties: {
-            serverPort: {$ref: 'clientPort'},
-            clientPort: {$ref: 'serverPort'},
-            logLevel: 'trace',
+            server:false,
+            logLevel: {$ref:'config.workerBus.logLevel'},
             id:'worker',
             logFactory:{$ref:'log'}
         }
@@ -51,5 +18,3 @@ module.exports = {
         }
     }
 };
-
-//});})(typeof define === 'function' && define.amd ?  define : function(factory) { module.exports = factory(require); });

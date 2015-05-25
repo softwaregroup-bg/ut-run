@@ -1,23 +1,13 @@
 module.exports = {
-    console: {
-        create: 'ut-port-console',
-        init: 'init',
-        properties: {
-            config: {
-                host: {$ref: 'consoleHost'},
-                port: {$ref: 'consolePort'}
-            }
-        },
-        ready:'start'
-    },
     master:{
         create:'ut-bus',
         init:'init',
+        ready:'start',
         properties:{
-            serverPort: {$ref: 'serverPort'},
-            clientPort: {$ref: 'clientPort'},
-            id:'master'
-        },
-        ready:'start'
+            server:true,
+            logLevel: {$ref:'config.masterBus.logLevel'},
+            id:'master',
+            logFactory:{$ref:'log'}
+        }
     }
 };
