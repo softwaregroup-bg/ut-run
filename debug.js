@@ -29,7 +29,7 @@ module.exports = {
             require('ut-run/worker')
         )).then(function(context) {
             repl.context.app = app = context;
-            context.run.loadImpl(impl, config);
+            return context.run.loadImpl(impl, config);
         }).done();
     }
 }

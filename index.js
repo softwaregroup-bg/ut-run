@@ -12,7 +12,7 @@ module.exports = {
     ready:function() {
         this.config = this.config || {};
         if (this.bus) {
-            this.bus.register({
+            return this.bus.register({
                 run:this.run.bind(this),
                 loadPort:this.loadPort.bind(this)
             });
