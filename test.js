@@ -7,32 +7,41 @@
  */
 
 var when = require('when');
-
+var _ = require('lodash');
 module.exports = {
     start: function(impl, config) {
-        require('repl').start({useGlobal: true});
         require('when/monitor/console');
+        var defaultConfig = {
+            masterBus: {
+                logLevel:"error"
+            },
+            workerBus: {
+                logLevel:"error"
+            },
+            console: {
+                host: "0.0.0.0",
+                port: 30001
+            }
+        }
 
-        // stoping all logs from loggin except for errors
         impl.ports.forEach(function (port) {
             port.logLevel = 'error';
         })
-        var worker = require('ut-run/worker');
-        worker.bus.properties.logLevel = 'error';
 
         return when.promise(function(resolve, reject) {
-            require('wire')({
-                consoleHost: config.console.host,
-                consolePort: config.console.port,
-                serverPort: config.master.serverPort,
-                clientPort: config.master.clientPort,
-                master: require('ut-run/master'),
-                worker: worker
-            }).then(function(app) {
-                app.worker.run.loadImpl(impl, config);
-                resolve(app);
-            })
-        })
-
+            require('wire')(_.assign({config: _.assign(defaultConfig, config)},
+                require('ut-run/logger'),
+                require('ut-run/master'),
+                require('ut-run/worker')
+            )).then(function (context) {
+                return resolve(context.run.loadImpl(impl, config));
+            }).catch(function(err){
+                console.log("ERROR Loading implementation! " + err);
+                reject(err);
+            }).done();
+        });
     }
 }
+
+
+
