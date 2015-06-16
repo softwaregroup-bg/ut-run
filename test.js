@@ -13,7 +13,8 @@ module.exports = {
         require('when/monitor/console');
         var defaultConfig = {
             masterBus: {
-                logLevel:"error"
+                logLevel:"error",
+                socket:"bus"
             },
             workerBus: {
                 logLevel:"error"

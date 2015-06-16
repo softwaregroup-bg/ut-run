@@ -11,7 +11,8 @@ module.exports = {
         var repl = require('repl').start({prompt: '>'});
         var defaultConfig = {
             masterBus: {
-                logLevel:"debug"
+                logLevel:"debug",
+                socket:"bus"
             },
             workerBus: {
                 logLevel:"debug"

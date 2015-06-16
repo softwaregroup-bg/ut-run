@@ -5,6 +5,7 @@ module.exports = {
         properties: {
             server:false,
             logLevel: {$ref:'config.workerBus.logLevel'},
+            socket: {$ref:'config.masterBus.socket'},
             id:'worker',
             logFactory:{$ref:'log'}
         }
