@@ -36,7 +36,7 @@ module.exports = {
                         },
                         type: 'raw'
                     }
-                ], {$ref: 'config.logStreams'})
+                ], {$ref: 'config.log.streams'})
             }
         }
     }

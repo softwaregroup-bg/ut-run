@@ -11,15 +11,18 @@ module.exports = {
         var repl = require('repl').start({prompt: '>'});
         var defaultConfig = {
             masterBus: {
-                logLevel:"debug",
-                socket:"bus"
+                logLevel:'debug',
+                socket:'bus'
             },
             workerBus: {
-                logLevel:"debug"
+                logLevel:'debug'
             },
             console: {
-                host: "0.0.0.0",
+                host: '0.0.0.0',
                 port: 30001
+            },
+            log: {
+                streams: []
             }
         }
         require('when/monitor/console');
