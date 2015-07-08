@@ -9,7 +9,7 @@ var _ = require('lodash');
 module.exports = {
     start: function(impl, config) {
         var repl = require('repl').start({prompt: '>'});
-        var defaultConfig = {
+        var mergedConfig = _.assign({
             masterBus: {
                 logLevel:'debug',
                 socket:'bus'
@@ -24,11 +24,10 @@ module.exports = {
             log: {
                 streams: []
             }
-        }
+        }, config);
         require('when/monitor/console');
-
-        require('wire')(_.assign({config: _.assign(defaultConfig, config)},
-            require('ut-run/logger'),
+        require('wire')(_.assign({config: mergedConfig},
+            require('ut-run/logger')(mergedConfig.log.streams),
             require('ut-run/master'),
             require('ut-run/worker')
         )).then(function(context) {

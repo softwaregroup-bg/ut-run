@@ -1,43 +1,45 @@
 var _ = require('lodash');
-module.exports = {
-    console: {
-        create: 'ut-port-console',
-        init: 'init',
-        properties: {
-            config: {
-                host: {$ref: 'config.console.host'},
-                port: {$ref: 'config.console.port'}
-            }
+module.exports = function(streams){
+    return {
+        console: {
+            create: 'ut-port-console',
+            init: 'init',
+            properties: {
+                config: {
+                    host: {$ref: 'config.console.host'},
+                    port: {$ref: 'config.console.port'}
+                }
+            },
+            ready:'start'
         },
-        ready:'start'
-    },
-    log: {
-        create: {
-            module: 'ut-log',
-            args: {
-                type: 'bunyan',
-                name: 'bunyan_test',
-                streams: _.union([
-                    {
-                        level: 'trace',
-                        stream: 'process.stdout'
-                    },
-                    {
-                        level: 'trace',
-                        stream: {
-                            create: {
-                                module:'ut-log/socketStream',
-                                args:{
-                                    host: {'$ref': 'config.console.host'},
-                                    port: {'$ref': 'config.console.port'},
-                                    objectMode: true
-                                }
-                            }
+        log: {
+            create: {
+                module: 'ut-log',
+                args: {
+                    type: 'bunyan',
+                    name: 'bunyan_test',
+                    streams: _.union([
+                        {
+                            level: 'trace',
+                            stream: 'process.stdout'
                         },
-                        type: 'raw'
-                    }
-                ], {$ref: 'config.log.streams'})
+                        {
+                            level: 'trace',
+                            stream: {
+                                create: {
+                                    module:'ut-log/socketStream',
+                                    args:{
+                                        host: {'$ref': 'config.console.host'},
+                                        port: {'$ref': 'config.console.port'},
+                                        objectMode: true
+                                    }
+                                }
+                            },
+                            type: 'raw'
+                        }
+                    ], streams)
+                }
             }
         }
     }
-}
+};
