@@ -27,7 +27,7 @@ module.exports = {
         }, config);
         require('when/monitor/console');
         require('wire')(_.assign({config: mergedConfig},
-            require('ut-run/logger')(mergedConfig.log.streams),
+            config.log === false ? {log:null} : require('ut-run/logger')(mergedConfig.log.streams),
             require('ut-run/master'),
             require('ut-run/worker')
         )).then(function(context) {
