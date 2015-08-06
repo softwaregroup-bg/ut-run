@@ -22,6 +22,9 @@ module.exports = {
             console: {
                 host: "0.0.0.0",
                 port: 30001
+            },
+            log: {
+                streams: []
             }
         }
 
@@ -31,7 +34,7 @@ module.exports = {
 
         return when.promise(function(resolve, reject) {
             require('wire')(_.assign({config: _.assign(defaultConfig, config)},
-                require('ut-run/logger'),
+                config.log === false ? {log:null} : require('ut-run/logger')(defaultConfig.log.streams),
                 require('ut-run/master'),
                 require('ut-run/worker')
             )).then(function (context) {
