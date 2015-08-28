@@ -1,4 +1,3 @@
-var nconf = require('nconf');
 var path = require('path');
 var when = require('when');
 var _ = require('lodash');
@@ -14,22 +13,8 @@ module.exports = {
         if (this.bus) {
             return this.bus.register({
                 run:this.run.bind(this),
-                loadPort:this.loadPort.bind(this)
             });
         }
-    },
-
-    loadPort:function(implementation, port, environment) {
-        var config = new nconf.Provider({
-          stores: {
-            user:{type: 'file', file: path.join(process.cwd(), 'impl', implementation, 'ports', port + '.' + (environment || 'dev') + '.json')},
-            global:{type: 'literal', store: require(path.join(process.cwd(), 'impl', implementation, 'ports', port + '.js'))}
-          }
-        }).get();
-
-        this.config[port] = config;
-        return this.loadConfig(config);
-
     },
 
     loadImpl:function(implementation, config) {
