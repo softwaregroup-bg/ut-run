@@ -29,5 +29,8 @@
   "repository": {
     "type": "git",
     "url": "git@git.softwaregroup-bg.com:ut5/ut-run.git"
+  },
+  "browser": {
+    "repl": "./browser/repl"
   }
 }

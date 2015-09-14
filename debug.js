@@ -8,7 +8,6 @@
 var _ = require('lodash');
 module.exports = {
     start: function(impl, config) {
-        var repl = require('repl').start({prompt: '>'});
         var mergedConfig = _.assign({
             masterBus: {
                 logLevel:'debug',
@@ -31,7 +30,10 @@ module.exports = {
             require('ut-run/master'),
             require('ut-run/worker')
         )).then(function(context) {
-            repl.context.app = app = context;
+            if (config.repl !== false) {
+                var repl = require('repl').start({prompt: '>'});
+                repl.context.app = app = context;
+            }
             return context.run.loadImpl(impl, config);
         }).done();
     }
