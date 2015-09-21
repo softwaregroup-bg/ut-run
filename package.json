@@ -19,8 +19,7 @@
     "ut-port-script": "^5.0.0",
     "ut-port-smtp": "^5.0.0",
     "ut-template": "^5.0.0",
-    "ut-log": "^5.0.0",
-    "wire": "~0.10.10"
+    "ut-log": "^5.0.0"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
@@ -29,8 +28,5 @@
   "repository": {
     "type": "git",
     "url": "git@git.softwaregroup-bg.com:ut5/ut-run.git"
-  },
-  "browser": {
-    "repl": "./browser/repl"
   }
 }

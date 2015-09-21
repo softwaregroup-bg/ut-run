@@ -6,7 +6,7 @@ module.exports = {
 
     bus:null,
     config:null,
-    wire:null,
+    logFactory:null,
 
     ready:function() {
         this.config = this.config || {};
@@ -59,17 +59,15 @@ module.exports = {
     },
 
     loadConfig:function(config) {
-        return this.wire({
-            port:{
-                create:'ut-port-' + config.type,
-                init:'init',
-                properties:{
-                    config:config,
-                    bus:{$ref:'bus'},
-                    logFactory:{$ref:'log'}
-                }
-            }
-        }, {require:require});
+        var Port = require('ut-port-' + config.type);
+        var port = _.assign(new Port(),{
+            config:config,
+            bus:this.bus,
+            logFactory:this.logFactory
+        });
+        return when(port.init()).then(function(){
+            return {port:port};
+        })
     },
 
     run:function() {
