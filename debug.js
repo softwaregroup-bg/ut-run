@@ -80,7 +80,7 @@ module.exports = {
             var repl = serverRequire('repl').start({prompt: '>'});
             repl.context.app = app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
         }
-        consolePort && consolePort.init();
+        consolePort && when(consolePort.init()).then(consolePort.start());
         masterBus.init()
             .then(workerBus.init.bind(workerBus))
             .then(masterBus.start.bind(masterBus))
