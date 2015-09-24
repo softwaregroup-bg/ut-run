@@ -21,6 +21,15 @@ module.exports = {
             }
         }, config);
 
+        if (!process.browser && !mergedConfig.workDir){
+            if (!mergedConfig.implementation) {
+                throw new Error('Missing implementation ID in config');
+            }
+            var fsp = serverRequire('fs-plus');
+            var path = serverRequire('path');
+            mergedConfig.workDir = path.join((fsp.getAppDataDirectory() || process.cwd()), mergedConfig.implementation);
+        }
+
         require('when/monitor/console');
 
         var Bus = require('ut-bus');
@@ -71,7 +80,7 @@ module.exports = {
             id: 'worker',
             logFactory: log
         });
-        var workerRun = _.assign(require('.'), {
+        var workerRun = _.assign(require('./index'), {
             bus: workerBus,
             logFactory: log
         });
@@ -85,6 +94,6 @@ module.exports = {
             .then(workerBus.init.bind(workerBus))
             .then(masterBus.start.bind(masterBus))
             .then(workerRun.ready.bind(workerRun))
-            .then(workerRun.loadImpl.bind(workerRun, impl, config));
+            .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
     }
 }

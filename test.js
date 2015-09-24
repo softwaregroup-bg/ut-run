@@ -1,51 +1,103 @@
-/**
- * ut-debug module is used to start the switch, like this:
- require('ut-run/debug').start(
- require('../impl/<implementation>/server'),
- require('../impl/<implementation>/config/dev.json')
- );
- */
-
-var when = require('when');
 var _ = require('lodash');
+var when = require('when');
+var serverRequire = require;//hide some of the requires from lasso
+
 module.exports = {
-    start: function(impl, config) {
-        require('when/monitor/console');
-        var defaultConfig = {
+    start: function (impl, config) {
+        var mergedConfig = _.assign({
             masterBus: {
-                logLevel:"error",
-                socket:"bus"
+                logLevel: 'error',
+                socket: 'bus'
             },
             workerBus: {
-                logLevel:"error"
+                logLevel: 'error'
             },
             console: {
-                host: "0.0.0.0",
+                host: '0.0.0.0',
                 port: 30001
             },
             log: {
                 streams: []
             }
-        }
+        }, config);
 
         impl.ports.forEach(function (port) {
             port.logLevel = 'error';
         })
 
-        return when.promise(function(resolve, reject) {
-            require('wire')(_.assign({config: _.assign(defaultConfig, config)},
-                config.log === false ? {log:null} : require('ut-run/logger')(defaultConfig.log.streams),
-                require('ut-run/master'),
-                require('ut-run/worker')
-            )).then(function (context) {
-                return resolve(context.run.loadImpl(impl, config));
-            }).catch(function(err){
-                console.log("ERROR Loading implementation! " + err);
-                reject(err);
-            }).done();
+        if (!process.browser && !mergedConfig.workDir){
+            if (!mergedConfig.implementation) {
+                throw new Error('Missing implementation ID in config');
+            }
+            var fsp = serverRequire('fs-plus');
+            var path = serverRequire('path');
+            mergedConfig.workDir = path.join((fsp.getAppDataDirectory() || process.cwd()), mergedConfig.implementation);
+        }
+
+        require('when/monitor/console');
+
+        var Bus = require('ut-bus');
+        var log;
+        var consolePort;
+
+        if (config.log === false) {
+            log = null
+        } else {
+            var UTLog = serverRequire('ut-log');
+            var SocketStream = serverRequire('ut-log/socketStream');
+            var Console = serverRequire('ut-port-console');
+            log = new UTLog({
+                type: 'bunyan',
+                name: 'bunyan_test',
+                streams: _.union([{
+                    level: 'trace',
+                    stream: 'process.stdout'
+                }, {
+                    level: 'trace',
+                    stream: '../socketStream',
+                    streamConfig:{
+                        host: mergedConfig.console.host,
+                        port: mergedConfig.console.port,
+                        objectMode: true
+                    },
+                    type: 'raw'
+                }], mergedConfig.log.streams)
+            });
+            consolePort = _.assign(new Console(), {
+                config: {
+                    host: mergedConfig.console.host,
+                    port: mergedConfig.console.port,
+                }
+            });
+        }
+        var masterBus = _.assign(new Bus(), {
+            server: true,
+            logLevel: mergedConfig.masterBus.logLevel,
+            socket: mergedConfig.masterBus.socket,
+            id: 'master',
+            logFactory: log
         });
+        var workerBus = _.assign(new Bus(), {
+            server: false,
+            logLevel: mergedConfig.workerBus.logLevel,
+            socket: mergedConfig.masterBus.socket,
+            id: 'worker',
+            logFactory: log
+        });
+        var workerRun = _.assign(require('./index'), {
+            bus: workerBus,
+            logFactory: log
+        });
+
+        if (config.repl !== false) {
+            var repl = serverRequire('repl').start({prompt: '>'});
+            repl.context.app = app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
+        }
+        consolePort && when(consolePort.init()).then(consolePort.start());
+        masterBus.init()
+            .then(workerBus.init.bind(workerBus))
+            .then(masterBus.start.bind(masterBus))
+            .then(workerRun.ready.bind(workerRun))
+            .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
     }
 }
-
-
-

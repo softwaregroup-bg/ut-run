@@ -2,6 +2,7 @@
   "name": "ut-run",
   "version": "5.0.0",
   "dependencies": {
+    "fs-plus": "^2.8.1",
     "nconf": "~0.7.1",
     "when": "~3.7.2",
     "lodash": "^3.5.0",
