@@ -39,9 +39,8 @@ module.exports = {
         if (config.log === false) {
             log = null
         } else {
-            var UTLog = serverRequire('ut-log');
-            var SocketStream = serverRequire('ut-log/socketStream');
-            var Console = serverRequire('ut-port-console');
+            var UTLog = require('ut-log');
+            var SocketStream = require('ut-log/socketStream');
             log = new UTLog({
                 type: 'bunyan',
                 name: 'bunyan_test',
@@ -59,6 +58,9 @@ module.exports = {
                     type: 'raw'
                 }], mergedConfig.log.streams)
             });
+        }
+        if (config.console !== false) {
+            var Console = serverRequire('ut-port-console');
             consolePort = _.assign(new Console(), {
                 config: {
                     host: mergedConfig.console.host,
