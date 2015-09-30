@@ -94,7 +94,7 @@ module.exports = {
             repl.context.app = app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
         }
         consolePort && when(consolePort.init()).then(consolePort.start());
-        masterBus.init()
+        return masterBus.init()
             .then(workerBus.init.bind(workerBus))
             .then(masterBus.start.bind(masterBus))
             .then(workerRun.ready.bind(workerRun))
