@@ -96,7 +96,7 @@ module.exports = {
         consolePort && when(consolePort.init()).then(consolePort.start());
         return masterBus.init()
             .then(workerBus.init.bind(workerBus))
-            .then(masterBus.start.bind(masterBus))
+            .then(mergedConfig.masterBus.socket ? masterBus.start.bind(masterBus) : workerBus.start.bind(workerBus))
             .then(workerRun.ready.bind(workerRun))
             .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
     }
