@@ -1,5 +1,5 @@
 var when = require('when');
-var _ = require('lodash');
+var assign = require('lodash/object/assign');
 
 module.exports = {
 
@@ -38,14 +38,14 @@ module.exports = {
                 var module = implementation.modules[validationName];
                 var validation = implementation.validations[validationName];
                 module && Object.keys(validation).forEach(function (value) {
-                    _.assign(module[value], validation[value]);
+                    assign(module[value], validation[value]);
                 });
             });
         }
 
         return when.all(
             ports.reduce(function(all, port) {
-                all.push(this.loadConfig(_.assign(port, config[port.id])));
+                all.push(this.loadConfig(assign(port, config[port.id])));
                 return all;
             }.bind(this), [])
         ).then(function(contexts) {
@@ -58,8 +58,8 @@ module.exports = {
     },
 
     loadConfig:function(config) {
-        var Port = require('ut-port-' + config.type);
-        var port = _.assign(new Port(),{
+        var Port = (config.type instanceof Function) ? config.type : require('ut-port-' + config.type);
+        var port = assign(new Port(),{
             config:config,
             bus:this.bus,
             logFactory:this.logFactory
