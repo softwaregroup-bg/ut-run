@@ -58,12 +58,11 @@ module.exports = {
     },
 
     loadConfig:function(config) {
-        var Port = (config.type instanceof Function) ? config.type : require('ut-port-' + config.type);
-        var port = assign(new Port(),{
-            config:config,
-            bus:this.bus,
-            logFactory:this.logFactory
-        });
+        var Port = (config.createPort instanceof Function) ? config.createPort : require('ut-port-' + config.type);
+        var port = new Port()
+        port.bus = this.bus;
+        port.logFactory = this.logFactory;
+        assign(port.config, config);
         return when(port.init()).then(function(){
             return {port:port};
         })
