@@ -12,7 +12,7 @@
     "ut-port-tcp": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-tcp.git#master",
     "ut-port-console": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-console.git#meta",
     "ut-port-couchbase": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-couchbase.git#meta",
-    "ut-port-file": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-file.git#meta",
+    "ut-port-file": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-file.git#master",
     "ut-port-http": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-http.git#meta",
     "ut-port-httpserver": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-httpserver.git#meta",
     "ut-port-performance": "git+ssh://git@git.softwaregroup-bg.com:ut5/ut-port-performance.git#master",
