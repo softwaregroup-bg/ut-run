@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "dependencies": {
     "fs-plus": "^2.8.1",
     "minimist": "~1.2.0",
@@ -9,7 +9,6 @@
     "ut-bus": "~5.3.0",
     "ut-front": "~5.1.0",
     "ut-log": "~5.3.0",
-    "ut-bus": "~5.3.0",
     "ut-port-ftp": "~5.3.0",
     "ut-port-sql": "~5.3.0",
     "ut-port-tcp": "~5.3.0",
