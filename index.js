@@ -69,6 +69,35 @@ module.exports = {
     },
 
     run:function() {
+        if (process.type === 'browser') {
+            require('ut-front/electron')(module.parent.filename);
+        } else {
+            require('babel-core/register')({
+                extensions: [".jsx"]
+            });
+
+            var argv = require('minimist')(process.argv.slice(2));
+            var app = process.env.ut_app || argv._[0] || 'server';
+            var method = process.env.ut_method || argv._[1] || 'debug';
+            var env = process.env.ut_env || argv._[2] || 'dev';
+            var config = module.parent.require('./' + app + '/' + env + '.json');
+            var main = module.parent.require('./' + app);
+
+            if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port){
+                var cluster = require('cluster');
+                if (cluster.isMaster) {
+                    var workerCount = config.cluster.workers || require('os').cpus().length;
+                    for (var i = 0; i < workerCount; i += 1) {
+                        cluster.fork();
+                    }
+                    return true;
+                } else {
+                    config.masterBus.socket.port = config.masterBus.socket.port + cluster.worker.id;
+                    config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
+                }
+            }
+            return require('ut-run/' + method).start(main,config);
+        }
     }
 
 };
