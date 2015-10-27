@@ -1,10 +1,24 @@
-var _ = require('lodash');
+var assign = require('lodash/object/assign');
+var union = require('lodash/array/union');
 var when = require('when');
 var serverRequire = require;//hide some of the requires from lasso
 
+function getDataDirectory() {
+    switch (process.platform) {
+        case 'darwin':
+            return  path.join(process.env.HOME , 'Library/Application Support');
+        case 'linux':
+            return '/var/lib';
+        case 'win32':
+            return process.env.ProgramData;
+        default:
+            return null;
+    }
+}
+
 module.exports = {
     start: function (impl, config) {
-        var mergedConfig = _.assign({
+        var mergedConfig = assign({
             masterBus: {
                 logLevel: 'debug',
                 socket: 'bus'
@@ -25,9 +39,8 @@ module.exports = {
             if (!mergedConfig.implementation) {
                 throw new Error('Missing implementation ID in config');
             }
-            var fsp = serverRequire('fs-plus');
             var path = serverRequire('path');
-            mergedConfig.workDir = path.join((fsp.getAppDataDirectory() || process.cwd()), mergedConfig.implementation);
+            mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree' , mergedConfig.implementation);
         }
 
         require('when/monitor/console');
@@ -44,7 +57,8 @@ module.exports = {
             log = new UTLog({
                 type: 'bunyan',
                 name: 'bunyan_test',
-                streams: _.union([{
+                workDir: mergedConfig.workDir,
+                streams: union([{
                     level: 'trace',
                     stream: 'process.stdout'
                 }, {
@@ -61,28 +75,28 @@ module.exports = {
         }
         if (mergedConfig.console !== false) {
             var Console = serverRequire('ut-port-console');
-            consolePort = _.assign(new Console(), {
+            consolePort = assign(new Console(), {
                 config: {
                     host: mergedConfig.console.host,
                     port: mergedConfig.console.port,
                 }
             });
         }
-        var masterBus = _.assign(new Bus(), {
+        var masterBus = assign(new Bus(), {
             server: true,
             logLevel: mergedConfig.masterBus.logLevel,
             socket: mergedConfig.masterBus.socket,
             id: 'master',
             logFactory: log
         });
-        var workerBus = _.assign(new Bus(), {
+        var workerBus = assign(new Bus(), {
             server: false,
             logLevel: mergedConfig.workerBus.logLevel,
             socket: mergedConfig.masterBus.socket,
             id: 'worker',
             logFactory: log
         });
-        var workerRun = _.assign(require('./index'), {
+        var workerRun = assign(require('./index'), {
             bus: workerBus,
             logFactory: log
         });
