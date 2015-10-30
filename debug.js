@@ -48,6 +48,7 @@ module.exports = {
         var Bus = require('ut-bus');
         var log;
         var consolePort;
+        var performancePort;
 
         if (config.log === false) {
             log = null
@@ -75,26 +76,27 @@ module.exports = {
         }
         if (mergedConfig.console !== false) {
             var Console = serverRequire('ut-port-console');
-            consolePort = assign(new Console(), {
-                config: {
-                    host: mergedConfig.console.host,
-                    port: mergedConfig.console.port,
-                }
-            });
+            consolePort = assign(new Console(), {config: mergedConfig.console});
+        }
+        if (mergedConfig.performance) {
+            var Performance = require('ut-port-performance');
+            performancePort = assign(new Performance(), {config: mergedConfig.performance});
         }
         var masterBus = assign(new Bus(), {
             server: true,
             logLevel: mergedConfig.masterBus.logLevel,
             socket: mergedConfig.masterBus.socket,
             id: 'master',
-            logFactory: log
+            logFactory: log,
+            performance: performancePort
         });
         var workerBus = assign(new Bus(), {
             server: false,
             logLevel: mergedConfig.workerBus.logLevel,
             socket: mergedConfig.masterBus.socket,
             id: 'worker',
-            logFactory: log
+            logFactory: log,
+            performance: performancePort
         });
         var workerRun = assign(require('./index'), {
             bus: workerBus,
@@ -106,6 +108,7 @@ module.exports = {
             repl.context.app = app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
         }
         consolePort && when(consolePort.init()).then(consolePort.start());
+        performancePort && when(performancePort.init()).then(performancePort.start());
         return masterBus.init()
             .then(workerBus.init.bind(workerBus))
             .then(mergedConfig.masterBus.socket ? masterBus.start.bind(masterBus) : workerBus.start.bind(workerBus))
