@@ -2,11 +2,12 @@ var assign = require('lodash/object/assign');
 var union = require('lodash/array/union');
 var when = require('when');
 var serverRequire = require;//hide some of the requires from lasso
+var path = require('path');
 
 function getDataDirectory() {
     switch (process.platform) {
         case 'darwin':
-            return  path.join(process.env.HOME , 'Library/Application Support');
+            return path.join(process.env.HOME , 'Library/Application Support');
         case 'linux':
             return '/var/lib';
         case 'win32':
@@ -17,7 +18,7 @@ function getDataDirectory() {
 }
 
 module.exports = {
-    start: function (impl, config) {
+    start: function(impl, config) {
         var mergedConfig = assign({
             masterBus: {
                 logLevel: 'debug',
@@ -35,7 +36,7 @@ module.exports = {
             }
         }, config);
 
-        if (!process.browser && !mergedConfig.workDir){
+        if (!process.browser && !mergedConfig.workDir) {
             if (!mergedConfig.implementation) {
                 throw new Error('Missing implementation ID in config');
             }
@@ -51,10 +52,9 @@ module.exports = {
         var performancePort;
 
         if (config.log === false) {
-            log = null
+            log = null;
         } else {
             var UTLog = require('ut-log');
-            var SocketStream = require('ut-log/socketStream');
             log = new UTLog({
                 type: 'bunyan',
                 name: 'bunyan_test',
@@ -105,7 +105,7 @@ module.exports = {
 
         if (config.repl !== false) {
             var repl = serverRequire('repl').start({prompt: '>'});
-            repl.context.app = app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
+            repl.context.app = global.app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
         }
         consolePort && when(consolePort.init()).then(consolePort.start());
         performancePort && when(performancePort.init()).then(performancePort.start());
@@ -115,4 +115,4 @@ module.exports = {
             .then(workerRun.ready.bind(workerRun))
             .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
     }
-}
+};
