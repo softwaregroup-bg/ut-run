@@ -25,7 +25,7 @@
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
   },
-  "description": "UT run module",
+  "description": "UT run module.",
   "repository": {
     "type": "git",
     "url": "git@git.softwaregroup-bg.com:ut5/ut-run.git"
