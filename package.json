@@ -9,7 +9,7 @@
     "ut-front": "~5.3.0",
     "ut-log": "~5.3.2",
     "ut-port-ftp": "~5.3.1",
-    "ut-port-sql": "~5.3.3",
+    "ut-port-sql": "~5.3.4",
     "ut-port-tcp": "~5.3.3",
     "ut-port-console": "~5.3.2",
     "ut-port-couchbase": "~5.3.2",
@@ -20,7 +20,7 @@
     "ut-port-schedule": "~5.3.1",
     "ut-port-script": "~5.3.1",
     "ut-port-mail": "~5.3.3",
-    "ut-template": "~5.3.0"
+    "ut-template": "~5.3.1"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
