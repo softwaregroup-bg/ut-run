@@ -79,7 +79,7 @@ module.exports = {
             consolePort = assign(new Console(), {config: mergedConfig.console});
         }
         if (mergedConfig.performance) {
-            var Performance = require('ut-port-performance');
+            var Performance = serverRequire('ut-port-performance');
             performancePort = assign(new Performance(), {config: mergedConfig.performance});
         }
         var masterBus = assign(new Bus(), {

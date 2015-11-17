@@ -71,7 +71,7 @@ module.exports = {
 
     run: function() {
         if (process.type === 'browser') {
-            require('ut-front/electron')(module.parent.filename);
+            serverRequire('ut-front/electron')({main: module.parent.filename});
         } else {
             require('babel-core/register')({
                 extensions: ['.jsx']
