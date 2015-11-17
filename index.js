@@ -1,5 +1,6 @@
 var when = require('when');
 var assign = require('lodash/object/assign');
+var serverRequire = require;//hide some of the requires from lasso
 
 module.exports = {
 
@@ -84,7 +85,7 @@ module.exports = {
             var main = module.parent.require('./' + app);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
-                var cluster = require('cluster');
+                var cluster = serverRequire('cluster');
                 if (cluster.isMaster) {
                     var workerCount = config.cluster.workers || require('os').cpus().length;
                     for (var i = 0; i < workerCount; i += 1) {
