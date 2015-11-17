@@ -73,9 +73,11 @@ module.exports = {
         if (process.type === 'browser') {
             serverRequire('ut-front/electron')({main: module.parent.filename});
         } else {
-            require('babel-core/register')({
-                extensions: ['.jsx']
-            });
+            if (!process.browser) {
+                serverRequire('babel-core/register')({
+                    extensions: ['.jsx']
+                });
+            }
 
             var argv = require('minimist')(process.argv.slice(2));
             var app = process.env.UT_APP || argv._[0] || 'server';
