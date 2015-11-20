@@ -79,12 +79,13 @@ module.exports = {
                 });
             }
 
+            var config = {params: {}};
             var argv = require('minimist')(process.argv.slice(2));
-            var app = process.env.UT_APP || argv._[0] || 'server';
-            var method = process.env.UT_METHOD || argv._[1] || 'debug';
-            var env = process.env.UT_ENV || argv._[2] || 'dev';
-            var config = module.parent.require('./' + app + '/' + env + '.json');
-            var main = module.parent.require('./' + app);
+            config.params.app = process.env.UT_APP || argv._[0] || 'server';
+            config.params.method = process.env.UT_METHOD || argv._[1] || 'debug';
+            config.params.env = process.env.UT_ENV || argv._[2] || 'dev';
+            config = Object.assign(config, module.parent.require('./' + config.params.app + '/' + config.params.env + '.json'));
+            var main = module.parent.require('./' + config.params.app);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
                 var cluster = serverRequire('cluster');
@@ -99,7 +100,7 @@ module.exports = {
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
-            return require('ut-run/' + method).start(main, config);
+            return require('ut-run/' + config.params.method).start(main, config);
         }
     }
 
