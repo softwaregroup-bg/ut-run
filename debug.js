@@ -47,6 +47,7 @@ module.exports = {
         require('when/monitor/console');
 
         var Bus = require('ut-bus');
+        var Port = require('ut-bus/port');
         var log;
         var consolePort;
         var performancePort;
@@ -79,7 +80,7 @@ module.exports = {
             consolePort = assign(new Console(), {config: mergedConfig.console});
         }
         if (mergedConfig.performance) {
-            var Performance = serverRequire('ut-port-performance');
+            var Performance = serverRequire('ut-port-performance')(Port);
             performancePort = assign(new Performance(), {config: mergedConfig.performance});
         }
         var masterBus = assign(new Bus(), {
