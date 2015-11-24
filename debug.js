@@ -105,7 +105,7 @@ module.exports = {
         });
 
         if (config.repl !== false) {
-            var repl = serverRequire('repl').start({prompt: '>'});
+            var repl = serverRequire('repl').start({prompt: 'ut>'});
             repl.context.app = global.app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
         }
         consolePort && when(consolePort.init()).then(consolePort.start());
