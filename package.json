@@ -11,7 +11,7 @@
     "ut-front": "~5.3.4",
     "ut-log": "~5.3.5",
     "ut-port-ftp": "~5.3.1",
-    "ut-port-sql": "~5.3.8",
+    "ut-port-sql": "~5.3.9",
     "ut-port-tcp": "~5.3.3",
     "ut-port-console": "~5.3.2",
     "ut-port-couchbase": "~5.3.2",
