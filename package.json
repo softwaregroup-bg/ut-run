@@ -8,7 +8,7 @@
     "lodash": "^3.5.0",
     "ut-bus": "~5.3.12",
     "ut-error": "~5.3.0",
-    "ut-front": "~5.3.2",
+    "ut-front": "~5.3.4",
     "ut-log": "~5.3.5",
     "ut-port-ftp": "~5.3.1",
     "ut-port-sql": "~5.3.8",
