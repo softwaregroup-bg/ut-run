@@ -2,7 +2,9 @@
   "name": "ut-run",
   "version": "5.3.21",
   "dependencies": {
-    "babel-core": "^6.1.21",
+    "babel-register": "~6.2.0",
+    "babel-plugin-syntax-jsx": "~6.2.0",
+    "babel-plugin-transform-react-jsx ": "~6.2.0",
     "minimist": "~1.2.0",
     "when": "~3.7.2",
     "lodash": "^3.5.0",
