@@ -1,9 +1,9 @@
 var _ = require('lodash');
 var when = require('when');
-var serverRequire = require;//hide some of the requires from lasso
+var serverRequire = require;// hide some of the requires from lasso
 
 module.exports = {
-    start: function (impl, config) {
+    start: function(impl, config) {
         var mergedConfig = _.assign({
             masterBus: {
                 logLevel: 'error',
@@ -21,11 +21,11 @@ module.exports = {
             }
         }, config);
 
-        impl.ports.forEach(function (port) {
+        impl.ports.forEach(function(port) {
             port.logLevel = 'error';
-        })
+        });
 
-        if (!process.browser && !mergedConfig.workDir){
+        if (!process.browser && !mergedConfig.workDir) {
             if (!mergedConfig.implementation) {
                 throw new Error('Missing implementation ID in config');
             }
@@ -41,10 +41,9 @@ module.exports = {
         var consolePort;
 
         if (config.log === false) {
-            log = null
+            log = null;
         } else {
             var UTLog = serverRequire('ut-log');
-            var SocketStream = serverRequire('ut-log/socketStream');
             var Console = serverRequire('ut-port-console');
             log = new UTLog({
                 type: 'bunyan',
@@ -55,7 +54,7 @@ module.exports = {
                 }, {
                     level: 'trace',
                     stream: '../socketStream',
-                    streamConfig:{
+                    streamConfig: {
                         host: mergedConfig.console.host,
                         port: mergedConfig.console.port,
                         objectMode: true
@@ -66,7 +65,7 @@ module.exports = {
             consolePort = _.assign(new Console(), {
                 config: {
                     host: mergedConfig.console.host,
-                    port: mergedConfig.console.port,
+                    port: mergedConfig.console.port
                 }
             });
         }
@@ -91,7 +90,7 @@ module.exports = {
 
         if (config.repl !== false) {
             var repl = serverRequire('repl').start({prompt: '>'});
-            repl.context.app = app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
+            repl.context.app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
         }
         consolePort && when(consolePort.init()).then(consolePort.start());
         return masterBus.init()
@@ -100,4 +99,4 @@ module.exports = {
             .then(workerRun.ready.bind(workerRun))
             .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
     }
-}
+};

@@ -1,13 +1,13 @@
 var assign = require('lodash/object/assign');
 var union = require('lodash/array/union');
 var when = require('when');
-var serverRequire = require;//hide some of the requires from lasso
+var serverRequire = require;// hide some of the requires from lasso
 var path = require('path');
 
 function getDataDirectory() {
     switch (process.platform) {
         case 'darwin':
-            return path.join(process.env.HOME , 'Library/Application Support');
+            return path.join(process.env.HOME, 'Library/Application Support');
         case 'linux':
             return '/var/lib';
         case 'win32':
@@ -41,7 +41,7 @@ module.exports = {
                 throw new Error('Missing implementation ID in config');
             }
             var path = serverRequire('path');
-            mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree' , mergedConfig.implementation);
+            mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree', mergedConfig.implementation);
         }
 
         require('when/monitor/console');
@@ -66,7 +66,7 @@ module.exports = {
                 }, {
                     level: 'trace',
                     stream: '../socketStream',
-                    streamConfig:{
+                    streamConfig: {
                         host: mergedConfig.console.host,
                         port: mergedConfig.console.port,
                         objectMode: true

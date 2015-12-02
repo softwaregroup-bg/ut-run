@@ -1,6 +1,6 @@
 var when = require('when');
 var assign = require('lodash/object/assign');
-var serverRequire = require;//hide some of the requires from lasso
+var serverRequire = require;// hide some of the requires from lasso
 
 module.exports = {
 
