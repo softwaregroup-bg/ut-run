@@ -11,7 +11,7 @@
     "ut-bus": "~5.3.13",
     "ut-error": "~5.3.0",
     "ut-front": "~5.3.4",
-    "ut-log": "~5.3.6",
+    "ut-log": "~5.3.7",
     "ut-port-ftp": "~5.3.1",
     "ut-port-sql": "~5.3.9",
     "ut-port-tcp": "~5.3.3",

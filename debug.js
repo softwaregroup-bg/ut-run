@@ -62,7 +62,8 @@ module.exports = {
                 workDir: mergedConfig.workDir,
                 streams: union([{
                     level: 'trace',
-                    stream: 'process.stdout'
+                    stream: 'process.stdout',
+                    streamConfig: mergedConfig.stdOut
                 }, {
                     level: 'trace',
                     stream: '../socketStream',
