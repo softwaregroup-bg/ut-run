@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "5.3.28",
+  "version": "5.3.29",
   "dependencies": {
     "acorn": {
       "version": "1.2.2",
