@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "dependencies": {
     "fs-plus": "^2.8.1",
     "nconf": "~0.7.1",
