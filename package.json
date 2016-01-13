@@ -10,7 +10,7 @@
     "minimist": "~1.2.0",
     "ut-bus": "5.3.19",
     "ut-error": "5.3.3",
-    "ut-front": "5.3.5",
+    "ut-front": "5.3.6",
     "ut-log": "5.3.9",
     "ut-port-console": "5.3.3",
     "ut-port-couchbase": "5.3.3",
@@ -23,7 +23,7 @@
     "ut-port-schedule": "5.3.4",
     "ut-port-script": "5.3.4",
     "ut-port-sql": "5.3.17",
-    "ut-port-tcp": "5.3.6",
+    "ut-port-tcp": "5.3.7",
     "ut-template": "5.3.4",
     "when": "~3.7.2"
   },
