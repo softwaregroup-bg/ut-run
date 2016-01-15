@@ -22,7 +22,7 @@
     "ut-port-performance": "5.3.3",
     "ut-port-schedule": "5.3.4",
     "ut-port-script": "5.3.4",
-    "ut-port-sql": "5.3.17",
+    "ut-port-sql": "5.3.19",
     "ut-port-tcp": "5.3.7",
     "ut-template": "5.3.4",
     "when": "~3.7.2"
