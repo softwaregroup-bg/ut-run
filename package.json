@@ -6,7 +6,6 @@
     "babel-plugin-transform-react-jsx": "~6.2.0",
     "babel-register": "~6.2.0",
     "lodash": "^3.5.0",
-    "marko": "^2.7.31",
     "minimist": "~1.2.0",
     "ut-bus": "5.3.21",
     "ut-error": "5.3.3",
@@ -24,7 +23,7 @@
     "ut-port-script": "5.3.4",
     "ut-port-sql": "5.3.20",
     "ut-port-tcp": "5.3.8",
-    "ut-template": "5.3.4",
+    "ut-template": "5.3.5",
     "when": "~3.7.2"
   },
   "devDependencies": {
