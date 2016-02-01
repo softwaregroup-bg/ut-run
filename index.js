@@ -75,7 +75,8 @@ module.exports = {
         } else {
             if (!process.browser) {
                 serverRequire('babel-register')({
-                    extensions: ['.jsx']
+                    extensions: ['.jsx'],
+                    ignore: false
                 });
             }
 
