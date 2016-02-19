@@ -1,6 +1,7 @@
 var when = require('when');
 var assign = require('lodash/object/assign');
 var serverRequire = require;// hide some of the requires from lasso
+var run = require('./debug');
 
 module.exports = {
 
@@ -51,9 +52,9 @@ module.exports = {
             }.bind(this), [])
         ).then(function(contexts) {
             return when.reduce(contexts, function(prev, context) {
-                return context.port.start();
+                return context.start();
             }, []).then(function() {
-                return ports;
+                return contexts;
             });
         });
     },
@@ -65,11 +66,11 @@ module.exports = {
         port.logFactory = this.logFactory;
         assign(port.config, config);
         return when(port.init()).then(function() {
-            return {port: port};
+            return port;
         });
     },
 
-    run: function() {
+    run: function(params) {
         if (process.type === 'browser') {
             serverRequire('ut-front/electron')({main: module.parent.filename});
         } else {
@@ -79,14 +80,16 @@ module.exports = {
                     ignore: false
                 });
             }
-
-            var config = {params: {}};
-            var argv = require('minimist')(process.argv.slice(2));
-            config.params.app = process.env.UT_APP || argv._[0] || 'server';
-            config.params.method = process.env.UT_METHOD || argv._[1] || 'debug';
-            config.params.env = process.env.UT_ENV || argv._[2] || 'dev';
-            config = Object.assign(config, module.parent.require('./' + config.params.app + '/' + config.params.env + '.json'));
-            var main = module.parent.require('./' + config.params.app);
+            var config = params && params.config;
+            if (!config) {
+                config = {params: {}};
+                var argv = require('minimist')(process.argv.slice(2));
+                config.params.app = process.env.UT_APP || argv._[0] || 'server';
+                config.params.method = process.env.UT_METHOD || argv._[1] || 'debug';
+                config.params.env = process.env.UT_ENV || argv._[2] || 'dev';
+                config = Object.assign(config, module.parent.require('./' + config.params.app + '/' + config.params.env));
+            }
+            var main = (params && params.main) || module.parent.require('./' + config.params.app);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
                 var cluster = serverRequire('cluster');
@@ -101,7 +104,7 @@ module.exports = {
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
-            return require('ut-run/' + config.params.method).start(main, config);
+            return run[(params && params.method) || config.params.method](main, config);
         }
     }
 

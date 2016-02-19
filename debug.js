@@ -18,7 +18,7 @@ function getDataDirectory() {
 }
 
 module.exports = {
-    start: function(impl, config) {
+    debug: function(impl, config) {
         var mergedConfig = assign({
             masterBus: {
                 logLevel: 'debug',
@@ -115,6 +115,15 @@ module.exports = {
             .then(workerBus.init.bind(workerBus))
             .then(mergedConfig.masterBus.socket ? masterBus.start.bind(masterBus) : workerBus.start.bind(workerBus))
             .then(workerRun.ready.bind(workerRun))
-            .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
+            .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig))
+            .then(function(ports) {
+                return {
+                    ports: ports,
+                    master: masterBus,
+                    bus: workerBus,
+                    log: log,
+                    config: mergedConfig
+                };
+            });
     }
 };
