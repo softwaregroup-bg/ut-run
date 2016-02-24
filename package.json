@@ -7,7 +7,7 @@
     "babel-register": "~6.2.0",
     "lodash": "^3.5.0",
     "minimist": "~1.2.0",
-    "ut-bus": "5.3.25",
+    "ut-bus": "5.3.26",
     "ut-error": "5.3.3",
     "ut-front": "5.3.13",
     "ut-log": "5.3.10",
