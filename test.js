@@ -21,18 +21,23 @@ function sequence(test, bus, flow, params) {
                 error: f.error
             };
         });
-        var skipped = false;
+        var skipped = 0;
 
-        steps.forEach(step => {
-            test.test('testing method ' + step.name, (methodAssert) => {
-                skipped = false;
+        steps.forEach((step, index) => {
+            (index >= skipped) && test.test('testing method ' + step.name, (methodAssert) => {
                 return new Promise(resolve => {
                     resolve(step.params.call({
                         sequence: function() {
                             return runSequence.apply(null, arguments);
                         },
-                        skip: function() {
-                            skipped = true;
+                        skip: function(name) {
+                            skipped = steps.length;
+                            for (var i = index; i < steps.length; i += 1) {
+                                if (name === steps[i].name) {
+                                    skipped = i;
+                                    break;
+                                }
+                            }
                         }
                     }, context));
                 })

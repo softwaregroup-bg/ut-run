@@ -1,13 +1,13 @@
 {
   "name": "ut-run",
-  "version": "5.3.56",
+  "version": "5.3.59",
   "dependencies": {
     "babel-plugin-syntax-jsx": "~6.2.0",
     "babel-plugin-transform-react-jsx": "~6.2.0",
     "babel-register": "~6.2.0",
     "lodash": "^3.5.0",
     "minimist": "~1.2.0",
-    "ut-bus": "5.3.26",
+    "ut-bus": "5.3.27",
     "ut-error": "5.3.3",
     "ut-front": "5.3.14",
     "ut-log": "5.3.10",
