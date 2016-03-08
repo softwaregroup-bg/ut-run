@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "5.3.60",
+  "version": "5.3.59",
   "dependencies": {
     "babel-plugin-syntax-jsx": "~6.2.0",
     "babel-plugin-transform-react-jsx": "~6.2.0",
@@ -8,7 +8,7 @@
     "lodash": "^3.5.0",
     "minimist": "~1.2.0",
     "ut-bus": "5.3.27",
-    "ut-error": "5.3.3",
+    "ut-error": "5.3.4",
     "ut-front": "5.3.15",
     "ut-log": "5.3.10",
     "ut-port-console": "5.3.4",
