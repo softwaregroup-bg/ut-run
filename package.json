@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "5.3.397",
+  "version": "5.3.398",
   "dependencies": {
     "babel-plugin-syntax-jsx": "~6.2.0",
     "babel-plugin-transform-react-jsx": "~6.2.0",
