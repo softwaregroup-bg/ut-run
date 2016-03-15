@@ -6,6 +6,7 @@ require('babel-register')({
 var tape = require('blue-tape');
 var run = require('./index').run;
 var when = require('when');
+var timers = {};
 
 function sequence(test, bus, flow, params) {
     return (function runSequence(flow, params) {
@@ -24,6 +25,7 @@ function sequence(test, bus, flow, params) {
         var skipped = 0;
 
         steps.forEach((step, index) => {
+            timers[step.name] = { start: Date.now() };
             (index >= skipped) && test.test('testing method ' + step.name, (methodAssert) => {
                 return new Promise(resolve => {
                     resolve(step.params.call({
@@ -52,6 +54,12 @@ function sequence(test, bus, flow, params) {
                             console.timeEnd(step.signature);
                             console.dir(step);
                             console.log('--------------------------\n\n\n\n');*/
+                            timers[step.name].time = Date.now() - timers[step.name].start;
+                            var state = result._isOk ? 'passed' : 'failed';
+                            var measurement = 'testing'; // @TODO: discuss better way to identify measurement name
+                            var tags = 'testTitle="' + step.name + '",testState="' + state + '",testDuration=' + timers[step.name].time + ',testId=7';
+                            var message = measurement + ' ' + tags;
+                            bus.performance.write(message);
                             context[step.name] = result;
                             return result;
                         })
