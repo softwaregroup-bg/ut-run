@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "blue-tape": "^0.2.0",
-    "ut-tools": "~2.0.8"
+    "ut-tools": "~1.0.9"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
