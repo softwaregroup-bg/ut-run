@@ -7,11 +7,11 @@
     "babel-register": "~6.2.0",
     "lodash": "^3.5.0",
     "minimist": "~1.2.0",
-    "ut-bus": "5.3.28",
+    "ut-bus": "5.3.29",
     "ut-error": "5.3.5",
     "ut-front": "5.3.17",
-    "ut-log": "5.3.14",
-    "ut-port-console": "5.3.5",
+    "ut-log": "5.3.16",
+    "ut-port-console": "5.3.6",
     "ut-port-couchbase": "5.3.5",
     "ut-port-file": "5.3.6",
     "ut-port-ftp": "5.3.4",
@@ -21,14 +21,14 @@
     "ut-port-performance": "5.3.5",
     "ut-port-schedule": "5.3.6",
     "ut-port-script": "5.3.5",
-    "ut-port-sql": "5.3.35",
+    "ut-port-sql": "5.3.37",
     "ut-port-tcp": "5.3.9",
     "ut-template": "5.3.5",
     "when": "~3.7.2"
   },
   "devDependencies": {
     "blue-tape": "^0.2.0",
-    "ut-tools": "~1.0.5"
+    "ut-tools": "~2.0.8"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
