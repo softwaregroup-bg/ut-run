@@ -66,7 +66,7 @@ module.exports = {
                     streamConfig: mergedConfig.stdOut
                 }, {
                     level: 'trace',
-                    stream: '../socketStream',
+                    stream: require('ut-log/socketStream'),
                     streamConfig: {
                         host: mergedConfig.console.host,
                         port: mergedConfig.console.port,
