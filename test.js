@@ -6,9 +6,8 @@ require('babel-register')({
 var tape = require('blue-tape');
 var run = require('./index').run;
 var when = require('when');
-var timers = {};
 
-function sequence(test, bus, flow, params) {
+function sequence(name, test, bus, flow, params) {
     return (function runSequence(flow, params) {
         var context = {
             params: params || {}
@@ -24,10 +23,13 @@ function sequence(test, bus, flow, params) {
         });
         var skipped = 0;
 
+        var passed = name && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + name, 'gauge', 'p', 'Passed tests');
+        var duration = name && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + name, 'gauge', 'd', 'Test duration');
+
         steps.forEach((step, index) => {
-            timers[step.name] = { start: Date.now() };
+            var start = Date.now();
             (index >= skipped) && test.test('testing method ' + step.name, (methodAssert) => {
-                return new Promise(resolve => {
+                return new Promise((resolve) => {
                     resolve(step.params.call({
                         sequence: function() {
                             return runSequence.apply(null, arguments);
@@ -43,23 +45,14 @@ function sequence(test, bus, flow, params) {
                         }
                     }, context));
                 })
-                .then(params => {
+                .then((params) => {
                     if (skipped) {
                         return params;
                     }
-                    /* console.time(step.signature);*/
                     return step.method(params)
                         .then(function(result) {
-                            /* console.log('\n\n\n\n--------------------------');
-                            console.timeEnd(step.signature);
-                            console.dir(step);
-                            console.log('--------------------------\n\n\n\n');*/
-                            timers[step.name].time = Date.now() - timers[step.name].start;
-                            var state = result._isOk ? 'passed' : 'failed';
-                            var measurement = 'testing'; // @TODO: discuss better way to identify measurement name
-                            var tags = 'testTitle="' + step.name + '",testState="' + state + '",testDuration=' + timers[step.name].time + ',testId=7';
-                            var message = measurement + ' ' + tags;
-                            bus.performance.write(message);
+                            duration && duration(Date.now() - start);
+                            passed && passed(result._isOk ? 1 : 0);
                             context[step.name] = result;
                             return result;
                         })
@@ -70,11 +63,17 @@ function sequence(test, bus, flow, params) {
                             return result;
                         })
                         .catch(function(error) {
+                            duration && duration(Date.now() - start);
                             if (typeof step.error === 'function') {
                                 step.error.call(context, error, methodAssert);
+                                passed && passed(0);
                             } else {
+                                passed && passed(0);
                                 throw error;
                             }
+                        })
+                        .finally(function() {
+                            bus.performance && bus.performance.write({stepName: step.name, step: index});
                         });
                 });
             });
@@ -95,23 +94,23 @@ module.exports = function(params) {
 
     var serverRun = run(server);
     var clientRun = run(client);
-    tape('server start', assert => serverRun);
-    tape('client start', assert => clientRun.then(client => params.steps(assert, client.bus, sequence)));
+    tape('server start', (assert) => serverRun);
+    tape('client start', (assert) => clientRun.then((client) => params.steps(assert, client.bus, sequence.bind(null, params.name))));
 
     function stop(assert, x) {
-        x.ports.forEach(port => {
-            assert.test('stopping port ' + port.config.id, assert => new Promise(resolve => {
+        x.ports.forEach((port) => {
+            assert.test('stopping port ' + port.config.id, (assert) => new Promise((resolve) => {
                 resolve(port.stop());
             }));
         });
-        assert.test('stopping worker bus', assert => new Promise(resolve => {
+        assert.test('stopping worker bus', (assert) => new Promise((resolve) => {
             resolve(x.bus.destroy());
         }));
-        assert.test('stopping master bus', assert => new Promise(resolve => {
+        assert.test('stopping master bus', (assert) => new Promise((resolve) => {
             resolve(x.master.destroy());
         }));
-        return new Promise(resolve => resolve(x));
+        return new Promise((resolve) => resolve(x));
     }
-    tape('client stop', assert => clientRun.then(stop.bind(null, assert)));
-    tape('server stop', assert => serverRun.then(stop.bind(null, assert)));
+    tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
+    tape('server stop', (assert) => serverRun.then(stop.bind(null, assert)));
 };
