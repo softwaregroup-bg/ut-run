@@ -11,7 +11,7 @@
     "ut-error": "5.3.5",
     "ut-front": "5.4.1",
     "ut-front-smartclient": "5.4.1",
-    "ut-log": "5.3.16",
+    "ut-log": "5.3.19",
     "ut-port-console": "5.3.6",
     "ut-port-couchbase": "5.3.5",
     "ut-port-file": "5.3.6",
