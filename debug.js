@@ -1,3 +1,5 @@
+/* eslint no-process-env:0 */
+
 var assign = require('lodash/object/assign');
 var union = require('lodash/array/union');
 var when = require('when');

@@ -1,3 +1,5 @@
+/* eslint no-process-env:0 */
+
 var when = require('when');
 var assign = require('lodash/object/assign');
 var serverRequire = require;// hide some of the requires from lasso

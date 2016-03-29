@@ -5,6 +5,7 @@
     "babel-plugin-syntax-jsx": "~6.2.0",
     "babel-plugin-transform-react-jsx": "~6.2.0",
     "babel-register": "~6.2.0",
+    "loadtest": "1.3.3",
     "lodash": "^3.5.0",
     "minimist": "~1.2.0",
     "ut-bus": "5.3.29",
@@ -29,17 +30,27 @@
   },
   "devDependencies": {
     "blue-tape": "^0.2.0",
-    "ut-tools": "~1.0.9"
+    "ut-tools": "^5.3.1"
   },
   "publishConfig": {
-    "registry": "http://npm.softwaregroup-bg.com:5001"
+    "registry": "https://nexus.softwaregroup-bg.com/repository/npm-internal"
   },
   "scripts": {
     "lint": "ut-lint .",
-    "pre-commit": "npm run lint",
-    "pre-release": "ut-pre-release",
     "release": "ut-release",
-    "post-release": "ut-post-release"
+    "changelog": "ut-changelog",
+    "check": "ut-check",
+    "cover": "ut-cover",
+    "lint-js": "ut-lint-js .",
+    "postpublish": "ut-postpublish",
+    "postversion": "ut-postversion",
+    "precommit": "ut-precommit",
+    "prepublish": "ut-prepublish",
+    "prepush": "ut-prepush",
+    "pretest": "ut-pretest",
+    "preversion": "ut-preversion",
+    "test": "ut-test",
+    "version": "ut-version"
   },
   "description": "UT run module",
   "repository": {
