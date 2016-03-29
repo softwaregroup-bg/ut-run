@@ -7,14 +7,15 @@ var tape = require('blue-tape');
 var run = require('./index').run;
 var when = require('when');
 
-function sequence(name, test, bus, flow, params) {
+function sequence(options, test, bus, flow, params) {
     return (function runSequence(flow, params) {
         var context = {
             params: params || {}
         };
         var steps = flow.map(function(f) {
             return {
-                name: f.name || f.method,
+                name: f.name || '',
+                methodName: f.method,
                 method: bus.importMethod(f.method),
                 params: (typeof f.params === 'function') ? when.lift(f.params) : () => f.params,
                 result: f.result,
@@ -23,8 +24,8 @@ function sequence(name, test, bus, flow, params) {
         });
         var skipped = 0;
 
-        var passed = name && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + name, 'gauge', 'p', 'Passed tests');
-        var duration = name && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + name, 'gauge', 'd', 'Test duration');
+        var passed = options.type && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
+        var duration = options.type && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
         steps.forEach((step, index) => {
             var start = Date.now();
@@ -73,7 +74,7 @@ function sequence(name, test, bus, flow, params) {
                             }
                         })
                         .finally(function() {
-                            bus.performance && bus.performance.write({stepName: step.name, step: index});
+                            bus.performance && bus.performance.write({testName: options.name, stepName: step.name, method: step.methodName, step: index});
                         });
                 });
             });
@@ -95,7 +96,7 @@ module.exports = function(params) {
     var serverRun = run(server);
     var clientRun = run(client);
     tape('server start', (assert) => serverRun);
-    tape('client start', (assert) => clientRun.then((client) => params.steps(assert, client.bus, sequence.bind(null, params.name))));
+    tape('client start', (assert) => clientRun.then((client) => params.steps(assert, client.bus, sequence.bind(null, params))));
 
     function stop(assert, x) {
         x.ports.forEach((port) => {
