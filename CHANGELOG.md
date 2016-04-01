@@ -1,3 +1,13 @@
+<a name="5.3.76"></a>
+## [5.3.76](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.75...v5.3.76) (2016-04-01)
+
+
+### Bug Fixes
+
+* use constant dependencies ([895c55e](https://git.softwaregroup-bg.com/ut5/ut-run/commit/895c55e))
+
+
+
 <a name="5.3.75"></a>
 ## [5.3.75](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.74...v5.3.75) (2016-03-30)
 
