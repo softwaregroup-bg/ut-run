@@ -24,8 +24,10 @@ function sequence(options, test, bus, flow, params) {
         });
         var skipped = 0;
 
-        var passed = options.type && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
-        var duration = options.type && bus.performance && bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
+        var passed = options.type && bus.performance &&
+            bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
+        var duration = options.type && bus.performance &&
+            bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
         steps.forEach((step, index) => {
             var start = Date.now();

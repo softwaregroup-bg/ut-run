@@ -62,7 +62,16 @@ module.exports = {
     },
 
     loadConfig: function(config) {
-        var Port = (config.createPort instanceof Function) ? config.createPort : require('ut-port-' + config.type);
+        var Port;
+        if (config.createPort instanceof Function) {
+            Port = config.createPort;
+        } else {
+            if (config.type) {
+                throw new Error('Use createPort:require(\'ut-port-' + config.type + '\') instead of type:\'' + config.type + '\'');
+            } else {
+                throw new Error('Missing createPort property');
+            }
+        }
         var port = new Port();
         port.bus = this.bus;
         port.logFactory = this.logFactory;
