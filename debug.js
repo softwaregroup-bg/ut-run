@@ -102,7 +102,7 @@ module.exports = {
             logFactory: log,
             performance: performancePort
         });
-        var workerRun = assign(require('./index'), {
+        var workerRun = assign({}, require('./index'), {
             bus: workerBus,
             logFactory: log
         });
