@@ -1,3 +1,20 @@
+<a name="5.3.78"></a>
+## [5.3.78](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.77...v5.3.78) (2016-04-05)
+
+
+### Bug Fixes
+
+* allow multiple workers in single process ([e1151f4](https://git.softwaregroup-bg.com/ut5/ut-run/commit/e1151f4))
+* fix version ([01787a5](https://git.softwaregroup-bg.com/ut5/ut-run/commit/01787a5))
+* properly handle params function in tests ([40a9970](https://git.softwaregroup-bg.com/ut5/ut-run/commit/40a9970))
+* ut-bus is now peer dependency ([8006756](https://git.softwaregroup-bg.com/ut5/ut-run/commit/8006756))
+
+### Features
+
+* remove dynamic require and excess dependencies ([084aa6e](https://git.softwaregroup-bg.com/ut5/ut-run/commit/084aa6e))
+
+
+
 <a name="5.3.77"></a>
 ## [5.3.77](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.76...v5.3.77) (2016-04-01)
 
