@@ -32,27 +32,25 @@ function sequence(options, test, bus, flow, params) {
         steps.forEach((step, index) => {
             var start = Date.now();
             (index >= skipped) && test.test('testing method ' + step.name, (methodAssert) => {
-                return new Promise((resolve) => {
-                    resolve(step.params.call({
-                        sequence: function() {
-                            return runSequence.apply(null, arguments);
-                        },
-                        skip: function(name) {
-                            skipped = steps.length;
-                            for (var i = index; i < steps.length; i += 1) {
-                                if (name === steps[i].name) {
-                                    skipped = i;
-                                    break;
-                                }
+                return when(step.params.call({
+                    sequence: function() {
+                        return runSequence.apply(null, arguments);
+                    },
+                    skip: function(name) {
+                        skipped = steps.length;
+                        for (var i = index; i < steps.length; i += 1) {
+                            if (name === steps[i].name) {
+                                skipped = i;
+                                break;
                             }
                         }
-                    }, context));
-                })
+                    }
+                }, context))
                 .then((params) => {
                     if (skipped) {
                         return params;
                     }
-                    return step.method(params)
+                    return when(step.method(params))
                         .then(function(result) {
                             duration && duration(Date.now() - start);
                             passed && passed(result._isOk ? 1 : 0);
