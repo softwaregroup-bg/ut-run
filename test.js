@@ -87,16 +87,16 @@ module.exports = function(params) {
         config: params.serverConfig,
         method: 'debug'
     };
-    var client = {
+    var client = params.client && {
         main: params.client,
         config: params.clientConfig,
         method: 'debug'
     };
 
     var serverRun = run(server);
-    var clientRun = run(client);
-    tape('server start', (assert) => serverRun);
-    tape('client start', (assert) => clientRun.then((client) => params.steps(assert, client.bus, sequence.bind(null, params))));
+    var clientRun = client && run(client);
+    tape('server start', (assert) => serverRun.then((server) => client ? server : params.steps(assert, server.bus, sequence.bind(null, params))));
+    client && tape('client start', (assert) => clientRun.then((client) => params.steps(assert, client.bus, sequence.bind(null, params))));
 
     function stop(assert, x) {
         x.ports.forEach((port) => {
@@ -112,6 +112,6 @@ module.exports = function(params) {
         }));
         return new Promise((resolve) => resolve(x));
     }
-    tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
+    client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
     tape('server stop', (assert) => serverRun.then(stop.bind(null, assert)));
 };
