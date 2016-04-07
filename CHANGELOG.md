@@ -1,3 +1,13 @@
+<a name="5.3.79"></a>
+## [5.3.79](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.78...v5.3.79) (2016-04-07)
+
+
+### Features
+
+* add support for testing only internal server APIs ([b8e6d09](https://git.softwaregroup-bg.com/ut5/ut-run/commit/b8e6d09))
+
+
+
 <a name="5.3.78"></a>
 ## [5.3.78](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.77...v5.3.78) (2016-04-05)
 
