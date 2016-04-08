@@ -1,3 +1,13 @@
+<a name="5.3.80"></a>
+## [5.3.80](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.79...v5.3.80) (2016-04-08)
+
+
+### Features
+
+* allow configuration overrides with the rc module ([e71a2a9](https://git.softwaregroup-bg.com/ut5/ut-run/commit/e71a2a9))
+
+
+
 <a name="5.3.79"></a>
 ## [5.3.79](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.78...v5.3.79) (2016-04-07)
 
