@@ -4,6 +4,7 @@ var when = require('when');
 var assign = require('lodash/object/assign');
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
+var rc = require('rc');
 
 module.exports = {
 
@@ -101,6 +102,8 @@ module.exports = {
                 config = Object.assign(config, module.parent.require('./' + config.params.app + '/' + config.params.env));
             }
             var main = (params && params.main) || module.parent.require('./' + config.params.app);
+
+            config = rc(['ut', config.implementation || 'test', (config && config.params && config.params.env) || 'dev'].join('-'), config);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
                 var cluster = serverRequire('cluster');
