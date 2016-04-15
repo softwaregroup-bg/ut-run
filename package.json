@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "blue-tape": "0.2.0",
-    "ut-tools": "^5.3.6"
+    "ut-tools": "^5.3.13"
   },
   "publishConfig": {
     "registry": "https://nexus.softwaregroup-bg.com/repository/npm-internal"
@@ -35,7 +35,9 @@
     "pretest": "ut-pretest",
     "preversion": "ut-preversion",
     "test": "ut-test",
-    "version": "ut-version"
+    "version": "ut-version",
+    "jenkins": "ut-jenkins",
+    "gitlab": "ut-gitlab"
   },
   "description": "UT run module",
   "repository": {
