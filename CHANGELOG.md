@@ -1,3 +1,13 @@
+<a name="5.3.82"></a>
+## [5.3.82](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.81...v5.3.82) (2016-04-19)
+
+
+### Bug Fixes
+
+* move babel to devDependency ([53b4174](https://git.softwaregroup-bg.com/ut5/ut-run/commit/53b4174))
+
+
+
 <a name="5.3.81"></a>
 ## [5.3.81](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.80...v5.3.81) (2016-04-15)
 
