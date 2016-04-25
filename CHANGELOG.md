@@ -1,3 +1,13 @@
+<a name="5.3.83"></a>
+## [5.3.83](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.82...v5.3.83) (2016-04-25)
+
+
+### Features
+
+* improve tests and error handling ([4521d44](https://git.softwaregroup-bg.com/ut5/ut-run/commit/4521d44))
+
+
+
 <a name="5.3.82"></a>
 ## [5.3.82](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.81...v5.3.82) (2016-04-19)
 
