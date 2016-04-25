@@ -4,7 +4,7 @@ require('babel-register')({
 });
 
 var tape = require('blue-tape');
-var run = require('./index').run;
+var run = require('./index').runParams;
 var when = require('when');
 
 function sequence(options, test, bus, flow, params) {
@@ -85,18 +85,37 @@ module.exports = function(params) {
     var server = {
         main: params.server,
         config: params.serverConfig,
-        method: 'debug'
+        app: params.serverApp || '../server',
+        env: params.serverEnv || 'test',
+        method: params.serverMethod || 'debug'
     };
     var client = params.client && {
         main: params.client,
         config: params.clientConfig,
-        method: 'debug'
+        app: params.clientApp || '../desktop',
+        env: params.clientEnv || 'test',
+        method: params.clientMethod || 'debug'
     };
 
-    var serverRun = run(server);
-    var clientRun = client && run(client);
-    tape('server start', (assert) => serverRun.then((server) => client ? server : params.steps(assert, server.bus, sequence.bind(null, params))));
-    client && tape('client start', (assert) => clientRun.then((client) => params.steps(assert, client.bus, sequence.bind(null, params))));
+    var serverRun = run(server, module.parent);
+    tape('server start', (assert) =>
+        serverRun.then((server) =>
+            client ? server : params.steps(assert, server.bus, sequence.bind(null, params))
+        )
+    );
+    var clientRun;
+    client && tape('client start', (assert) => {
+        return serverRun
+        .then(() => {
+            clientRun = client && run(client, module.parent);
+            return clientRun.then((client) =>
+                params.steps(assert, client.bus, sequence.bind(null, params))
+            );
+        })
+        .catch(() =>
+            Promise.reject('Server did not start')
+        );
+    });
 
     function stop(assert, x) {
         x.ports.forEach((port) => {
@@ -112,6 +131,10 @@ module.exports = function(params) {
         }));
         return new Promise((resolve) => resolve(x));
     }
-    client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
-    tape('server stop', (assert) => serverRun.then(stop.bind(null, assert)));
+
+    clientRun && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
+    tape('server stop', (assert) => serverRun
+        .then(stop.bind(null, assert))
+        .catch(() => Promise.reject('Server did not start'))
+    );
 };

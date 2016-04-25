@@ -1,4 +1,4 @@
-/* eslint no-process-env:0 */
+/* eslint no-process-env:0, no-console:0 */
 
 var when = require('when');
 var assign = require('lodash/object/assign');
@@ -56,8 +56,15 @@ module.exports = {
         ).then(function(contexts) {
             return when.reduce(contexts, function(prev, context) {
                 return context.start();
-            }, []).then(function() {
+            }, [])
+            .then(function() {
                 return contexts;
+            })
+            .catch(function(err) {
+                return when.reduce(contexts, function(prev, context) {
+                    return Promise.resolve(context.stop()).catch(() => true); // continue on error
+                }, [])
+                .then(() => Promise.reject(err)); // reject with the original error
             });
         });
     },
@@ -82,9 +89,10 @@ module.exports = {
         });
     },
 
-    run: function(params) {
+    runParams: function(params, parent) {
+        parent = parent || module.parent;
         if (process.type === 'browser') {
-            serverRequire('ut-front/electron')({main: module.parent.filename});
+            serverRequire('ut-front/electron')({main: parent.filename});
         } else {
             if (!process.browser) {
                 serverRequire('babel-register')({
@@ -96,14 +104,14 @@ module.exports = {
             if (!config) {
                 config = {params: {}};
                 var argv = require('minimist')(process.argv.slice(2));
-                config.params.app = process.env.UT_APP || argv._[0] || 'server';
-                config.params.method = process.env.UT_METHOD || argv._[1] || 'debug';
-                config.params.env = process.env.UT_ENV || argv._[2] || 'dev';
-                config = Object.assign(config, module.parent.require('./' + config.params.app + '/' + config.params.env));
+                config.params.app = process.env.UT_APP || (params && params.app) || argv._[0] || 'server';
+                config.params.method = process.env.UT_METHOD || (params && params.method) || argv._[1] || 'debug';
+                config.params.env = process.env.UT_ENV || (params && params.env) || argv._[2] || 'dev';
+                config = Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
             }
-            var main = (params && params.main) || module.parent.require('./' + config.params.app);
+            var main = (params && params.main) || parent.require('./' + config.params.app);
 
-            config = rc(['ut', config.implementation || 'test', (config && config.params && config.params.env) || 'dev'].join('-'), config);
+            config = rc(['ut', config.implementation || 'ut5', process.env.UT_ENV || (params && params.env) || 'dev'].join('-'), config);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
                 var cluster = serverRequire('cluster');
@@ -120,6 +128,12 @@ module.exports = {
             }
             return run[(params && params.method) || config.params.method](main, config);
         }
+    },
+    run: function() {
+        this.runParams().catch((err) => {
+            console.error(err);
+            process.abort();
+        });
     }
 
 };

@@ -126,6 +126,11 @@ module.exports = {
                     log: log,
                     config: mergedConfig
                 };
+            })
+            .catch((err) => {
+                workerBus.destroy();
+                masterBus.destroy();
+                return Promise.reject(err);
             });
     }
 };
