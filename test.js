@@ -31,7 +31,7 @@ function sequence(options, test, bus, flow, params) {
 
         steps.forEach((step, index) => {
             var start = Date.now();
-            (index >= skipped) && test.test('testing method ' + step.name, (methodAssert) => {
+            (index >= skipped) && test.test(step.name || ('testing method ' + step.methodName), (methodAssert) => {
                 return when(step.params.call({
                     sequence: function() {
                         return runSequence.apply(null, arguments);
