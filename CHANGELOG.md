@@ -1,3 +1,13 @@
+<a name="5.3.84"></a>
+## [5.3.84](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.83...v5.3.84) (2016-04-26)
+
+
+### Bug Fixes
+
+* fix naming of tests ([3c01341](https://git.softwaregroup-bg.com/ut5/ut-run/commit/3c01341))
+
+
+
 <a name="5.3.83"></a>
 ## [5.3.83](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.82...v5.3.83) (2016-04-25)
 
