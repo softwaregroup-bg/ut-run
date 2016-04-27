@@ -1,3 +1,13 @@
+<a name="5.3.85"></a>
+## [5.3.85](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.84...v5.3.85) (2016-04-27)
+
+
+### Bug Fixes
+
+* pass params to runParams([7fa546f](https://git.softwaregroup-bg.com/ut5/ut-run/commit/7fa546f))
+
+
+
 <a name="5.3.84"></a>
 ## [5.3.84](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.83...v5.3.84) (2016-04-26)
 
