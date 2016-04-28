@@ -62,7 +62,7 @@ module.exports = {
             })
             .catch(function(err) {
                 return when.reduce(contexts, function(prev, context) {
-                    return Promise.resolve(context.stop()).catch(() => true); // continue on error
+                    return new Promise(() => (context.stop())).catch(() => true); // continue on error
                 }, [])
                 .then(() => Promise.reject(err)); // reject with the original error
             });
