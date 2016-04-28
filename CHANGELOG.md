@@ -1,3 +1,13 @@
+<a name="5.3.89"></a>
+## [5.3.89](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.88...v5.3.89) (2016-04-28)
+
+
+### Bug Fixes
+
+* handle stop error correctly([d0b366b](https://git.softwaregroup-bg.com/ut5/ut-run/commit/d0b366b))
+
+
+
 <a name="5.3.88"></a>
 ## [5.3.88](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.87...v5.3.88) (2016-04-28)
 
