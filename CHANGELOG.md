@@ -1,3 +1,13 @@
+<a name="5.3.88"></a>
+## [5.3.88](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.87...v5.3.88) (2016-04-28)
+
+
+### Bug Fixes
+
+* fix continue on error during port.stop([70940eb](https://git.softwaregroup-bg.com/ut5/ut-run/commit/70940eb))
+
+
+
 <a name="5.3.87"></a>
 ## [5.3.87](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.86...v5.3.87) (2016-04-28)
 
