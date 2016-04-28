@@ -1,3 +1,13 @@
+<a name="5.3.87"></a>
+## [5.3.87](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.86...v5.3.87) (2016-04-28)
+
+
+### Bug Fixes
+
+* do not replace default config for console and performance ports([1d5532d](https://git.softwaregroup-bg.com/ut5/ut-run/commit/1d5532d))
+
+
+
 <a name="5.3.86"></a>
 ## [5.3.86](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.85...v5.3.86) (2016-04-28)
 
