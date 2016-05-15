@@ -74,7 +74,12 @@ function sequence(options, test, bus, flow, params) {
                             }
                         })
                         .finally(function() {
-                            bus.performance && bus.performance.write({testName: options.name, stepName: step.name, method: step.methodName, step: index});
+                            bus.performance && bus.performance.write({
+                                testName: options.name,
+                                stepName: step.name,
+                                method: step.methodName,
+                                step: index
+                            });
                         });
                 });
             });
@@ -97,24 +102,25 @@ module.exports = function(params) {
         method: params.clientMethod || 'debug'
     };
 
-    var serverRun = run(server, module.parent);
-    tape('server start', (assert) =>
-        serverRun.then((server) =>
+    var serverRun;
+    tape('server start', (assert) => {
+        serverRun = run(server, module.parent);
+        return serverRun.then((server) =>
             client ? server : params.steps(assert, server.bus, sequence.bind(null, params))
-        )
-    );
+        );
+    });
     var clientRun;
     client && tape('client start', (assert) => {
         return serverRun
-        .then(() => {
-            clientRun = client && run(client, module.parent);
-            return clientRun.then((client) =>
-                params.steps(assert, client.bus, sequence.bind(null, params))
+            .then(() => {
+                clientRun = client && run(client, module.parent);
+                return clientRun.then((client) =>
+                    params.steps(assert, client.bus, sequence.bind(null, params))
+                );
+            })
+            .catch(() =>
+                Promise.reject('Server did not start')
             );
-        })
-        .catch(() =>
-            Promise.reject('Server did not start')
-        );
     });
 
     function stop(assert, x) {
