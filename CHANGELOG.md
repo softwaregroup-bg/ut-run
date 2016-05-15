@@ -1,3 +1,13 @@
+<a name="5.3.91"></a>
+## [5.3.91](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.90...v5.3.91) (2016-05-15)
+
+
+### Bug Fixes
+
+* run serever during the test to allow chaining tests ([6bab946](https://git.softwaregroup-bg.com/ut5/ut-run/commit/6bab946))
+
+
+
 <a name="5.3.90"></a>
 ## [5.3.90](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.89...v5.3.90) (2016-05-10)
 
