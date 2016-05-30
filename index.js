@@ -1,7 +1,7 @@
 /* eslint no-process-env:0, no-console:0 */
 
 var when = require('when');
-var assign = require('lodash/object/assign');
+var merge = require('lodash/object/merge');
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
@@ -43,14 +43,14 @@ module.exports = {
                 var module = implementation.modules[validationName];
                 var validation = implementation.validations[validationName];
                 module && Object.keys(validation).forEach(function(value) {
-                    assign(module[value], validation[value]);
+                    merge(module[value], validation[value]);
                 });
             });
         }
 
         return when.all(
             ports.reduce(function(all, port) {
-                all.push(this.loadConfig(assign(port, config[port.id])));
+                all.push(this.loadConfig(merge(port, config[port.id])));
                 return all;
             }.bind(this), [])
         ).then(function(contexts) {
@@ -83,7 +83,7 @@ module.exports = {
         var port = new Port();
         port.bus = this.bus;
         port.logFactory = this.logFactory;
-        assign(port.config, config);
+        merge(port.config, config);
         return when(port.init()).then(function() {
             return port;
         });
