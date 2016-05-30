@@ -1,3 +1,13 @@
+<a name="5.3.92"></a>
+## [5.3.92](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.91...v5.3.92) (2016-05-30)
+
+
+### Features
+
+* use merge for config instead of assign ([261c2b1](https://git.softwaregroup-bg.com/ut5/ut-run/commit/261c2b1))
+
+
+
 <a name="5.3.91"></a>
 ## [5.3.91](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.90...v5.3.91) (2016-05-15)
 
