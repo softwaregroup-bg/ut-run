@@ -50,7 +50,7 @@ module.exports = {
 
         return when.all(
             ports.reduce(function(all, port) {
-                all.push(this.loadConfig(merge(port, config[port.id])));
+                config[port.id] !== false && all.push(this.loadConfig(merge(port, config[port.id])));
                 return all;
             }.bind(this), [])
         ).then(function(contexts) {
