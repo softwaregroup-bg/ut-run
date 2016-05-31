@@ -1,3 +1,13 @@
+<a name="5.3.93"></a>
+## [5.3.93](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.92...v5.3.93) (2016-05-31)
+
+
+### Features
+
+* allow disabling ports through config ([a6da54b](https://git.softwaregroup-bg.com/ut5/ut-run/commit/a6da54b))
+
+
+
 <a name="5.3.92"></a>
 ## [5.3.92](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.91...v5.3.92) (2016-05-30)
 
