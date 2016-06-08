@@ -1,3 +1,14 @@
+<a name="5.3.94"></a>
+## [5.3.94](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.93...v5.3.94) (2016-06-08)
+
+
+### Bug Fixes
+
+* update dependencies ([3133aa6](https://git.softwaregroup-bg.com/ut5/ut-run/commit/3133aa6))
+* upgrade lodash ([25a9a2f](https://git.softwaregroup-bg.com/ut5/ut-run/commit/25a9a2f))
+
+
+
 <a name="5.3.93"></a>
 ## [5.3.93](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.92...v5.3.93) (2016-05-31)
 
