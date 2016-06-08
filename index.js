@@ -1,7 +1,7 @@
 /* eslint no-process-env:0, no-console:0 */
 
 var when = require('when');
-var merge = require('lodash/object/merge');
+var merge = require('lodash.merge');
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');

@@ -1,7 +1,7 @@
 /* eslint no-process-env:0 */
 
-var assign = require('lodash/object/assign');
-var union = require('lodash/array/union');
+var assign = require('lodash.assign');
+var union = require('lodash.union');
 var when = require('when');
 var serverRequire = require;// hide some of the requires from lasso
 var path = require('path');
