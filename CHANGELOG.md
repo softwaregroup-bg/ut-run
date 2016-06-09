@@ -1,3 +1,13 @@
+<a name="5.3.95"></a>
+## [5.3.95](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.94...v5.3.95) (2016-06-09)
+
+
+### Features
+
+* reuse test.js for performance tests ([a966949](https://git.softwaregroup-bg.com/ut5/ut-run/commit/a966949))
+
+
+
 <a name="5.3.94"></a>
 ## [5.3.94](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.93...v5.3.94) (2016-06-08)
 
