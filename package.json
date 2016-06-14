@@ -2,7 +2,7 @@
   "name": "ut-run",
   "version": "5.3.95",
   "dependencies": {
-    "loadtest": "1.3.3",
+    "loadtest": "1.4.3",
     "lodash.assign": "4.0.9",
     "lodash.merge": "4.4.0",
     "lodash.union": "4.4.0",
