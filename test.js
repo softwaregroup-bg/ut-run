@@ -160,7 +160,6 @@ function performanceTest(params, assert, bus, flow) {
             }, 5000);
         }
     });
-
 }
 
 module.exports = function(params) {
