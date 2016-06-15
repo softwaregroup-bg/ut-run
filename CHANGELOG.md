@@ -1,3 +1,19 @@
+<a name="5.3.96"></a>
+## [5.3.96](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.95...v5.3.96) (2016-06-15)
+
+
+### Bug Fixes
+
+* lint ([cfe336c](https://git.softwaregroup-bg.com/ut5/ut-run/commit/cfe336c))
+
+
+### Features
+
+* handle cookies in performance tests ([f2aca41](https://git.softwaregroup-bg.com/ut5/ut-run/commit/f2aca41))
+* upgrade loadtest ([2236cc5](https://git.softwaregroup-bg.com/ut5/ut-run/commit/2236cc5))
+
+
+
 <a name="5.3.95"></a>
 ## [5.3.95](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.94...v5.3.95) (2016-06-09)
 
