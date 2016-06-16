@@ -91,6 +91,7 @@ function sequence(options, test, bus, flow, params) {
 function performanceTest(params, assert, bus, flow) {
     var step = flow.shift();
     var start = Date.now();
+    if (!params.context) params.context = {};
 
     var passed = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'p', 'Passed tests');
@@ -110,7 +111,7 @@ function performanceTest(params, assert, bus, flow) {
     var state = true;
     var httpSettings = {
         url: step.url || params.url,
-        body: Object.assign({method: step.method, params: step.params}, params.body || {jsonrpc: '2.0', 'id': 1}),
+        body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params}, params.body || {jsonrpc: '2.0', 'id': 1}),
         method: step.httpMethod || params.httpMethod || 'POST',
         contentType: step.contentType || params.contentType || 'application/json',
         maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
@@ -123,6 +124,7 @@ function performanceTest(params, assert, bus, flow) {
                     params.cookies = cookie;
                 }
                 var result = response ? JSON.parse(response.body) : {};
+                params.context[step.name] = result;
                 step.result(result, assert, response);
             }
             state = state && assert._ok && result;
