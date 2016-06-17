@@ -1,3 +1,13 @@
+<a name="5.3.97"></a>
+## [5.3.97](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.96...v5.3.97) (2016-06-17)
+
+
+### Features
+
+* support context in performance tests ([179377f](https://git.softwaregroup-bg.com/ut5/ut-run/commit/179377f))
+
+
+
 <a name="5.3.96"></a>
 ## [5.3.96](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.95...v5.3.96) (2016-06-15)
 
