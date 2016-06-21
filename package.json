@@ -15,7 +15,6 @@
     "ut-bus": "~5.3.33"
   },
   "devDependencies": {
-    "babel-register": "6.9.0",
     "blue-tape": "0.2.0",
     "ut-tools": "^5.3.13"
   },

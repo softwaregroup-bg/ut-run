@@ -94,12 +94,6 @@ module.exports = {
         if (process.type === 'browser') {
             serverRequire('ut-front/electron')({main: parent.filename});
         } else {
-            if (!process.browser) {
-                serverRequire('babel-register')({
-                    extensions: ['.jsx'],
-                    ignore: false
-                });
-            }
             var config = params && params.config;
             if (!config) {
                 config = {params: {}};
