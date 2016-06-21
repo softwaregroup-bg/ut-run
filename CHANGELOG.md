@@ -1,3 +1,14 @@
+<a name="5.3.98"></a>
+## [5.3.98](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.97...v5.3.98) (2016-06-21)
+
+
+### Bug Fixes
+
+* remove babel dependency ([44f4156](https://git.softwaregroup-bg.com/ut5/ut-run/commit/44f4156))
+* remove babel dependency ([0d748a1](https://git.softwaregroup-bg.com/ut5/ut-run/commit/0d748a1))
+
+
+
 <a name="5.3.97"></a>
 ## [5.3.97](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.96...v5.3.97) (2016-06-17)
 
