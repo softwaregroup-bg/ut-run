@@ -86,7 +86,7 @@ function sequence(options, test, bus, flow, params) {
 function performanceTest(params, assert, bus, flow) {
     var step = flow.shift();
     var start = Date.now();
-    if (!params.context) params.context = {};
+    params.context = params.context || {};
 
     var passed = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'p', 'Passed tests');
@@ -106,7 +106,8 @@ function performanceTest(params, assert, bus, flow) {
     var state = true;
     var httpSettings = {
         url: step.url || params.url,
-        body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params}, params.body || {jsonrpc: '2.0', 'id': 1}),
+        body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params},
+            params.body || {jsonrpc: '2.0', 'id': 1}),
         method: step.httpMethod || params.httpMethod || 'POST',
         contentType: step.contentType || params.contentType || 'application/json',
         maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
@@ -177,14 +178,14 @@ module.exports = function(params) {
     var server = {
         main: params.server,
         config: params.serverConfig,
-        app: params.serverApp || '../server',
+        app: params.serverApp || '../../server',
         env: params.serverEnv || 'test',
         method: params.serverMethod || 'debug'
     };
     client = params.client && {
         main: params.client,
         config: params.clientConfig,
-        app: params.clientApp || '../desktop',
+        app: params.clientApp || '../../desktop',
         env: params.clientEnv || 'test',
         method: params.clientMethod || 'debug'
     };
