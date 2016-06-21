@@ -1,8 +1,3 @@
-require('babel-register')({
-    extensions: ['.jsx'],
-    ignore: false
-});
-
 var tape = require('blue-tape');
 var run = require('./index').runParams;
 var when = require('when');
