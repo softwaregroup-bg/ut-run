@@ -1,3 +1,13 @@
+<a name="5.3.102"></a>
+## [5.3.102](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.101...v5.3.102) (2016-06-24)
+
+
+### Features
+
+* add support for https ([9e4dc90](https://git.softwaregroup-bg.com/ut5/ut-run/commit/9e4dc90))
+
+
+
 <a name="5.3.101"></a>
 ## [5.3.101](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.100...v5.3.101) (2016-06-21)
 
