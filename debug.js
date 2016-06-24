@@ -70,6 +70,7 @@ module.exports = {
                     level: 'trace',
                     stream: require('ut-log/socketStream'),
                     streamConfig: {
+                        protocol: process.browser && global.location.protocol,
                         host: mergedConfig.console.host,
                         port: mergedConfig.console.port,
                         objectMode: true
