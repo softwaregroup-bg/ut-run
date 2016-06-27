@@ -77,6 +77,10 @@ function sequence(options, test, bus, flow, params) {
                                 step: index
                             });
                         });
+                }).finally(() => {
+                    if (flow.length === index + 1) {
+                        bus.performance.stop();
+                    }
                 });
             });
         });
