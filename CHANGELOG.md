@@ -1,3 +1,13 @@
+<a name="5.3.103"></a>
+## [5.3.103](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.102...v5.3.103) (2016-06-29)
+
+
+### Bug Fixes
+
+* stop performance port after integration tests ended ([b8baa04](https://git.softwaregroup-bg.com/ut5/ut-run/commit/b8baa04))
+
+
+
 <a name="5.3.102"></a>
 ## [5.3.102](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.101...v5.3.102) (2016-06-24)
 
