@@ -116,8 +116,10 @@ function performanceTest(params, assert, bus, flow) {
         contentType: step.contentType || params.contentType || 'application/json',
         maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
         concurrency: step.concurrency || params.concurrency || 1, // threads in parallel
+        timeout: step.timeout || params.timeout || 30000,
         cookies: step.cookies || params.cookies || [],
-        statusCallback: function(latency, response) {
+        statusCallback: function(latency, response, error) {
+            if (error) throw new Error(error);
             if (response) {
                 var cookie = step.storeCookies && response.headers && response.headers['set-cookie'] && (response.headers['set-cookie'][0].split(';'))[0];
                 if (cookie) {
