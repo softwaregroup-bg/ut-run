@@ -1,3 +1,13 @@
+<a name="5.3.104"></a>
+## [5.3.104](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.103...v5.3.104) (2016-07-07)
+
+
+### Features
+
+* set maximum timeout of request and throw on request errors ([d0f4d01](https://git.softwaregroup-bg.com/ut5/ut-run/commit/d0f4d01))
+
+
+
 <a name="5.3.103"></a>
 ## [5.3.103](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.102...v5.3.103) (2016-06-29)
 
