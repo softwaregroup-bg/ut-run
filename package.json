@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "5.3.104",
+  "version": "5.4.0",
   "dependencies": {
     "loadtest": "1.4.3",
     "lodash.assign": "4.0.9",
@@ -12,11 +12,11 @@
     "when": "3.7.7"
   },
   "peerDependencies": {
-    "ut-bus": "~5.3.33"
+    "ut-bus": "~5.4.2"
   },
   "devDependencies": {
     "blue-tape": "0.2.0",
-    "ut-tools": "^5.3.13"
+    "ut-tools": "^5.4.1"
   },
   "publishConfig": {
     "registry": "https://nexus.softwaregroup-bg.com/repository/npm-internal"
