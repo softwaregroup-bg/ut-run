@@ -1,3 +1,13 @@
+<a name="5.4.2"></a>
+## [5.4.2](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.1...v5.4.2) (2016-07-11)
+
+
+### Bug Fixes
+
+* upgrade ut-log ([364b409](https://git.softwaregroup-bg.com/ut5/ut-run/commit/364b409))
+
+
+
 <a name="5.4.1"></a>
 ## [5.4.1](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.3.104...v5.4.1) (2016-07-11)
 
