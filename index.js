@@ -34,6 +34,7 @@ module.exports = {
             Object.keys(implementation.modules).forEach(function(moduleName) {
                 var module = implementation.modules[moduleName];
                 (module.init instanceof Function) && (module.init(this.bus));
+                module.validations = [];
                 this.bus.registerLocal(module, moduleName);
             }.bind(this));
         }
@@ -43,7 +44,10 @@ module.exports = {
                 var module = implementation.modules[validationName];
                 var validation = implementation.validations[validationName];
                 module && Object.keys(validation).forEach(function(value) {
-                    merge(module[value], validation[value]);
+                    module.validations.push({
+                        method: validationName + '.' + value,
+                        schema: validation[value]
+                    });
                 });
             });
         }
