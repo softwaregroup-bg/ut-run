@@ -1,3 +1,13 @@
+<a name="5.4.3"></a>
+## [5.4.3](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.2...v5.4.3) (2016-07-14)
+
+
+### Features
+
+* swagger validation integration ([6983e09](https://git.softwaregroup-bg.com/ut5/ut-run/commit/6983e09))
+
+
+
 <a name="5.4.2"></a>
 ## [5.4.2](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.1...v5.4.2) (2016-07-11)
 
