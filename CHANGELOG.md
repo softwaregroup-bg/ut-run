@@ -1,3 +1,13 @@
+<a name="5.4.4"></a>
+## [5.4.4](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.3...v5.4.4) (2016-07-18)
+
+
+### Bug Fixes
+
+* fail when expecting error ([1d5a929](https://git.softwaregroup-bg.com/ut5/ut-run/commit/1d5a929))
+
+
+
 <a name="5.4.3"></a>
 ## [5.4.3](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.2...v5.4.3) (2016-07-14)
 
