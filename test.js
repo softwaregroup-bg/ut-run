@@ -56,7 +56,11 @@ function sequence(options, test, bus, flow, params) {
                         .then(function(result) {
                             if (typeof step.result === 'function') {
                                 step.result.call(context, result, methodAssert);
-                            };
+                            } else if (typeof step.error === 'function') {
+                                methodAssert.fail('Result is expected to be an error');
+                            } else {
+                                methodAssert.fail('Test is missing result and error handlers');
+                            }
                             return result;
                         })
                         .catch(function(error) {
