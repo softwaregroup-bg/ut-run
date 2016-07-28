@@ -81,10 +81,6 @@ function sequence(options, test, bus, flow, params) {
                                 step: index
                             });
                         });
-                }).finally(() => {
-                    if (flow.length === index + 1) {
-                        bus.performance.stop();
-                    }
                 });
             });
         });
@@ -170,15 +166,26 @@ function performanceTest(params, assert, bus, flow) {
     });
 }
 
-module.exports = function(params) {
+module.exports = function(params, cache) {
     var client;
+    if (cache) {
+        if (!cache.first) {
+            cache.first = true;
+        } else {
+            tape('Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params)));
+            return;
+        }
+    }
+
+    var clientRun;
+
     if (params.type && params.type === 'performance') {
         client = {
             main: params.client,
             config: params.clientConfig,
             method: 'debug'
         };
-        var clientRun = run(client);
+        clientRun = run(client);
         tape('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params));
         }));
@@ -203,18 +210,20 @@ module.exports = function(params) {
     var serverRun;
     tape('server start', (assert) => {
         serverRun = run(server, module.parent);
-        return serverRun.then((server) =>
-            client ? server : params.steps(assert, server.bus, sequence.bind(null, params))
-        );
+        return serverRun.then((server) => {
+            !client && cache && (cache.bus = server.bus);
+            return client ? server : params.steps(assert, server.bus, sequence.bind(null, params));
+        });
     });
 
     client && tape('client start', (assert) => {
         return serverRun
             .then(() => {
                 clientRun = client && run(client, module.parent);
-                return clientRun.then((client) =>
-                    params.steps(assert, client.bus, sequence.bind(null, params))
-                );
+                return clientRun.then((client) => {
+                    cache && (cache.bus = client.bus);
+                    return params.steps(assert, client.bus, sequence.bind(null, params));
+                });
             })
             .catch(() =>
                 Promise.reject('Server did not start')
@@ -236,9 +245,13 @@ module.exports = function(params) {
         return new Promise((resolve) => resolve(x));
     }
 
-    clientRun && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
-    tape('server stop', (assert) => serverRun
-        .then(stop.bind(null, assert))
-        .catch(() => Promise.reject('Server did not start'))
-    );
+    var stopAll = function() {
+        client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
+        tape('server stop', (assert) => serverRun
+            .then(stop.bind(null, assert))
+            .catch(() => Promise.reject('Server did not start'))
+        );
+    };
+
+    return cache ? stopAll : stopAll();
 };
