@@ -1,3 +1,13 @@
+<a name="5.5.0"></a>
+# [5.5.0](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.4...v5.5.0) (2016-07-28)
+
+
+### Features
+
+* allow reuse of client / server between tests ([1d9d9ba](https://git.softwaregroup-bg.com/ut5/ut-run/commit/1d9d9ba))
+
+
+
 <a name="5.4.4"></a>
 ## [5.4.4](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.3...v5.4.4) (2016-07-18)
 
