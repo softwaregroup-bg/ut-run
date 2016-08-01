@@ -66,11 +66,11 @@ function sequence(options, test, bus, flow, params) {
                         .catch(function(error) {
                             duration && duration(Date.now() - start);
                             if (typeof step.error === 'function') {
-                                step.error.call(context, error, methodAssert);
+                                step.error.call(context, error.stack, methodAssert);
                                 passed && passed(0);
                             } else {
                                 passed && passed(0);
-                                throw error;
+                                throw error.stack;
                             }
                         })
                         .finally(function() {
