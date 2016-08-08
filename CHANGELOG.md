@@ -1,3 +1,18 @@
+<a name="6.0.0"></a>
+# [6.0.0](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.5.0...v6.0.0) (2016-08-08)
+
+
+### Bug Fixes
+
+* improve env var compatibility ([5711808](https://git.softwaregroup-bg.com/ut5/ut-run/commit/5711808))
+
+
+### BREAKING CHANGES
+
+* rc configuration files need to be renamed too by replacing "-" with "_"
+
+
+
 <a name="5.5.0"></a>
 # [5.5.0](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.4.4...v5.5.0) (2016-07-28)
 
