@@ -16,10 +16,7 @@
   },
   "devDependencies": {
     "blue-tape": "0.2.0",
-    "ut-tools": "^5.4.1"
-  },
-  "publishConfig": {
-    "registry": "https://nexus.softwaregroup-bg.com/repository/npm-internal"
+    "ut-tools": "^5.6.0"
   },
   "scripts": {
     "lint": "ut-lint .",
@@ -43,6 +40,7 @@
   "description": "UT run module",
   "repository": {
     "type": "git",
-    "url": "git@git.softwaregroup-bg.com:ut5/ut-run.git"
-  }
+    "url": "git@github.com:softwaregroup-bg/ut-run.git"
+  },
+  "license": "Apache-2.0"
 }
