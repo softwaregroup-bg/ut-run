@@ -1,3 +1,13 @@
+<a name="6.0.1"></a>
+## [6.0.1](https://github.com/softwaregroup-bg/ut-run/compare/v6.0.0...v6.0.1) (2016-08-12)
+
+
+### Bug Fixes
+
+* publish to npm ([b63687f](https://github.com/softwaregroup-bg/ut-run/commit/b63687f))
+
+
+
 <a name="6.0.0"></a>
 # [6.0.0](https://git.softwaregroup-bg.com/ut5/ut-run/compare/v5.5.0...v6.0.0) (2016-08-08)
 
