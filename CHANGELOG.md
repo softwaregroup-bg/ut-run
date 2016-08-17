@@ -1,3 +1,13 @@
+<a name="6.0.2"></a>
+## [6.0.2](https://github.com/softwaregroup-bg/ut-run/compare/v6.0.1...v6.0.2) (2016-08-17)
+
+
+### Bug Fixes
+
+* replace minus with underscore in config name ([aea9704](https://github.com/softwaregroup-bg/ut-run/commit/aea9704))
+
+
+
 <a name="6.0.1"></a>
 ## [6.0.1](https://github.com/softwaregroup-bg/ut-run/compare/v6.0.0...v6.0.1) (2016-08-12)
 
