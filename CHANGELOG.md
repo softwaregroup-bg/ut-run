@@ -1,3 +1,13 @@
+<a name="6.1.0"></a>
+# [6.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.0.2...v6.1.0) (2016-08-26)
+
+
+### Features
+
+* add parent module as parameter to run ([aca0b31](https://github.com/softwaregroup-bg/ut-run/commit/aca0b31))
+
+
+
 <a name="6.0.2"></a>
 ## [6.0.2](https://github.com/softwaregroup-bg/ut-run/compare/v6.0.1...v6.0.2) (2016-08-17)
 
