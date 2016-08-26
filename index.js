@@ -127,8 +127,8 @@ module.exports = {
             return run[(params && params.method) || config.params.method](main, config);
         }
     },
-    run: function(params) {
-        this.runParams(params).catch((err) => {
+    run: function(params, parent) {
+        this.runParams(params, parent).catch((err) => {
             console.error(err);
             process.abort();
         });
