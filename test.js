@@ -100,6 +100,8 @@ function performanceTest(params, assert, bus, flow) {
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'TotalRequests', 'Total requests');
     var totalErrors = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'TotalErrors', 'Total errors');
+    var errorMessage = params.name && bus.performance &&
+        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorMessage', 'Error message');
     var rps = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'RpS', 'Requests per seconds');
     var meanLatencyMs = params.name && bus.performance &&
@@ -107,62 +109,73 @@ function performanceTest(params, assert, bus, flow) {
     var maxLatencyMs = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'MaxLatencyMs', 'Max latency');
 
-    var state = true;
-    var httpSettings = {
-        url: step.url || params.url,
-        body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params},
-            params.body || {jsonrpc: '2.0', 'id': 1}),
-        method: step.httpMethod || params.httpMethod || 'POST',
-        contentType: step.contentType || params.contentType || 'application/json',
-        maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
-        concurrency: step.concurrency || params.concurrency || 1, // threads in parallel
-        timeout: step.timeout || params.timeout || 30000,
-        cookies: step.cookies || params.cookies || [],
-        statusCallback: function(latency, response, error) {
-            if (error) throw new Error(error);
-            if (response) {
-                var cookie = step.storeCookies && response.headers && response.headers['set-cookie'] && (response.headers['set-cookie'][0].split(';'))[0];
-                if (cookie) {
-                    params.cookies = cookie;
+    var errors = [];
+    assert.test(step.name || ('testing method ' + step.methodName), (methodAssert) => {
+        var state = true;
+        var httpSettings = {
+            url: step.url || params.url,
+            body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params},
+                params.body || {jsonrpc: '2.0', 'id': 1}),
+            method: step.httpMethod || params.httpMethod || 'POST',
+            contentType: step.contentType || params.contentType || 'application/json',
+            maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
+            concurrency: step.concurrency || params.concurrency || 1, // threads in parallel
+            timeout: step.timeout || params.timeout || 30000,
+            cookies: step.cookies || params.cookies || [],
+            statusCallback: function(latency, response, error) {
+                if (error) {
+                    state = false;
                 }
-                var result = response ? JSON.parse(response.body) : {};
-                params.context[step.name] = result;
-                step.result(result, assert, response);
+                if (response) {
+                    var cookie = step.storeCookies && response.headers && response.headers['set-cookie'] && (response.headers['set-cookie'][0].split(';'))[0];
+                    if (cookie) {
+                        params.cookies = cookie;
+                    }
+                    var result = response ? JSON.parse(response.body) : {};
+                    if (result.error) {
+                        state = false;
+                        errors.push(result.error.message);
+                        methodAssert.true(state, result.error.message);
+                    }
+                    params.context[step.name] = result;
+                    step.result(result, assert, response);
+                }
+                state = state && assert._ok && result;
             }
-            state = state && assert._ok && result;
-        }
-    };
-    return new Promise(function(resolve, reject) {
-        loadtest.loadTest(httpSettings, function(error, result) {
-            error ? reject(error) : resolve(result);
-        });
-    }).then(function(result) {
-        duration && duration(Date.now() - start);
-        passed && passed(state ? 1 : 0);
-        totalRequests && totalRequests(result.totalRequests);
-        totalErrors && totalErrors(result.totalErrors);
-        rps && rps(result.rps);
-        meanLatencyMs && meanLatencyMs(result.meanLatencyMs);
-        maxLatencyMs && maxLatencyMs(result.maxLatencyMs);
-
-        var metrics = {stepName: step.name, method: step.method};
-
-        if (result.errorCodes) {
-            var keys = Object.keys(result.errorCodes);
-            keys.map(function(key) {
-                var errorCode = params.name && bus.performance &&
-                    bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorCode' + key, 'Error code ' + key);
-                errorCode(result.errorCodes[key]);
+        };
+        return new Promise(function(resolve, reject) {
+            loadtest.loadTest(httpSettings, function(error, result) {
+                error ? reject(error) : resolve(result);
             });
-        }
-        bus.performance && bus.performance.write(metrics);
-        if (flow.length) {
-            performanceTest(params, assert, bus, flow);
-        } else {
-            setTimeout(() => {
-                bus && bus.performance && bus.performance.stop();
-            }, 5000);
-        }
+        }).then(function(result) {
+            duration && duration(Date.now() - start);
+            passed && passed(state ? 1 : 0);
+            totalRequests && totalRequests(result.totalRequests);
+            totalErrors && totalErrors(result.totalErrors);
+            errorMessage && errorMessage(errors);
+            rps && rps(result.rps);
+            meanLatencyMs && meanLatencyMs(result.meanLatencyMs);
+            maxLatencyMs && maxLatencyMs(result.maxLatencyMs);
+
+            var metrics = {stepName: step.name, method: step.method};
+
+            if (result.errorCodes) {
+                var keys = Object.keys(result.errorCodes);
+                keys.map(function(key) {
+                    var errorCode = params.name && bus.performance &&
+                        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorCode' + key, 'Error code ' + key);
+                    errorCode(result.errorCodes[key]);
+                });
+            }
+            bus.performance && console.log('write to grafana') && bus.performance.write(metrics);
+            if (flow.length) {
+                performanceTest(params, assert, bus, flow);
+            } else {
+                setTimeout(() => {
+                    bus && bus.performance && bus.performance.stop();
+                }, 5000);
+            }
+        });
     });
 }
 
