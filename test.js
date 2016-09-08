@@ -167,7 +167,7 @@ function performanceTest(params, assert, bus, flow) {
                     errorCode(result.errorCodes[key]);
                 });
             }
-            bus.performance && console.log('write to grafana') && bus.performance.write(metrics);
+            bus.performance && bus.performance.write(metrics);
             if (flow.length) {
                 performanceTest(params, assert, bus, flow);
             } else {
