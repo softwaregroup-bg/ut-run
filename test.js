@@ -1,3 +1,4 @@
+// var log = require('why-is-node-running');
 var tape = require('blue-tape');
 var run = require('./index').runParams;
 var when = require('when');
@@ -253,7 +254,10 @@ module.exports = function(params, cache) {
             resolve(x.bus.destroy());
         }));
         assert.test('stopping master bus', (assert) => new Promise((resolve) => {
-            resolve(x.master.destroy());
+            resolve(x.master.destroy().then(function(res) {
+                // log();
+                return res;
+            }));
         }));
         return new Promise((resolve) => resolve(x));
     }
