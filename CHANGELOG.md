@@ -1,3 +1,13 @@
+<a name="6.2.0"></a>
+# [6.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.1.2...v6.2.0) (2016-09-19)
+
+
+### Features
+
+* make utRun.run return promise instead of undefined ([511154c](https://github.com/softwaregroup-bg/ut-run/commit/511154c))
+
+
+
 <a name="6.1.2"></a>
 ## [6.1.2](https://github.com/softwaregroup-bg/ut-run/compare/v6.1.1...v6.1.2) (2016-09-16)
 
