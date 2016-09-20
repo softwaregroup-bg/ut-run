@@ -1,3 +1,13 @@
+<a name="6.3.0"></a>
+# [6.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.2.2...v6.3.0) (2016-09-20)
+
+
+### Features
+
+* bypass bus.importMethod if no method is specified in test spec ([6b001fb](https://github.com/softwaregroup-bg/ut-run/commit/6b001fb))
+
+
+
 <a name="6.2.2"></a>
 ## [6.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v6.2.1...v6.2.2) (2016-09-19)
 
