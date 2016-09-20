@@ -1,3 +1,8 @@
+<a name="6.3.1"></a>
+## [6.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v6.3.0...v6.3.1) (2016-09-20)
+
+
+
 <a name="6.3.0"></a>
 # [6.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.2.2...v6.3.0) (2016-09-20)
 
