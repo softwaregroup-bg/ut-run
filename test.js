@@ -13,7 +13,7 @@ function sequence(options, test, bus, flow, params) {
             return {
                 name: f.name || '',
                 methodName: f.method,
-                method: bus.importMethod(f.method),
+                method: f.method ? bus.importMethod(f.method) : (params) => (params),
                 params: (typeof f.params === 'function') ? when.lift(f.params) : () => f.params,
                 result: f.result,
                 error: f.error
