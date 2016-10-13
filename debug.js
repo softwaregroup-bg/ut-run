@@ -127,7 +127,16 @@ module.exports = {
                     master: masterBus,
                     bus: workerBus,
                     log: log,
-                    config: mergedConfig
+                    config: mergedConfig,
+                    stop: () => {
+                        var promise = Promise.resolve();
+                        ports
+                            .map((port) => port.stop.bind(port))
+                            .concat(workerBus.destroy.bind(workerBus))
+                            .concat(masterBus.destroy.bind(masterBus))
+                            .forEach((method) => (promise = promise.then(() => method())));
+                        return promise;
+                    }
                 };
             })
             .catch((err) => {
