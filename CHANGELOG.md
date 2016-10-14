@@ -1,3 +1,13 @@
+<a name="6.4.0"></a>
+# [6.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.3.1...v6.4.0) (2016-10-14)
+
+
+### Features
+
+* add stop method on implementation level ([#5](https://github.com/softwaregroup-bg/ut-run/issues/5)) ([8e78809](https://github.com/softwaregroup-bg/ut-run/commit/8e78809))
+
+
+
 <a name="6.3.1"></a>
 ## [6.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v6.3.0...v6.3.1) (2016-09-20)
 
