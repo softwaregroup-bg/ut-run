@@ -263,6 +263,13 @@ module.exports = function(params, cache) {
     }
 
     var stopAll = function() {
+        params.peerImplementations && tape('Stopping peer implementations', (assert) => {
+            var x = Promise.resolve();
+            params.peerImplementations.forEach((promise) => {
+                x = x.then(() => (promise.then((impl) => (impl.stop()))));
+            });
+            return x;
+        });
         client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
         tape('server stop', (assert) => serverRun
             .then(stop.bind(null, assert))
