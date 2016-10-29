@@ -186,7 +186,7 @@ module.exports = function(params, cache) {
         if (!cache.first) {
             cache.first = true;
         } else {
-            tape('Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params)));
+            tape('Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
             return;
         }
     }
@@ -201,7 +201,7 @@ module.exports = function(params, cache) {
         };
         clientRun = run(client);
         tape('Performance test start', (assert) => clientRun.then((client) => {
-            params.steps(assert, client.bus, performanceTest.bind(null, params));
+            params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
         }));
         return;
     }
@@ -225,8 +225,8 @@ module.exports = function(params, cache) {
     tape('server start', (assert) => {
         serverRun = run(server, module.parent);
         return serverRun.then((server) => {
-            !client && cache && (cache.bus = server.bus);
-            return client ? server : params.steps(assert, server.bus, sequence.bind(null, params));
+            !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
+            return client ? server : params.steps(assert, server.bus, sequence.bind(null, params), server.ports);
         });
     });
 
@@ -235,8 +235,8 @@ module.exports = function(params, cache) {
             .then(() => {
                 clientRun = client && run(client, module.parent);
                 return clientRun.then((client) => {
-                    cache && (cache.bus = client.bus);
-                    return params.steps(assert, client.bus, sequence.bind(null, params));
+                    cache && (cache.bus = client.bus) && (cache.ports = client.ports);
+                    return params.steps(assert, client.bus, sequence.bind(null, params), client.ports);
                 });
             })
             .catch(() =>
