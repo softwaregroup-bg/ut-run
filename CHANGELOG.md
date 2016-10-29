@@ -1,3 +1,13 @@
+<a name="6.5.0"></a>
+# [6.5.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.4.1...v6.5.0) (2016-10-29)
+
+
+### Features
+
+* expose ports to the steps method ([c1e3134](https://github.com/softwaregroup-bg/ut-run/commit/c1e3134))
+
+
+
 <a name="6.4.1"></a>
 ## [6.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v6.4.0...v6.4.1) (2016-10-24)
 

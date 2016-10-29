@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "6.4.1",
+  "version": "6.5.0",
   "dependencies": {
     "loadtest": "1.4.3",
     "lodash.assign": "4.0.9",
