@@ -3,20 +3,20 @@
   "version": "6.5.0",
   "dependencies": {
     "loadtest": "1.4.3",
-    "lodash.assign": "4.0.9",
-    "lodash.merge": "4.4.0",
-    "lodash.union": "4.4.0",
+    "lodash.assign": "4.2.0",
+    "lodash.merge": "4.6.0",
+    "lodash.union": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
-    "ut-log": "~5.4.1",
+    "ut-log": "~5.4.10",
     "when": "3.7.7"
   },
   "peerDependencies": {
-    "ut-bus": "~5.4.2"
+    "ut-bus": "~5.6.1"
   },
   "devDependencies": {
     "blue-tape": "0.2.0",
-    "ut-tools": "^5.6.0"
+    "ut-tools": "^5.10.7"
   },
   "scripts": {
     "lint": "ut-lint .",
