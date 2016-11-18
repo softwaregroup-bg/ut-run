@@ -1,3 +1,18 @@
+<a name="7.0.0"></a>
+# [7.0.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.5.0...v7.0.0) (2016-11-18)
+
+
+### Features
+
+* refactor validations ([83b1485](https://github.com/softwaregroup-bg/ut-run/commit/83b1485))
+
+
+### BREAKING CHANGES
+
+* validations are now route configs
+
+
+
 <a name="6.5.0"></a>
 # [6.5.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.4.1...v6.5.0) (2016-10-29)
 
