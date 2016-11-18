@@ -34,19 +34,19 @@ module.exports = {
             Object.keys(implementation.modules).forEach(function(moduleName) {
                 var module = implementation.modules[moduleName];
                 (module.init instanceof Function) && (module.init(this.bus));
-                module.validations = [];
+                module.routeConfig = [];
                 this.bus.registerLocal(module, moduleName);
             }.bind(this));
         }
 
         if (implementation.validations instanceof Object) {
-            Object.keys(implementation.validations).forEach(function(validationName) {
-                var module = implementation.modules[validationName];
-                var validation = implementation.validations[validationName];
-                module && Object.keys(validation).forEach(function(value) {
-                    module.validations.push({
-                        method: validationName + '.' + value,
-                        schema: validation[value]
+            Object.keys(implementation.validations).forEach(function(routeConfigName) {
+                var module = implementation.modules[routeConfigName];
+                var routeConfig = implementation.validations[routeConfigName];
+                module && Object.keys(routeConfig).forEach(function(value) {
+                    module.routeConfig.push({
+                        method: routeConfigName + '.' + value,
+                        config: routeConfig[value]
                     });
                 });
             });
