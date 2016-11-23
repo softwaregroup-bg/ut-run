@@ -1,3 +1,13 @@
+<a name="7.0.3"></a>
+## [7.0.3](https://github.com/softwaregroup-bg/ut-run/compare/v7.0.2...v7.0.3) (2016-11-23)
+
+
+### Bug Fixes
+
+* UIS-403 modify validation initialization ([9724001](https://github.com/softwaregroup-bg/ut-run/commit/9724001))
+
+
+
 <a name="7.0.2"></a>
 ## [7.0.2](https://github.com/softwaregroup-bg/ut-run/compare/v7.0.1...v7.0.2) (2016-11-23)
 
