@@ -8,15 +8,15 @@
     "lodash.union": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
-    "ut-log": "~5.4.10",
+    "ut-log": "~5.5.0",
     "when": "3.7.7"
   },
   "peerDependencies": {
-    "ut-bus": "~5.6.1"
+    "ut-bus": "~5.6.2"
   },
   "devDependencies": {
     "blue-tape": "0.2.0",
-    "ut-tools": "^5.10.7"
+    "ut-tools": "^5.10.8"
   },
   "scripts": {
     "lint": "ut-lint .",
