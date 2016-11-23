@@ -1,3 +1,13 @@
+<a name="7.0.1"></a>
+## [7.0.1](https://github.com/softwaregroup-bg/ut-run/compare/v7.0.0...v7.0.1) (2016-11-23)
+
+
+### Bug Fixes
+
+* deps bump ([3c3603a](https://github.com/softwaregroup-bg/ut-run/commit/3c3603a))
+
+
+
 <a name="7.0.0"></a>
 # [7.0.0](https://github.com/softwaregroup-bg/ut-run/compare/v6.5.0...v7.0.0) (2016-11-18)
 
