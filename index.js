@@ -40,12 +40,14 @@ module.exports = {
         }
 
         if (implementation.validations instanceof Object) {
-            Object.keys(implementation.validations).forEach(function(routeConfigName) {
-                var module = implementation.modules[routeConfigName];
-                var routeConfig = implementation.validations[routeConfigName];
+            Object.keys(implementation.validations).forEach(function(validationKey) {
+                var routeConfigNames = validationKey.split('.');
+                var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
+                var module = implementation.modules[moduleName];
+                var routeConfig = implementation.validations[validationKey];
                 module && Object.keys(routeConfig).forEach(function(value) {
                     module.routeConfig.push({
-                        method: routeConfigName + '.' + value,
+                        method: routeConfigNames.join('.') + '.' + value,
                         config: routeConfig[value]
                     });
                 });
