@@ -26,6 +26,15 @@ module.exports = {
             implementation = require(implementation);
         }
 
+        if (Array.isArray(implementation)) {
+            implementation = implementation.reduce((prev, impl) => {
+                impl.ports && (prev.ports = prev.ports.concat(impl.ports));
+                impl.modules && Object.assign(prev.modules, impl.modules);
+                impl.validations && Object.assign(prev.validations, impl.validations);
+                return prev;
+            }, {ports: [], modules: {}, validations: {}});
+        }
+
         var ports = implementation.ports;
         config = config || {};
         this.bus.config = config;
