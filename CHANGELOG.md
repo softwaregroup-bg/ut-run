@@ -1,3 +1,13 @@
+<a name="7.1.0"></a>
+# [7.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.0.3...v7.1.0) (2016-11-27)
+
+
+### Features
+
+* allow passing array as implementation ([2c359da](https://github.com/softwaregroup-bg/ut-run/commit/2c359da))
+
+
+
 <a name="7.0.3"></a>
 ## [7.0.3](https://github.com/softwaregroup-bg/ut-run/compare/v7.0.2...v7.0.3) (2016-11-23)
 
