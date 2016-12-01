@@ -1,3 +1,13 @@
+<a name="7.2.0"></a>
+# [7.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.1.0...v7.2.0) (2016-12-01)
+
+
+### Features
+
+* improve configuration handling ([e0c0ea6](https://github.com/softwaregroup-bg/ut-run/commit/e0c0ea6))
+
+
+
 <a name="7.1.0"></a>
 # [7.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.0.3...v7.1.0) (2016-11-27)
 
