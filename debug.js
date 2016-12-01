@@ -1,7 +1,6 @@
 /* eslint no-process-env:0 */
 
-var assign = require('lodash.assign');
-var union = require('lodash.union');
+var merge = require('lodash.merge');
 var when = require('when');
 var serverRequire = require;// hide some of the requires from lasso
 var path = require('path');
@@ -21,7 +20,7 @@ function getDataDirectory() {
 
 module.exports = {
     debug: function(impl, config) {
-        var mergedConfig = assign({
+        var mergedConfig = merge({
             masterBus: {
                 logLevel: 'debug',
                 socket: 'bus'
@@ -30,11 +29,14 @@ module.exports = {
                 logLevel: 'debug'
             },
             console: {
-                host: '0.0.0.0',
+                host: '127.0.0.1',
                 port: 30001
             },
             log: {
                 streams: []
+            },
+            stdOut: {
+                mode: 'dev'
             }
         }, config);
 
@@ -58,15 +60,16 @@ module.exports = {
             log = null;
         } else {
             var UTLog = require('ut-log');
-            log = new UTLog({
-                type: 'bunyan',
-                name: 'bunyan_test',
-                workDir: mergedConfig.workDir,
-                streams: union([{
+            var streams = [];
+            if (mergedConfig.stdOut) {
+                streams.push({
                     level: 'trace',
                     stream: 'process.stdout',
                     streamConfig: mergedConfig.stdOut
-                }, {
+                });
+            }
+            if (mergedConfig.console) {
+                streams.push({
                     level: 'trace',
                     stream: require('ut-log/socketStream'),
                     streamConfig: {
@@ -76,20 +79,26 @@ module.exports = {
                         objectMode: true
                     },
                     type: 'raw'
-                }], mergedConfig.log.streams)
+                });
+            }
+            log = new UTLog({
+                type: 'bunyan',
+                name: 'bunyan_test',
+                workDir: mergedConfig.workDir,
+                streams: Array.prototype.concat(streams, mergedConfig.log.streams)
             });
         }
-        if (mergedConfig.console !== false) {
+        if (mergedConfig.console && mergedConfig.console.server) {
             var Console = serverRequire('ut-port-console');
             consolePort = new Console();
-            assign(consolePort.config, mergedConfig.console);
+            merge(consolePort.config, mergedConfig.console);
         }
         if (mergedConfig.performance) {
             var Performance = serverRequire('ut-port-performance')(Port);
             performancePort = new Performance();
-            assign(performancePort.config, mergedConfig.performance);
+            merge(performancePort.config, mergedConfig.performance);
         }
-        var masterBus = assign(new Bus(), {
+        var masterBus = merge(new Bus(), {
             server: true,
             logLevel: mergedConfig.masterBus.logLevel,
             socket: mergedConfig.masterBus.socket,
@@ -97,7 +106,7 @@ module.exports = {
             logFactory: log,
             performance: performancePort
         });
-        var workerBus = assign(new Bus(), {
+        var workerBus = merge(new Bus(), {
             server: false,
             logLevel: mergedConfig.workerBus.logLevel,
             socket: mergedConfig.masterBus.socket,
@@ -105,7 +114,7 @@ module.exports = {
             logFactory: log,
             performance: performancePort
         });
-        var workerRun = assign({}, require('./index'), {
+        var workerRun = merge({}, require('./index'), {
             bus: workerBus,
             logFactory: log
         });

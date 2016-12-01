@@ -3,9 +3,7 @@
   "version": "7.1.0",
   "dependencies": {
     "loadtest": "1.4.3",
-    "lodash.assign": "4.2.0",
     "lodash.merge": "4.6.0",
-    "lodash.union": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
     "ut-log": "~5.5.0",
