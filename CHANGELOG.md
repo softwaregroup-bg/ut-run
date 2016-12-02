@@ -1,3 +1,14 @@
+<a name="7.2.1"></a>
+## [7.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.0...v7.2.1) (2016-12-02)
+
+
+### Bug Fixes
+
+* do not swallow exception ([aac9354](https://github.com/softwaregroup-bg/ut-run/commit/aac9354))
+* revert to assign ([97cc41b](https://github.com/softwaregroup-bg/ut-run/commit/97cc41b))
+
+
+
 <a name="7.2.0"></a>
 # [7.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.1.0...v7.2.0) (2016-12-01)
 
