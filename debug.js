@@ -98,7 +98,7 @@ module.exports = {
             performancePort = new Performance();
             merge(performancePort.config, mergedConfig.performance);
         }
-        var masterBus = merge(new Bus(), {
+        var masterBus = Object.assign(new Bus(), {
             server: true,
             logLevel: mergedConfig.masterBus.logLevel,
             socket: mergedConfig.masterBus.socket,
@@ -106,7 +106,7 @@ module.exports = {
             logFactory: log,
             performance: performancePort
         });
-        var workerBus = merge(new Bus(), {
+        var workerBus = Object.assign(new Bus(), {
             server: false,
             logLevel: mergedConfig.workerBus.logLevel,
             socket: mergedConfig.masterBus.socket,
@@ -114,7 +114,7 @@ module.exports = {
             logFactory: log,
             performance: performancePort
         });
-        var workerRun = merge({}, require('./index'), {
+        var workerRun = Object.assign({}, require('./index'), {
             bus: workerBus,
             logFactory: log
         });
