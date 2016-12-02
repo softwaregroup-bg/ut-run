@@ -238,10 +238,7 @@ module.exports = function(params, cache) {
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
                     return params.steps(assert, client.bus, sequence.bind(null, params), client.ports);
                 });
-            })
-            .catch(() =>
-                Promise.reject('Server did not start')
-            );
+            });
     });
 
     function stop(assert, x) {
