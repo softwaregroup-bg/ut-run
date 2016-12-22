@@ -56,7 +56,7 @@ module.exports = {
         var consolePort;
         var performancePort;
 
-        if (config.log === false) {
+        if (config.log === false || config.log === 'false') {
             log = null;
         } else {
             var UTLog = require('ut-log');
