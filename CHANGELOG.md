@@ -1,3 +1,13 @@
+<a name="7.2.2"></a>
+## [7.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.1...v7.2.2) (2016-12-23)
+
+
+### Bug Fixes
+
+* when log config is passed from terminal line it resolves as string with content false ([acafbb7](https://github.com/softwaregroup-bg/ut-run/commit/acafbb7))
+
+
+
 <a name="7.2.1"></a>
 ## [7.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.0...v7.2.1) (2016-12-02)
 
