@@ -176,6 +176,7 @@ function performanceTest(params, assert, bus, flow) {
                     bus && bus.performance && bus.performance.stop();
                 }, 5000);
             }
+            return;
         });
     });
 }
@@ -202,6 +203,7 @@ module.exports = function(params, cache) {
         clientRun = run(client);
         tape('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
+            return;
         }));
         return;
     }
@@ -226,7 +228,8 @@ module.exports = function(params, cache) {
         serverRun = run(server, module.parent);
         return serverRun.then((server) => {
             !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
-            return client ? server : params.steps(assert, server.bus, sequence.bind(null, params), server.ports);
+            var result = client ? server : params.steps(assert, server.bus, sequence.bind(null, params), server.ports);
+            return result;
         });
     });
 
