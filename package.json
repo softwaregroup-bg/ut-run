@@ -2,19 +2,19 @@
   "name": "ut-run",
   "version": "7.2.2",
   "dependencies": {
-    "loadtest": "1.4.3",
+    "loadtest": "2.2.1",
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
-    "ut-log": "~5.5.0",
+    "ut-log": "~5.8.0",
     "when": "3.7.7"
   },
   "peerDependencies": {
     "ut-bus": "~5.6.2"
   },
   "devDependencies": {
-    "blue-tape": "0.2.0",
-    "ut-tools": "^5.10.8"
+    "blue-tape": "1.0.0",
+    "ut-tools": "^5.11.1"
   },
   "scripts": {
     "lint": "ut-lint .",
