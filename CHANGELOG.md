@@ -1,3 +1,14 @@
+<a name="7.2.3"></a>
+## [7.2.3](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.2...v7.2.3) (2016-12-23)
+
+
+### Bug Fixes
+
+* fix lint errors ([502320b](https://github.com/softwaregroup-bg/ut-run/commit/502320b))
+* update dependencies ([d0caec3](https://github.com/softwaregroup-bg/ut-run/commit/d0caec3))
+
+
+
 <a name="7.2.2"></a>
 ## [7.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.1...v7.2.2) (2016-12-23)
 
