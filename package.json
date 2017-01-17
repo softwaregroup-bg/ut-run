@@ -10,7 +10,7 @@
     "when": "3.7.7"
   },
   "peerDependencies": {
-    "ut-bus": "~5.6.2"
+    "ut-bus": "~5.8.1"
   },
   "devDependencies": {
     "blue-tape": "1.0.0",
