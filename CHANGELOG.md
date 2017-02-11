@@ -1,3 +1,13 @@
+<a name="7.3.0"></a>
+# [7.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.4...v7.3.0) (2017-02-11)
+
+
+### Features
+
+* wait port.isReady to be resolved if exists ([9c7cdfa](https://github.com/softwaregroup-bg/ut-run/commit/9c7cdfa))
+
+
+
 <a name="7.2.4"></a>
 ## [7.2.4](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.3...v7.2.4) (2017-01-17)
 
