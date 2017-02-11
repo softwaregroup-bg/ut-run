@@ -228,7 +228,8 @@ module.exports = function(params, cache) {
         serverRun = run(server, module.parent);
         return serverRun.then((server) => {
             !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
-            var result = client ? server : params.steps(assert, server.bus, sequence.bind(null, params), server.ports);
+            var result = client ? server : Promise.all(server.ports.map(port => port.isReady)).then(() =>
+                params.steps(assert, server.bus, sequence.bind(null, params), server.ports));
             return result;
         });
     });
@@ -239,7 +240,8 @@ module.exports = function(params, cache) {
                 clientRun = client && run(client, module.parent);
                 return clientRun.then((client) => {
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
-                    return params.steps(assert, client.bus, sequence.bind(null, params), client.ports);
+                    return Promise.all(client.ports.map(port => port.isReady)).then(() =>
+                        params.steps(assert, client.bus, sequence.bind(null, params), client.ports));
                 });
             });
     });
