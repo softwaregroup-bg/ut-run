@@ -29,18 +29,17 @@ function sequence(options, test, bus, flow, params) {
         var duration = options.type && bus.performance &&
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
-
         var promise = Promise.resolve();
         steps.forEach((step, index) => {
             var start = Date.now();
             promise = promise.then((resolve, reject) => {
-                var testName = step.name || ('testing method ' + step.methodName)
+                var testName = step.name || ('testing method ' + step.methodName);
                 test.comment(testName);
                 return when(step.params(context, {
                     sequence: function() {
-                        printSubtest(step.name, true)
+                        printSubtest(step.name, true);
                         return runSequence.apply(null, arguments)
-                            .then(() => printSubtest(step.name))
+                            .then(() => printSubtest(step.name));
                     }
                 }))
                 .then((params) => {
