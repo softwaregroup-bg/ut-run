@@ -7,8 +7,8 @@ var loadtest = require('loadtest');
 function sequence(options, test, bus, flow, params) {
     var nest = 0;
     function printSubtest(msg, start) {
-        var prefix = start ? '-'.repeat(++nest) + '> subtest start: ' : '<' + '-'.repeat(nest--) + ' subtest stop: ';
-        return test.comment(prefix + '[' + msg + ']');
+        var prefix = start ? '-'.repeat(++nest) + '> subtest start:' : '<' + '-'.repeat(nest--) + ' subtest stop:';
+        return test.comment(prefix + ' [' + msg + ']');
     }
     return (function runSequence(flow, params) {
         var context = {
@@ -30,20 +30,24 @@ function sequence(options, test, bus, flow, params) {
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
         var promise = Promise.resolve();
-        steps.forEach((step, index) => {
+        steps.forEach(function(step, index) {
             var start = Date.now();
-            promise = promise.then((resolve, reject) => {
+            promise = promise.then(function(resolve, reject) {
                 var testName = step.name || ('testing method ' + step.methodName);
+                var skip = false;
                 test.comment(testName);
                 return when(step.params(context, {
                     sequence: function() {
                         printSubtest(step.name, true);
                         return runSequence.apply(null, arguments)
-                            .then(() => printSubtest(step.name));
+                            .then(() => printSubtest(testName));
+                    },
+                    skip: function() {
+                        skip = true;
                     }
                 }))
-                .then((params) => {
-                    if (!params) {
+                .then(function(params) {
+                    if (skip) {
                         return test.comment('^ ' + step.name + ' - skipped');
                     }
                     return when(step.method(params))
