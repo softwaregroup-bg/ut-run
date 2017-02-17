@@ -63,9 +63,9 @@ test({
 # --> subtest start: [name2]
 # name3
 ok 1 return assertion for name 3
-# <-- subtest stop: [name2]
+# <-- subtest end: [name2]
 ok 2 return assertion for name 2
-# <- subtest stop: [name1]
+# <- subtest end: [name1]
 ok 3 return assertion for name 1
 ```
 ### Sample output with skipped step:
@@ -75,6 +75,6 @@ ok 3 return assertion for name 1
 # -> subtest start: [name1]
 # name2
 # ^ name2 - skipped
-# <- subtest stop: [name1]
+# <- subtest end: [name1]
 ok 3 return assertion for name 1
 ```
