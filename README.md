@@ -31,7 +31,7 @@ test({
                             return {}; // params for bus.method.name3
                         },
                         result: (result, assert) => {
-                            return assert; // do some assertions
+                            return assert; // do some assertions for bus.method.name3
                         }
                     }])
                     .then(() => {
@@ -39,7 +39,7 @@ test({
                     })
                 },
                 result: (result, assert) => {
-                    return assert; // do some assertions
+                    return assert; // do some assertions for bus.method.name2
                 }
             }])
             .then(() => {
@@ -48,7 +48,7 @@ test({
 
         },
         result: (result, assert) => {
-            return assert; // do some assertions
+            return assert; // do some assertions for bus.method.name1
         }
     }]);
   }
