@@ -7,7 +7,7 @@ var loadtest = require('loadtest');
 function sequence(options, test, bus, flow, params) {
     var nest = 0;
     function printSubtest(msg, start) {
-        var prefix = start ? '-'.repeat(++nest) + '> subtest start:' : '<' + '-'.repeat(nest--) + ' subtest stop:';
+        var prefix = start ? '-'.repeat(++nest) + '> subtest start:' : '<' + '-'.repeat(nest--) + ' subtest end:';
         return test.comment(prefix + ' [' + msg + ']');
     }
     return (function runSequence(flow, params) {
@@ -32,7 +32,7 @@ function sequence(options, test, bus, flow, params) {
         var promise = Promise.resolve();
         steps.forEach(function(step, index) {
             var start = Date.now();
-            promise = promise.then(function(resolve, reject) {
+            promise = promise.then(function() {
                 var testName = step.name || ('testing method ' + step.methodName);
                 var skip = false;
                 test.comment(testName);
