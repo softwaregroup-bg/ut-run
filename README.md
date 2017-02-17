@@ -22,7 +22,7 @@ test({
                 method: 'bus.method.name2'
                 params: (context2, utils) => {
                     if (someCondition) {
-                        return false; // skip step
+                        return utils.skip(); // skip step
                     }
                     return utils.sequence([{
                         name: 'name3',
