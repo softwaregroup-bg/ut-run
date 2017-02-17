@@ -40,7 +40,7 @@ function sequence(options, test, bus, flow, params) {
                     sequence: function() {
                         printSubtest(step.name, true);
                         return runSequence.apply(null, arguments)
-                            .then(function(params){
+                            .then(function(params) {
                                 printSubtest(testName);
                                 return params;
                             });
