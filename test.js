@@ -15,8 +15,11 @@ function sequence(options, test, bus, flow, params) {
             params: params || {}
         };
         var steps = flow.map(function(f) {
+            if (!f.name) {
+                throw new Error('step name is required');
+            }
             return {
-                name: f.name || '',
+                name: f.name,
                 methodName: f.method,
                 method: f.method ? bus.importMethod(f.method) : (params) => (params),
                 params: (typeof f.params === 'function') ? when.lift(f.params) : () => f.params,
@@ -33,15 +36,14 @@ function sequence(options, test, bus, flow, params) {
         steps.forEach(function(step, index) {
             var start = Date.now();
             promise = promise.then(function() {
-                var testName = step.name || ('testing method ' + step.methodName);
                 var skip = false;
-                test.comment(testName);
+                test.comment(step.name);
                 return when(step.params(context, {
                     sequence: function() {
-                        printSubtest(testName, true);
+                        printSubtest(step.name, true);
                         return runSequence.apply(null, arguments)
                             .then(function(params) {
-                                printSubtest(testName);
+                                printSubtest(step.name);
                                 return params;
                             });
                     },
@@ -51,7 +53,7 @@ function sequence(options, test, bus, flow, params) {
                 }))
                 .then(function(params) {
                     if (skip) {
-                        return test.comment('^ ' + testName + ' - skipped');
+                        return test.comment('^ ' + step.name + ' - skipped');
                     }
                     return when(step.method(params))
                         .then(function(result) {
