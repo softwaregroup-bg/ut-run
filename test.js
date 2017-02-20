@@ -1,14 +1,33 @@
 // var log = require('why-is-node-running');
 var tape = require('blue-tape');
 var run = require('./index').runParams;
-var when = require('when');
 var loadtest = require('loadtest');
 
+function lift(fn) {
+    return function () {
+        var promise
+        try {
+            promise = Promise.resolve(fn.apply(fn, Array.prototype.slice.call(arguments)))
+        } catch(e) {
+            promise = Promise.reject(e)
+        }
+        return promise
+    }
+}
+
 function sequence(options, test, bus, flow, params) {
-    var nest = 0;
-    function printSubtest(msg, start) {
-        var prefix = start ? '-'.repeat(++nest) + '> subtest start:' : '<' + '-'.repeat(nest--) + ' subtest end:';
-        return test.comment(prefix + ' [' + msg + ']');
+    function printSubtest(name, start) {
+        if (start) {
+            test.comment('-'.repeat(previous.length + 1) + '> subtest start: ' + getName(name));
+            previous.push(name);
+        } else {
+            previous.pop();
+            test.comment('<' + '-'.repeat(previous.length + 1) + ' subtest end: ' + getName(name));
+        }
+    }
+    var previous = [];
+    function getName(name) {
+        return previous.length ? previous.concat(name).join(' / ') : name;
     }
     return (function runSequence(flow, params) {
         var context = {
@@ -21,8 +40,8 @@ function sequence(options, test, bus, flow, params) {
             return {
                 name: f.name,
                 methodName: f.method,
-                method: f.method ? bus.importMethod(f.method) : (params) => (params),
-                params: (typeof f.params === 'function') ? when.lift(f.params) : () => f.params,
+                method: f.method ? bus.importMethod(f.method) : lift(params => params),
+                params: (typeof f.params === 'function') ? lift(f.params) : lift(() => f.params),
                 result: f.result,
                 error: f.error
             };
@@ -34,11 +53,19 @@ function sequence(options, test, bus, flow, params) {
 
         var promise = Promise.resolve();
         steps.forEach(function(step, index) {
-            var start = Date.now();
             promise = promise.then(function() {
+                var start = Date.now();
                 var skip = false;
-                test.comment(step.name);
-                return when(step.params(context, {
+                function performanceWrite() {
+                    bus.performance && bus.performance.write({
+                        testName: options.name,
+                        stepName: step.name,
+                        method: step.methodName,
+                        step: index
+                    });
+                }
+                test.comment(getName(step.name));
+                return step.params(context, {
                     sequence: function() {
                         printSubtest(step.name, true);
                         return runSequence.apply(null, arguments)
@@ -50,19 +77,17 @@ function sequence(options, test, bus, flow, params) {
                     skip: function() {
                         skip = true;
                     }
-                }))
+                })
                 .then(function(params) {
                     if (skip) {
-                        return test.comment('^ ' + step.name + ' - skipped');
+                        return test.comment('^ ' + getName(step.name) + ' - skipped');
                     }
-                    return when(step.method(params))
+                    return step.method(params)
                         .then(function(result) {
                             duration && duration(Date.now() - start);
                             passed && passed(result._isOk ? 1 : 0);
+                            performanceWrite();
                             context[step.name] = result;
-                            return result;
-                        })
-                        .then(function(result) {
                             if (typeof step.result === 'function') {
                                 step.result.call(context, result, test);
                             } else if (typeof step.error === 'function') {
@@ -74,22 +99,14 @@ function sequence(options, test, bus, flow, params) {
                         })
                         .catch(function(error) {
                             duration && duration(Date.now() - start);
+                            passed && passed(0);
+                            performanceWrite();
                             if (typeof step.error === 'function') {
                                 step.error.call(context, error, test);
-                                passed && passed(0);
                             } else {
-                                passed && passed(0);
                                 throw error;
                             }
                         })
-                        .finally(function() {
-                            bus.performance && bus.performance.write({
-                                testName: options.name,
-                                stepName: step.name,
-                                method: step.methodName,
-                                step: index
-                            });
-                        });
                 })
                 .catch(function(err) {
                     test.error(err);
