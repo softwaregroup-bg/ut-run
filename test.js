@@ -4,15 +4,15 @@ var run = require('./index').runParams;
 var loadtest = require('loadtest');
 
 function lift(fn) {
-    return function () {
-        var promise
+    return function() {
+        var promise;
         try {
-            promise = Promise.resolve(fn.apply(fn, Array.prototype.slice.call(arguments)))
-        } catch(e) {
-            promise = Promise.reject(e)
+            promise = Promise.resolve(fn.apply(fn, Array.prototype.slice.call(arguments)));
+        } catch (e) {
+            promise = Promise.reject(e);
         }
-        return promise
-    }
+        return promise;
+    };
 }
 
 function sequence(options, test, bus, flow, params) {
@@ -106,7 +106,7 @@ function sequence(options, test, bus, flow, params) {
                             } else {
                                 throw error;
                             }
-                        })
+                        });
                 })
                 .catch(function(err) {
                     test.error(err);
