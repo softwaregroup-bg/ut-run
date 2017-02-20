@@ -38,7 +38,7 @@ function sequence(options, test, bus, flow, params) {
                 test.comment(testName);
                 return when(step.params(context, {
                     sequence: function() {
-                        printSubtest(step.name, true);
+                        printSubtest(testName, true);
                         return runSequence.apply(null, arguments)
                             .then(function(params) {
                                 printSubtest(testName);
@@ -51,7 +51,7 @@ function sequence(options, test, bus, flow, params) {
                 }))
                 .then(function(params) {
                     if (skip) {
-                        return test.comment('^ ' + step.name + ' - skipped');
+                        return test.comment('^ ' + testName + ' - skipped');
                     }
                     return when(step.method(params))
                         .then(function(result) {
@@ -88,6 +88,10 @@ function sequence(options, test, bus, flow, params) {
                                 step: index
                             });
                         });
+                })
+                .catch(function(err) {
+                    test.error(err);
+                    return true;
                 });
             });
         });
