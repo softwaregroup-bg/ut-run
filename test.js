@@ -3,16 +3,10 @@ var tape = require('blue-tape');
 var run = require('./index').runParams;
 var loadtest = require('loadtest');
 
-function lift(fn) {
+function promisify(fn) {
     return function() {
-        var promise;
-        try {
-            promise = Promise.resolve(fn.apply(fn, Array.prototype.slice.call(arguments)));
-        } catch (e) {
-            promise = Promise.reject(e);
-        }
-        return promise;
-    };
+        return new Promise(resolve => resolve(fn.apply(this, arguments)));
+    }
 }
 
 function sequence(options, test, bus, flow, params) {
@@ -27,7 +21,7 @@ function sequence(options, test, bus, flow, params) {
     }
     var previous = [];
     function getName(name) {
-        return previous.length ? previous.concat(name).join(' / ') : name;
+        return previous.concat(name).join(' / ');
     }
     return (function runSequence(flow, params) {
         var context = {
@@ -40,8 +34,8 @@ function sequence(options, test, bus, flow, params) {
             return {
                 name: f.name,
                 methodName: f.method,
-                method: f.method ? bus.importMethod(f.method) : lift(params => params),
-                params: (typeof f.params === 'function') ? lift(f.params) : lift(() => f.params),
+                method: f.method ? bus.importMethod(f.method) : (params) => Promise.resolve(params),
+                params: (typeof f.params === 'function') ? promisify(f.params) : () => Promise.resolve(f.params),
                 result: f.result,
                 error: f.error
             };
@@ -108,10 +102,7 @@ function sequence(options, test, bus, flow, params) {
                             }
                         });
                 })
-                .catch(function(err) {
-                    test.error(err);
-                    return true;
-                });
+                .catch(test.error);
             });
         });
         return promise;
