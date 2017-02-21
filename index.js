@@ -86,7 +86,7 @@ module.exports = {
 
     loadImpl: function(implementation, config) {
         if (typeof implementation === 'function') {
-            return new Promise(resolve => implementation({config}))
+            return new Promise(resolve => resolve(implementation({config})))
                 .then(result => this.load(result, config));
         } else {
             return this.load(implementation, config);
