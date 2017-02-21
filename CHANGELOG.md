@@ -1,3 +1,13 @@
+<a name="7.4.0"></a>
+# [7.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.3.0...v7.4.0) (2017-02-21)
+
+
+### Features
+
+* allow to load implementation from function ([02a6154](https://github.com/softwaregroup-bg/ut-run/commit/02a6154))
+
+
+
 <a name="7.3.0"></a>
 # [7.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.2.4...v7.3.0) (2017-02-11)
 
