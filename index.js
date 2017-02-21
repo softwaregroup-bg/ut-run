@@ -21,7 +21,7 @@ module.exports = {
         }
     },
 
-    loadImpl: function(implementation, config) {
+    load: function(implementation, config) {
         if (typeof implementation === 'string') {
             implementation = require(implementation);
         }
@@ -82,6 +82,15 @@ module.exports = {
                 .then(() => Promise.reject(err)); // reject with the original error
             });
         });
+    },
+
+    loadImpl: function(implementation, config) {
+        if (typeof implementation === 'function') {
+            return new Promise(resolve => implementation({config}))
+                .then(result => this.load(result, config));
+        } else {
+            return this.load(implementation, config);
+        }
     },
 
     loadConfig: function(config) {
