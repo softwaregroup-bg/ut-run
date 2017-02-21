@@ -1,90 +1,111 @@
 // var log = require('why-is-node-running');
 var tape = require('blue-tape');
 var run = require('./index').runParams;
-var when = require('when');
 var loadtest = require('loadtest');
 
+function promisify(fn) {
+    return function() {
+        return new Promise(resolve => resolve(fn.apply(this, arguments)));
+    };
+}
+
 function sequence(options, test, bus, flow, params) {
+    function printSubtest(name, start) {
+        if (start) {
+            test.comment('-'.repeat(previous.length + 1) + '> subtest start: ' + getName(name));
+            previous.push(name);
+        } else {
+            previous.pop();
+            test.comment('<' + '-'.repeat(previous.length + 1) + ' subtest end: ' + getName(name));
+        }
+    }
+    var previous = [];
+    function getName(name) {
+        return previous.concat(name).join(' / ');
+    }
     return (function runSequence(flow, params) {
         var context = {
             params: params || {}
         };
         var steps = flow.map(function(f) {
+            if (!f.name) {
+                throw new Error('step name is required');
+            }
             return {
-                name: f.name || '',
+                name: f.name,
                 methodName: f.method,
-                method: f.method ? bus.importMethod(f.method) : (params) => (params),
-                params: (typeof f.params === 'function') ? when.lift(f.params) : () => f.params,
+                method: f.method ? bus.importMethod(f.method) : (params) => Promise.resolve(params),
+                params: (typeof f.params === 'function') ? promisify(f.params) : () => Promise.resolve(f.params),
                 result: f.result,
                 error: f.error
             };
         });
-        var skipped = 0;
-
         var passed = options.type && bus.performance &&
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
         var duration = options.type && bus.performance &&
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
-        steps.forEach((step, index) => {
-            var start = Date.now();
-            (index >= skipped) && test.test(step.name || ('testing method ' + step.methodName), (methodAssert) => {
-                return when(step.params.call({
+        var promise = Promise.resolve();
+        steps.forEach(function(step, index) {
+            promise = promise.then(function() {
+                var start = Date.now();
+                var skip = false;
+                function performanceWrite() {
+                    bus.performance && bus.performance.write({
+                        testName: options.name,
+                        stepName: step.name,
+                        method: step.methodName,
+                        step: index
+                    });
+                }
+                test.comment(getName(step.name));
+                return step.params(context, {
                     sequence: function() {
-                        return runSequence.apply(null, arguments);
+                        printSubtest(step.name, true);
+                        return runSequence.apply(null, arguments)
+                            .then(function(params) {
+                                printSubtest(step.name);
+                                return params;
+                            });
                     },
-                    skip: function(name) {
-                        skipped = steps.length;
-                        for (var i = index; i < steps.length; i += 1) {
-                            if (name === steps[i].name) {
-                                skipped = i;
-                                break;
-                            }
-                        }
+                    skip: function() {
+                        skip = true;
                     }
-                }, context))
-                .then((params) => {
-                    if (skipped) {
-                        return params;
+                })
+                .then(function(params) {
+                    if (skip) {
+                        return test.comment('^ ' + getName(step.name) + ' - skipped');
                     }
-                    return when(step.method(params))
+                    return step.method(params)
                         .then(function(result) {
                             duration && duration(Date.now() - start);
                             passed && passed(result._isOk ? 1 : 0);
+                            performanceWrite();
                             context[step.name] = result;
-                            return result;
-                        })
-                        .then(function(result) {
                             if (typeof step.result === 'function') {
-                                step.result.call(context, result, methodAssert);
+                                step.result.call(context, result, test);
                             } else if (typeof step.error === 'function') {
-                                methodAssert.fail('Result is expected to be an error');
+                                test.fail('Result is expected to be an error');
                             } else {
-                                methodAssert.fail('Test is missing result and error handlers');
+                                test.fail('Test is missing result and error handlers');
                             }
                             return result;
                         })
                         .catch(function(error) {
                             duration && duration(Date.now() - start);
+                            passed && passed(0);
+                            performanceWrite();
                             if (typeof step.error === 'function') {
-                                step.error.call(context, error, methodAssert);
-                                passed && passed(0);
+                                step.error.call(context, error, test);
                             } else {
-                                passed && passed(0);
                                 throw error;
                             }
-                        })
-                        .finally(function() {
-                            bus.performance && bus.performance.write({
-                                testName: options.name,
-                                stepName: step.name,
-                                method: step.methodName,
-                                step: index
-                            });
                         });
-                });
+                })
+                .catch(test.error);
             });
         });
+        return promise;
     })(flow, params);
 }
 
@@ -187,7 +208,7 @@ module.exports = function(params, cache) {
         if (!cache.first) {
             cache.first = true;
         } else {
-            tape('Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
+            tape('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
             return;
         }
     }
