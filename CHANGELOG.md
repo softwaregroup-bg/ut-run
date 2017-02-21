@@ -1,3 +1,23 @@
+<a name="8.0.0"></a>
+# [8.0.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.4.1...v8.0.0) (2017-02-21)
+
+
+### Features
+
+* provide possibility to run subtests and skip steps ([#11](https://github.com/softwaregroup-bg/ut-run/issues/11)) ([98ad476](https://github.com/softwaregroup-bg/ut-run/commit/98ad476))
+
+
+### BREAKING CHANGES
+
+* steps function should return a promise, usually the result of run
+```javascript
+steps: function (test, bus, run) {
+   run(test, bus, flow);
+}
+```
+
+
+
 <a name="7.4.1"></a>
 ## [7.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v7.4.0...v7.4.1) (2017-02-21)
 
