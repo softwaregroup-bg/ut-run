@@ -6,7 +6,7 @@ var loadtest = require('loadtest');
 function promisify(fn) {
     return function() {
         return new Promise(resolve => resolve(fn.apply(this, arguments)));
-    }
+    };
 }
 
 function sequence(options, test, bus, flow, params) {
