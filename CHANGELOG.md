@@ -1,3 +1,13 @@
+<a name="7.4.1"></a>
+## [7.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v7.4.0...v7.4.1) (2017-02-21)
+
+
+### Bug Fixes
+
+* call resolve ([443f0eb](https://github.com/softwaregroup-bg/ut-run/commit/443f0eb))
+
+
+
 <a name="7.4.0"></a>
 # [7.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v7.3.0...v7.4.0) (2017-02-21)
 
