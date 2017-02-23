@@ -36,6 +36,7 @@ module.exports = {
         }
 
         var ports = implementation.ports;
+        var portsStarted = [];
         config = config || {};
         this.bus.config = config;
 
@@ -69,14 +70,15 @@ module.exports = {
                 return all;
             }.bind(this), [])
         ).then(function(contexts) {
-            return when.reduce(contexts, function(prev, context) {
+            return when.reduce(contexts, function(prev, context, idx) {
+                portsStarted.push(context); // collect ports that are started
                 return context.start();
             }, [])
             .then(function() {
                 return contexts;
             })
             .catch(function(err) {
-                return when.reduce(contexts, function(prev, context) {
+                return when.reduce(portsStarted.reverse(), function(prev, context, idx) {
                     return new Promise((resolve) => resolve(context.stop())).catch(() => true); // continue on error
                 }, [])
                 .then(() => Promise.reject(err)); // reject with the original error
