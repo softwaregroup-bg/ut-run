@@ -71,18 +71,15 @@ module.exports = {
             }.bind(this), [])
         ).then(function(contexts) {
             return when.reduce(contexts, function(prev, context, idx) {
-                portsStarted.push(idx); // collect ports that are started
+                portsStarted.push(context); // collect ports that are started
                 return context.start();
             }, [])
             .then(function() {
                 return contexts;
             })
             .catch(function(err) {
-                return when.reduce(contexts, function(prev, context, idx) {
-                    if (portsStarted.indexOf(idx) >= 0) { // try to stop only started ports
-                        return new Promise((resolve) => resolve(context.stop())).catch(() => true); // continue on error
-                    }
-                    return prev;
+                return when.reduce(portsStarted.reverse(), function(prev, context, idx) {
+                    return new Promise((resolve) => resolve(context.stop())).catch(() => true); // continue on error
                 }, [])
                 .then(() => Promise.reject(err)); // reject with the original error
             });
