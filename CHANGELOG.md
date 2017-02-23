@@ -1,3 +1,8 @@
+<a name="8.0.4"></a>
+## [8.0.4](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.3...v8.0.4) (2017-02-23)
+
+
+
 <a name="8.0.3"></a>
 ## [8.0.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.2...v8.0.3) (2017-02-23)
 
