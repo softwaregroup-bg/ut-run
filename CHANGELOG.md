@@ -1,3 +1,13 @@
+<a name="8.0.5"></a>
+## [8.0.5](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.4...v8.0.5) (2017-02-24)
+
+
+### Bug Fixes
+
+* stop only those port that are started ([#12](https://github.com/softwaregroup-bg/ut-run/issues/12)) ([74f73fc](https://github.com/softwaregroup-bg/ut-run/commit/74f73fc))
+
+
+
 <a name="8.0.4"></a>
 ## [8.0.4](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.3...v8.0.4) (2017-02-23)
 
