@@ -1,3 +1,13 @@
+<a name="8.0.6"></a>
+## [8.0.6](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.5...v8.0.6) (2017-03-08)
+
+
+### Bug Fixes
+
+* dependencies ([fe506be](https://github.com/softwaregroup-bg/ut-run/commit/fe506be))
+
+
+
 <a name="8.0.5"></a>
 ## [8.0.5](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.4...v8.0.5) (2017-02-24)
 
