@@ -6,15 +6,15 @@
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
-    "ut-log": "~5.8.0",
+    "ut-log": "^5.8.0",
     "when": "3.7.7"
   },
   "peerDependencies": {
-    "ut-bus": "~5.8.1"
+    "ut-bus": "^5.9.0"
   },
   "devDependencies": {
     "blue-tape": "1.0.0",
-    "ut-tools": "^5.11.1"
+    "ut-tools": "^5.13.5"
   },
   "scripts": {
     "lint": "ut-lint .",
