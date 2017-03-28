@@ -137,11 +137,23 @@ module.exports = {
                 var cluster = serverRequire('cluster');
                 if (cluster.isMaster) {
                     var workerCount = config.cluster.workers || require('os').cpus().length;
-                    for (var i = 0; i < workerCount; i += 1) {
-                        cluster.fork();
-                    }
-                    return true;
+                    cluster.fork({UT_NOTIFY_READY: true})
+                        .on('message', function(message) {
+                            if (message === 'UT_EVENT_READY') {
+                                for (var i = 1; i < workerCount; i += 1) {
+                                    cluster.fork({UT_PRESERVE_SCHEMA: true});
+                                }
+                            }
+                        })
+                    return Promise.resolve();
                 } else {
+                    if (process.env.UT_PRESERVE_SCHEMA) {
+                        Object.keys(config).forEach(function(key) {
+                            if (config[key].db) {
+                                config[key].preserveSchema = true;
+                            }
+                        });
+                    }
                     config.masterBus.socket.port = config.masterBus.socket.port + cluster.worker.id;
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
@@ -150,10 +162,15 @@ module.exports = {
         }
     },
     run: function(params, parent) {
-        return this.runParams(params, parent).catch((err) => {
-            console.error(err);
-            process.abort();
-        });
+        return this.runParams(params, parent)
+            .then((result) => {
+                process.env.UT_NOTIFY_READY && process.send('UT_EVENT_READY');
+                return result;
+            })
+            .catch((err) => {
+                console.error(err);
+                process.abort();
+            });
     }
 
 };
