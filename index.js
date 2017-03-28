@@ -144,7 +144,7 @@ module.exports = {
                                     cluster.fork({UT_PRESERVE_SCHEMA: true});
                                 }
                             }
-                        })
+                        });
                     return Promise.resolve();
                 } else {
                     if (process.env.UT_PRESERVE_SCHEMA) {
