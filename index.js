@@ -5,7 +5,9 @@ var merge = require('lodash.merge');
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
-
+var utEvent = {
+    ready: 'UT_EVENT_READY'
+};
 module.exports = {
 
     bus: null,
@@ -137,11 +139,23 @@ module.exports = {
                 var cluster = serverRequire('cluster');
                 if (cluster.isMaster) {
                     var workerCount = config.cluster.workers || require('os').cpus().length;
-                    for (var i = 0; i < workerCount; i += 1) {
-                        cluster.fork();
-                    }
-                    return true;
+                    cluster.fork()
+                        .on('message', function(message) {
+                            if (message === utEvent.ready) {
+                                for (var i = 1; i < workerCount; i += 1) {
+                                    cluster.fork({UT_PRESERVE_SCHEMA: true});
+                                }
+                            }
+                        });
+                    return Promise.resolve();
                 } else {
+                    if (process.env.UT_PRESERVE_SCHEMA) {
+                        Object.keys(config).forEach(function(key) {
+                            if (config[key].db) {
+                                config[key].preserveSchema = true;
+                            }
+                        });
+                    }
                     config.masterBus.socket.port = config.masterBus.socket.port + cluster.worker.id;
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
@@ -150,10 +164,15 @@ module.exports = {
         }
     },
     run: function(params, parent) {
-        return this.runParams(params, parent).catch((err) => {
-            console.error(err);
-            process.abort();
-        });
+        return this.runParams(params, parent)
+            .then((result) => {
+                process.send && process.send(utEvent.ready);
+                return result;
+            })
+            .catch((err) => {
+                console.error(err);
+                process.abort();
+            });
     }
 
 };
