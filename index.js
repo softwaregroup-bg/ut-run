@@ -5,7 +5,9 @@ var merge = require('lodash.merge');
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
-
+var utEvent = {
+    ready: 'UT_EVENT_READY'
+};
 module.exports = {
 
     bus: null,
@@ -137,9 +139,9 @@ module.exports = {
                 var cluster = serverRequire('cluster');
                 if (cluster.isMaster) {
                     var workerCount = config.cluster.workers || require('os').cpus().length;
-                    cluster.fork({UT_NOTIFY_READY: true})
+                    cluster.fork()
                         .on('message', function(message) {
-                            if (message === 'UT_EVENT_READY') {
+                            if (message === utEvent.ready) {
                                 for (var i = 1; i < workerCount; i += 1) {
                                     cluster.fork({UT_PRESERVE_SCHEMA: true});
                                 }
@@ -164,7 +166,7 @@ module.exports = {
     run: function(params, parent) {
         return this.runParams(params, parent)
             .then((result) => {
-                process.env.UT_NOTIFY_READY && process.send('UT_EVENT_READY');
+                process.send && process.send(utEvent.ready);
                 return result;
             })
             .catch((err) => {
