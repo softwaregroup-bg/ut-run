@@ -1,4 +1,4 @@
-/* eslint no-process-exit: 0, no-process-env:0, no-console:0 */
+/* eslint no-process-env:0, no-console:0 */
 
 var when = require('when');
 var merge = require('lodash.merge');
