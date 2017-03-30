@@ -261,8 +261,16 @@ module.exports = function(params, cache) {
                 clientRun = client && run(client, module.parent);
                 return clientRun.then((client) => {
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
-                    return Promise.all(client.ports.map(port => port.isReady)).then(() =>
-                        params.steps(assert, client.bus, sequence.bind(null, params), client.ports));
+                    return Promise.all(client.ports.map(port => port.isReady))
+                    .then(() => {
+                        return params.steps(assert, client.bus, sequence.bind(null, params), client.ports)
+                    })
+                    .then((result) => {
+                        return result;
+                    })
+                    .catch(() => {
+                        var x
+                    });
                 });
             });
     });
@@ -293,7 +301,9 @@ module.exports = function(params, cache) {
             });
             return x;
         });
-        client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
+        client && tape('client stop', (assert) => {
+            return clientRun.then(stop.bind(null, assert));
+        });
         tape('server stop', (assert) => serverRun
             .then(stop.bind(null, assert))
             .catch(() => Promise.reject('Server did not start'))

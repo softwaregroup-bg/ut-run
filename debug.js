@@ -37,7 +37,9 @@ module.exports = {
             },
             stdOut: {
                 mode: 'dev'
-            }
+            },
+            runMaster: true,
+            runWorker: true
         }, config);
 
         if (!process.browser && !mergedConfig.workDir) {
@@ -102,7 +104,7 @@ module.exports = {
         var workerBus;
         var workerRun;
 
-        if (config.params.runMaster) {
+        if (mergedConfig.runMaster) {
             masterBus = Object.assign(new Bus(), {
                 server: true,
                 logLevel: mergedConfig.masterBus.logLevel,
@@ -113,7 +115,7 @@ module.exports = {
             });
         }
 
-        if (config.params.runWorker) {
+        if (mergedConfig.runWorker) {
             workerBus = Object.assign(new Bus(), {
                 server: false,
                 logLevel: mergedConfig.workerBus.logLevel,
@@ -125,9 +127,8 @@ module.exports = {
             workerRun = Object.assign({}, require('./index'), {
                 bus: workerBus,
                 logFactory: log
-            })
+            });
         }
-
 
         if (config.repl !== false) {
             var repl = serverRequire('repl').start({prompt: 'ut>'});
@@ -138,22 +139,22 @@ module.exports = {
 
         let promise = Promise.resolve();
         if (masterBus) {
-            promise = promise.then(() => masterBus.init())
+            promise = promise.then(masterBus.init.bind(masterBus));
         }
         if (workerBus) {
-            promise = promise.then(() => workerBus.init())
+            promise = promise.then(workerBus.init.bind(workerBus));
             if (masterBus && mergedConfig.masterBus.socket) {
-                promise = promise.then(masterBus.start.bind(masterBus))
+                promise = promise.then(masterBus.start.bind(masterBus));
             } else {
-                promise = promise.then(workerBus.start.bind(workerBus))
+                promise = promise.then(workerBus.start.bind(workerBus));
             }
             promise = promise
                 .then(workerRun.ready.bind(workerRun))
-                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig))
+                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
         } else {
             promise = promise
             .then(masterBus.start.bind(masterBus))
-            .then(() => ([])) // no ports
+            .then(() => ([])); // no ports
         }
         return promise
             .then(function(ports) {
