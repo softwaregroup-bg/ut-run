@@ -137,7 +137,7 @@ module.exports = {
         consolePort && when(consolePort.init()).then(consolePort.start());
         performancePort && when(performancePort.init()).then(performancePort.start());
 
-        let promise = Promise.resolve();
+        var promise = Promise.resolve();
         if (masterBus) {
             promise = promise.then(masterBus.init.bind(masterBus));
         }
