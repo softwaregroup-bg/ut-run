@@ -98,26 +98,36 @@ module.exports = {
             performancePort = new Performance();
             merge(performancePort.config, mergedConfig.performance);
         }
-        var masterBus = Object.assign(new Bus(), {
-            server: true,
-            logLevel: mergedConfig.masterBus.logLevel,
-            socket: mergedConfig.masterBus.socket,
-            id: 'master',
-            logFactory: log,
-            performance: performancePort
-        });
-        var workerBus = Object.assign(new Bus(), {
-            server: false,
-            logLevel: mergedConfig.workerBus.logLevel,
-            socket: mergedConfig.masterBus.socket,
-            id: 'worker',
-            logFactory: log,
-            performance: performancePort
-        });
-        var workerRun = Object.assign({}, require('./index'), {
-            bus: workerBus,
-            logFactory: log
-        });
+        var masterBus;
+        var workerBus;
+        var workerRun;
+
+        if (config.params.runMaster) {
+            masterBus = Object.assign(new Bus(), {
+                server: true,
+                logLevel: mergedConfig.masterBus.logLevel,
+                socket: mergedConfig.masterBus.socket,
+                id: 'master',
+                logFactory: log,
+                performance: performancePort
+            });
+        }
+
+        if (config.params.runWorker) {
+            workerBus = Object.assign(new Bus(), {
+                server: false,
+                logLevel: mergedConfig.workerBus.logLevel,
+                socket: mergedConfig.masterBus.socket,
+                id: 'worker',
+                logFactory: log,
+                performance: performancePort
+            });
+            workerRun = Object.assign({}, require('./index'), {
+                bus: workerBus,
+                logFactory: log
+            })
+        }
+
 
         if (config.repl !== false) {
             var repl = serverRequire('repl').start({prompt: 'ut>'});
@@ -125,11 +135,27 @@ module.exports = {
         }
         consolePort && when(consolePort.init()).then(consolePort.start());
         performancePort && when(performancePort.init()).then(performancePort.start());
-        return masterBus.init()
-            .then(workerBus.init.bind(workerBus))
-            .then(mergedConfig.masterBus.socket ? masterBus.start.bind(masterBus) : workerBus.start.bind(workerBus))
-            .then(workerRun.ready.bind(workerRun))
-            .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig))
+
+        let promise = Promise.resolve();
+        if (masterBus) {
+            promise = promise.then(() => masterBus.init())
+        }
+        if (workerBus) {
+            promise = promise.then(() => workerBus.init())
+            if (masterBus && mergedConfig.masterBus.socket) {
+                promise = promise.then(masterBus.start.bind(masterBus))
+            } else {
+                promise = promise.then(workerBus.start.bind(workerBus))
+            }
+            promise = promise
+                .then(workerRun.ready.bind(workerRun))
+                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig))
+        } else {
+            promise = promise
+            .then(masterBus.start.bind(masterBus))
+            .then(() => ([])) // no ports
+        }
+        return promise
             .then(function(ports) {
                 return {
                     ports: ports,
@@ -138,19 +164,19 @@ module.exports = {
                     log: log,
                     config: mergedConfig,
                     stop: () => {
-                        var promise = Promise.resolve();
+                        let innerPromise = Promise.resolve();
                         ports
                             .map((port) => port.stop.bind(port))
-                            .concat(workerBus.destroy.bind(workerBus))
-                            .concat(masterBus.destroy.bind(masterBus))
-                            .forEach((method) => (promise = promise.then(() => method())));
-                        return promise;
+                            .concat(workerBus ? workerBus.destroy.bind(workerBus) : [])
+                            .concat(masterBus ? masterBus.destroy.bind(masterBus) : [])
+                            .forEach((method) => (innerPromise = innerPromise.then(() => method())));
+                        return innerPromise;
                     }
                 };
             })
             .catch((err) => {
-                workerBus.destroy();
-                masterBus.destroy();
+                workerBus && workerBus.destroy();
+                masterBus && masterBus.destroy();
                 return Promise.reject(err);
             });
     }

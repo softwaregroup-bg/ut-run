@@ -1,4 +1,4 @@
-/* eslint no-process-env:0, no-console:0 */
+/* eslint no-process-exit: 0, no-process-env:0, no-console:0 */
 
 var when = require('when');
 var merge = require('lodash.merge');
@@ -126,6 +126,8 @@ module.exports = {
                 var argv = require('minimist')(process.argv.slice(2));
                 config.params.app = process.env.UT_APP || (params && params.app) || argv._[0] || 'server';
                 config.params.method = process.env.UT_METHOD || (params && params.method) || argv._[1] || 'debug';
+                config.params.runMaster = !(params && params.busType === 'worker');
+                config.params.runWorker = !(params && params.busType === 'master');
                 config.params.env = process.env.UT_ENV || (params && params.env) || argv._[2] || 'dev';
                 config = Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
             }
@@ -154,6 +156,77 @@ module.exports = {
             console.error(err);
             process.abort();
         });
+    },
+    runCluster: function(params, parent) {
+        var path = serverRequire('path');
+        var pm2 = serverRequire('pm2');
+        var argv = serverRequire('minimist')(process.argv.slice(2));
+        var debugPort = 6000;
+        function getNodeArgs() {
+            return process.execArgv.map(function(arg) {
+                return arg.startsWith('--debug') ? '--debug=' + debugPort++ : arg;
+            })
+        }
+        function getArgs(app) {
+            return [app].concat(argv._)
+        }
+        function getEnv() {
+            var env = {
+                basePath: path.join(parent.filename, '..')
+            }
+            if (process.env.NODE_PATH) {
+                env.NODE_PATH = path.resolve(process.env.NODE_PATH)
+            }
+            Object.keys(process.env).forEach((prop) => {
+                if (prop.startsWith('UT_')) {
+                    env[prop] = process.env[prop];
+                }
+            })
+            return env;
+        }
+        var scripts = {
+            master: path.resolve(__dirname, 'processes', 'master.js'),
+            worker: path.resolve(__dirname, 'processes', 'worker.js')
+        };
+        return new Promise(function(resolve, reject) {
+            pm2.connect(true, function(err) {
+                if (err) {
+                    console.error(err);
+                    process.exit(2);
+                }
+                pm2.start({
+                    name: 'master',
+                    script: scripts.master,
+                    node_args: getNodeArgs(),
+                    args: getArgs('server'),
+                    env: getEnv(),
+                    max_memory_restart: '500M'
+                }, function(err, apps) {
+                    // pm2.disconnect();   // Disconnects from PM2
+                    return err ? console.error(err) : console.log(apps);
+                })
+            });
+            pm2.launchBus(function(err, bus) {
+                bus.on('process:master', function(packet) {
+                    if (packet.data.ut_event === 'ready') {
+                        pm2.start(params.map((config, i) => {
+                            return {
+                                name: config.app,
+                                script: scripts.worker,
+                                args: getArgs(config.app),
+                                node_args: getNodeArgs(),
+                                env: getEnv(),
+                                max_memory_restart: '500M'
+                            }
+                        }), function(err, apps) {
+                            // pm2.disconnect();   // Disconnects from PM2
+                            return err ? reject(err) : resolve(apps)
+                        });
+                    } else if (packet.data.ut_event === 'fail') {
+                        pm2.disconnect();
+                    }
+                });
+            });
+        })
     }
-
 };
