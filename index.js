@@ -139,7 +139,7 @@ module.exports = {
             }
             var main = params.main || parent.require('./' + config.params.app);
 
-            config = rc(['ut', (config.implementation || 'ut5').replace(/-/g, '_'), process.env.UT_ENV || params.env || 'dev'].join('_'), config);
+            config = rc(['ut', (config.implementation || 'ut5').replace(/[-/\\]/g, '_'), process.env.UT_ENV || params.env || 'dev'].join('_'), config);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
                 var cluster = serverRequire('cluster');
