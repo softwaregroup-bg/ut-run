@@ -116,24 +116,30 @@ module.exports = {
     },
 
     runParams: function(params, parent) {
+        params = params || {};
         parent = parent || module.parent;
         if (process.type === 'browser') {
             serverRequire('ut-front/electron')({main: parent.filename});
         } else {
-            var config = params && params.config;
+            var config = params.config;
             if (!config) {
-                config = {params: {}};
+                config = {params: {}, runMaster: true, runWorker: true};
                 var argv = require('minimist')(process.argv.slice(2));
-                config.params.app = process.env.UT_APP || (params && params.app) || argv._[0] || 'server';
-                config.params.method = process.env.UT_METHOD || (params && params.method) || argv._[1] || 'debug';
-                config.params.env = process.env.UT_ENV || (params && params.env) || argv._[2] || 'dev';
-                config.runMaster = !(process.env.UT_BUS_MODE === 'worker' || (params && params.busMode === 'worker'));
-                config.runWorker = !(process.env.UT_BUS_MODE === 'master' || (params && params.busMode === 'master'));
+                var busMode = process.env.UT_BUS_MODE || params.busMode;
+                if (busMode === 'master') {
+                    condig.runWorker = false;
+                    params.main = {};
+                } else if (busMode === 'worker') {
+                    config.runMaster = false;
+                }
+                config.params.app = process.env.UT_APP || params.app || argv._[0] || 'server';
+                config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
+                config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
                 config = Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
             }
-            var main = (params && params.main) || parent.require('./' + config.params.app);
+            var main = params.main || parent.require('./' + config.params.app);
 
-            config = rc(['ut', (config.implementation || 'ut5').replace(/-/g, '_'), process.env.UT_ENV || (params && params.env) || 'dev'].join('_'), config);
+            config = rc(['ut', (config.implementation || 'ut5').replace(/-/g, '_'), process.env.UT_ENV || params.env || 'dev'].join('_'), config);
 
             if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
                 var cluster = serverRequire('cluster');
@@ -148,7 +154,7 @@ module.exports = {
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
-            return run[(params && params.method) || config.params.method](main, config);
+            return run[params.method || config.params.method](main, config);
         }
     },
     run: function(params, parent) {
