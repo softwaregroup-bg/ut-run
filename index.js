@@ -127,7 +127,7 @@ module.exports = {
                 var argv = require('minimist')(process.argv.slice(2));
                 var busMode = process.env.UT_BUS_MODE || params.busMode;
                 if (busMode === 'master') {
-                    condig.runWorker = false;
+                    config.runWorker = false;
                     params.main = {};
                 } else if (busMode === 'worker') {
                     config.runMaster = false;
