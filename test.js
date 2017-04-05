@@ -25,7 +25,8 @@ function sequence(options, test, bus, flow, params) {
     }
     return (function runSequence(flow, params) {
         var context = {
-            params: params || {}
+            params: params || {},
+            sql: bus.sql
         };
         var steps = flow.map(function(f) {
             if (!f.name) {
@@ -82,14 +83,15 @@ function sequence(options, test, bus, flow, params) {
                             passed && passed(result._isOk ? 1 : 0);
                             performanceWrite();
                             context[step.name] = result;
+                            var stepResult;
                             if (typeof step.result === 'function') {
-                                step.result.call(context, result, test);
+                                stepResult = step.result.call(context, result, test);
                             } else if (typeof step.error === 'function') {
                                 test.fail('Result is expected to be an error');
                             } else {
                                 test.fail('Test is missing result and error handlers');
                             }
-                            return result;
+                            return (stepResult && stepResult.then && stepResult.then(res => result)) || result;
                         })
                         .catch(function(error) {
                             duration && duration(Date.now() - start);
@@ -197,7 +199,6 @@ function performanceTest(params, assert, bus, flow) {
                     bus && bus.performance && bus.performance.stop();
                 }, 5000);
             }
-            return;
         });
     });
 }
@@ -224,7 +225,6 @@ module.exports = function(params, cache) {
         clientRun = run(client);
         tape('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
-            return;
         }));
         return;
     }
@@ -296,7 +296,7 @@ module.exports = function(params, cache) {
         client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
         tape('server stop', (assert) => serverRun
             .then(stop.bind(null, assert))
-            .catch(() => Promise.reject('Server did not start'))
+            .catch(() => Promise.reject(new Error('Server did not start')))
         );
     };
 
