@@ -110,6 +110,9 @@ module.exports = {
         port.bus = this.bus;
         port.logFactory = this.logFactory;
         merge(port.config, config);
+        if (Port.name === "SqlPort" && port.config.expose) {
+            this.bus.sql = port;
+        }
         return when(port.init()).then(function() {
             return port;
         });

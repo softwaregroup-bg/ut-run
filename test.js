@@ -25,7 +25,8 @@ function sequence(options, test, bus, flow, params) {
     }
     return (function runSequence(flow, params) {
         var context = {
-            params: params || {}
+            params: params || {},
+            sql: bus.sql
         };
         var steps = flow.map(function(f) {
             if (!f.name) {
@@ -82,14 +83,15 @@ function sequence(options, test, bus, flow, params) {
                             passed && passed(result._isOk ? 1 : 0);
                             performanceWrite();
                             context[step.name] = result;
+                            var stepResult;
                             if (typeof step.result === 'function') {
-                                step.result.call(context, result, test);
+                                stepResult = step.result.call(context, result, test);
                             } else if (typeof step.error === 'function') {
                                 test.fail('Result is expected to be an error');
                             } else {
                                 test.fail('Test is missing result and error handlers');
                             }
-                            return result;
+                            return stepResult && stepResult.then && stepResult.then(res => result) || result;
                         })
                         .catch(function(error) {
                             duration && duration(Date.now() - start);
