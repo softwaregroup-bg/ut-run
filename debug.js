@@ -54,12 +54,13 @@ module.exports = {
 
         var Bus = require('ut-bus');
         var Port = require('ut-bus/port');
+        var logFactory;
         var log;
         var consolePort;
         var performancePort;
 
         if (config.log === false || config.log === 'false') {
-            log = null;
+            logFactory = null;
         } else {
             var UTLog = require('ut-log');
             var streams = [];
@@ -83,11 +84,22 @@ module.exports = {
                     type: 'raw'
                 });
             }
-            log = new UTLog({
+            logFactory = new UTLog({
                 type: 'bunyan',
                 name: 'bunyan_test',
                 workDir: mergedConfig.workDir,
                 streams: Array.prototype.concat(streams, mergedConfig.log.streams)
+            });
+
+            log = logFactory.createLog((mergedConfig && mergedConfig.run && mergedConfig.run.logLevel) || 'info', {name: 'run', context: 'run'});
+            log && log.info && log.info({
+                $meta: {mtid: 'event', opcode: 'run.debug'},
+                config: mergedConfig.config,
+                performance: mergedConfig.performance,
+                console: mergedConfig.console,
+                runMaster: mergedConfig.runMaster,
+                runWorker: mergedConfig.runWorker,
+                repl: mergedConfig.repl
             });
         }
         if (mergedConfig.console && mergedConfig.console.server) {
@@ -110,7 +122,7 @@ module.exports = {
                 logLevel: mergedConfig.masterBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 id: 'master',
-                logFactory: log,
+                logFactory: logFactory,
                 performance: performancePort
             });
         }
@@ -121,12 +133,12 @@ module.exports = {
                 logLevel: mergedConfig.workerBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 id: 'worker',
-                logFactory: log,
+                logFactory: logFactory,
                 performance: performancePort
             });
             workerRun = Object.assign({}, require('./index'), {
                 bus: workerBus,
-                logFactory: log
+                logFactory: logFactory
             });
         }
 
@@ -162,7 +174,7 @@ module.exports = {
                     ports: ports,
                     master: masterBus,
                     bus: workerBus,
-                    log: log,
+                    log: logFactory,
                     config: mergedConfig,
                     stop: () => {
                         let innerPromise = Promise.resolve();
