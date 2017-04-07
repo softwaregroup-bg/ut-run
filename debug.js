@@ -30,7 +30,8 @@ module.exports = {
             },
             console: {
                 host: '127.0.0.1',
-                port: 30001
+                port: 30001,
+                logLevel: 'info'
             },
             log: {
                 streams: []
@@ -95,8 +96,6 @@ module.exports = {
             log && log.info && log.info({
                 $meta: {mtid: 'event', opcode: 'run.debug'},
                 config: mergedConfig.config,
-                performance: mergedConfig.performance,
-                console: mergedConfig.console,
                 runMaster: mergedConfig.runMaster,
                 runWorker: mergedConfig.runWorker,
                 repl: mergedConfig.repl
@@ -105,11 +104,13 @@ module.exports = {
         if (mergedConfig.console && mergedConfig.console.server) {
             var Console = serverRequire('ut-port-console');
             consolePort = new Console();
+            consolePort.logFactory = logFactory;
             merge(consolePort.config, mergedConfig.console);
         }
         if (mergedConfig.performance) {
             var Performance = serverRequire('ut-port-performance')(Port);
             performancePort = new Performance();
+            performancePort.logFactory = logFactory;
             merge(performancePort.config, mergedConfig.performance);
         }
         var masterBus;
