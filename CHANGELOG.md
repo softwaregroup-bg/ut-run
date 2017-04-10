@@ -1,3 +1,13 @@
+<a name="8.1.0"></a>
+# [8.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.7...v8.1.0) (2017-04-10)
+
+
+### Features
+
+*  allow to run masterBus and workerBus separately ([4f25d29](https://github.com/softwaregroup-bg/ut-run/commit/4f25d29))
+
+
+
 <a name="8.0.7"></a>
 ## [8.0.7](https://github.com/softwaregroup-bg/ut-run/compare/v8.0.6...v8.0.7) (2017-04-05)
 
