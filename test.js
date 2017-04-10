@@ -197,7 +197,7 @@ function performanceTest(params, assert, bus, flow) {
                     bus && bus.performance && bus.performance.stop();
                 }, 5000);
             }
-            return;
+            return true;
         });
     });
 }
@@ -224,7 +224,7 @@ module.exports = function(params, cache) {
         clientRun = run(client);
         tape('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
-            return;
+            return true;
         }));
         return;
     }
@@ -296,7 +296,7 @@ module.exports = function(params, cache) {
         client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
         tape('server stop', (assert) => serverRun
             .then(stop.bind(null, assert))
-            .catch(() => Promise.reject('Server did not start'))
+            .catch(() => Promise.reject(new Error('Server did not start')))
         );
     };
 
