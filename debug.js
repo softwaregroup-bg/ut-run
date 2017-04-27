@@ -67,14 +67,14 @@ module.exports = {
             var streams = [];
             if (mergedConfig.stdOut) {
                 streams.push({
-                    level: 'trace',
+                    level: mergedConfig.stdOut.level || 'trace',
                     stream: 'process.stdout',
                     streamConfig: mergedConfig.stdOut
                 });
             }
             if (mergedConfig.console) {
                 streams.push({
-                    level: 'trace',
+                    level: mergedConfig.console.level || 'trace',
                     stream: require('ut-log/socketStream'),
                     streamConfig: {
                         protocol: process.browser && global.location.protocol,
