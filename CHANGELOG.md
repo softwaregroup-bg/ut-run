@@ -1,3 +1,13 @@
+<a name="8.1.3"></a>
+## [8.1.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.2...v8.1.3) (2017-05-02)
+
+
+### Bug Fixes
+
+* start peer implementations first ([#17](https://github.com/softwaregroup-bg/ut-run/issues/17)) ([4530936](https://github.com/softwaregroup-bg/ut-run/commit/4530936))
+
+
+
 <a name="8.1.2"></a>
 ## [8.1.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.1...v8.1.2) (2017-04-27)
 
