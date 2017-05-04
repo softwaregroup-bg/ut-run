@@ -163,7 +163,14 @@ module.exports = {
             }
             promise = promise
                 .then(workerRun.ready.bind(workerRun))
-                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
+                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig))
+                .catch((err) => {
+                    performancePort.stop();
+                    consolePort.stop();
+                    masterBus.destroy();
+                    workerBus.destroy();
+                    return Promise.reject(err);
+                });
         } else {
             promise = promise
             .then(masterBus.start.bind(masterBus))
