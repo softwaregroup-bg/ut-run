@@ -189,6 +189,8 @@ module.exports = {
                 };
             })
             .catch((err) => {
+                consolePort && consolePort.stop();
+                performancePort && performancePort.stop();
                 workerBus && workerBus.destroy();
                 masterBus && masterBus.destroy();
                 return Promise.reject(err);
