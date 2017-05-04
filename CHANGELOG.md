@@ -1,3 +1,13 @@
+<a name="8.1.4"></a>
+## [8.1.4](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.3...v8.1.4) (2017-05-04)
+
+
+### Bug Fixes
+
+* catch fail when peer impl didnt run correctly ([57eb0ca](https://github.com/softwaregroup-bg/ut-run/commit/57eb0ca))
+
+
+
 <a name="8.1.3"></a>
 ## [8.1.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.2...v8.1.3) (2017-05-02)
 
