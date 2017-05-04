@@ -208,7 +208,7 @@ module.exports = function(params, cache) {
         if (!cache.first) {
             cache.first = true;
             if (params.peerImplementations) {
-                tape('starting peer implementations...', () => Promise.all(params.peerImplementations));
+                tape('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations).catch((err) => (assert.equals(err, null, 'Starting peer implementations... failed'))));
             }
         } else {
             tape('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
