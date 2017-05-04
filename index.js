@@ -165,7 +165,7 @@ module.exports = {
         })
         .catch((err) => {
             console.error(err);
-            // process.abort();
+            process.abort(); // this should be removed
         });
     }
 };
