@@ -1,4 +1,4 @@
-/* eslint no-process-env:0, no-console:0 */
+/* eslint no-process-env:0, no-console:0, no-process-exit:0 */
 
 var when = require('when');
 var merge = require('lodash.merge');
@@ -165,7 +165,7 @@ module.exports = {
         })
         .catch((err) => {
             console.error(err);
-            process.abort(); // this should be removed
+            process.exit(1); // this should be removed
         });
     }
 };
