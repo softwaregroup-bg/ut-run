@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "8.1.4",
+  "version": "8.1.6",
   "dependencies": {
     "loadtest": "2.2.1",
     "lodash.merge": "4.6.0",
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "blue-tape": "1.0.0",
-    "ut-tools": "^5.13.5"
+    "ut-tools": "*"
   },
   "scripts": {
     "lint": "ut-lint .",

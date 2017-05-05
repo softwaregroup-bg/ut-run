@@ -1,6 +1,6 @@
 // var log = require('why-is-node-running');
 var tape = require('blue-tape');
-var run = require('./index').runParams;
+var run = require('./index');
 var loadtest = require('loadtest');
 
 function promisify(fn) {
@@ -208,7 +208,7 @@ module.exports = function(params, cache) {
         if (!cache.first) {
             cache.first = true;
             if (params.peerImplementations) {
-                tape('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations).catch((err) => (assert.equals(err, null, 'Starting peer implementations... failed'))));
+                tape('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
             }
         } else {
             tape('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
@@ -224,7 +224,7 @@ module.exports = function(params, cache) {
             config: params.clientConfig,
             method: 'debug'
         };
-        clientRun = run(client);
+        clientRun = run.run(client);
         tape('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
             return true;
@@ -249,7 +249,7 @@ module.exports = function(params, cache) {
 
     var serverRun;
     tape('server start', (assert) => {
-        serverRun = run(server, module.parent);
+        serverRun = run.run(server, module.parent);
         return serverRun.then((server) => {
             !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
             var result = client ? server : Promise.all(server.ports.map(port => port.isReady)).then(() =>
@@ -261,7 +261,7 @@ module.exports = function(params, cache) {
     client && tape('client start', (assert) => {
         return serverRun
             .then(() => {
-                clientRun = client && run(client, module.parent);
+                clientRun = client && run.run(client, module.parent);
                 return clientRun.then((client) => {
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
                     return Promise.all(client.ports.map(port => port.isReady)).then(() =>

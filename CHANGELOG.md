@@ -1,3 +1,19 @@
+<a name="8.1.6"></a>
+## [8.1.6](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.5...v8.1.6) (2017-05-05)
+
+
+
+<a name="8.1.5"></a>
+## [8.1.5](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.4...v8.1.5) (2017-05-05)
+
+
+### Bug Fixes
+
+* deps bump ([d0ab537](https://github.com/softwaregroup-bg/ut-run/commit/d0ab537))
+* properly exit when running tests ([cef4485](https://github.com/softwaregroup-bg/ut-run/commit/cef4485))
+
+
+
 <a name="8.1.4"></a>
 ## [8.1.4](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.3...v8.1.4) (2017-05-04)
 
