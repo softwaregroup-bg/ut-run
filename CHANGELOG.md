@@ -1,3 +1,13 @@
+<a name="8.1.7"></a>
+## [8.1.7](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.6...v8.1.7) (2017-05-05)
+
+
+### Bug Fixes
+
+* change abort to exit ([12d5185](https://github.com/softwaregroup-bg/ut-run/commit/12d5185))
+
+
+
 <a name="8.1.6"></a>
 ## [8.1.6](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.5...v8.1.6) (2017-05-05)
 
