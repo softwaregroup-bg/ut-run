@@ -261,7 +261,7 @@ module.exports = function(params, cache) {
     client && tape('client start', (assert) => {
         return serverRun
             .then(() => {
-                clientRun = client && run(client, module.parent);
+                clientRun = client && run.run(client, module.parent);
                 return clientRun.then((client) => {
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
                     return Promise.all(client.ports.map(port => port.isReady)).then(() =>
