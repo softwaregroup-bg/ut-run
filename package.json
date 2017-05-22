@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "8.1.7",
+  "version": "8.1.8",
   "dependencies": {
     "loadtest": "2.2.1",
     "lodash.merge": "4.6.0",
