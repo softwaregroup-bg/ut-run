@@ -1,3 +1,13 @@
+<a name="8.1.15"></a>
+## [8.1.15](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.14...v8.1.15) (2017-06-09)
+
+
+### Bug Fixes
+
+* pass config to port console ([#23](https://github.com/softwaregroup-bg/ut-run/issues/23)) ([d5a9f30](https://github.com/softwaregroup-bg/ut-run/commit/d5a9f30))
+
+
+
 <a name="8.1.14"></a>
 ## [8.1.14](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.13...v8.1.14) (2017-05-22)
 
