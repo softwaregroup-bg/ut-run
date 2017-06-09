@@ -103,7 +103,7 @@ module.exports = {
         }
         if (mergedConfig.console && mergedConfig.console.server) {
             var Console = serverRequire('ut-port-console');
-            consolePort = new Console();
+            consolePort = new Console((mergedConfig && mergedConfig.console));
             consolePort.logFactory = logFactory;
             merge(consolePort.config, mergedConfig.console);
         }
