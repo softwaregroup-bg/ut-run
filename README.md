@@ -1,5 +1,75 @@
 # UT Run
 
+## Purpose
+The module is used to start ut5 implementations which includes initialising logging, starting worker and master busses, starting performance port, creating other ports, initializing them, pass config to ports, clustering between cpu-s.
+
+## Usage
+In the root of the implementation in index.js file module ut-run should be required and its function 'run' should be called.
+Sample run of implementation is node index.js.
+### Sample project structure and default run of the implementation:
+Default running of the implementation means that no params are passed to run function, no environment variables are passed and no rc files are used when running node index.js
+
+By default the file structure is this:
+```
+implementation
+│   index.js
+└───server
+│   ├──index.js
+│   └──dev.json
+```
+
+Sample index.js file:
+```js
+require('ut-run').run()
+```
+
+Sample server/dev.json look like this.
+```javascript
+{
+    "implementation": "impl-test"
+}
+```
+
+Sample server/index.js look like this.
+```javascript
+module.exports = ({config}) => [{
+    ports: [],
+    modules: {},
+    validations: {}
+}];
+```
+
+- ports - holds ports configurations with which ut-run will instantiate corresponding port that will be registered in ut-bus. Config for every ut-port-* module can be added here. For example port registering and usage see
+[ut-port-sql](https://github.com/softwaregroup-bg/ut-port-sql)
+- modules - Used for registering http routes or backend methods in ut-bus
+- validations - validations that will be applied on input requests
+- config - param which holds merged config from default configs, dev.json, rc files
+
+### Configuration of implementation and ports can be set in the following ways:
+- In server/[environment]json file (default - server/dev.json)
+- In rc file. The name of this file is .ut_[implementation]_[environment]rc where
+[implementation] is implementation from server/index.js file,
+[environment] is passed UT_ENV environment or 'dev' (by default)
+For the sample starting the result is .ut_impl_test_devrc
+Note:
+In this filename there should be no dashes! Dashes from implementation (server/index.js) will be replaced with underscores!
+Location on this file in windows is C:/Users/[user]
+- Passing params to run function when calling index.js
+This params can specify where ut-run should search for json files and index.js (in the sample above 'server' folder).
+Priority of configs is in the following order rc file, [environment].json, default config.
+### Environment variables and their meaning.
+- UT_BUS_MODE - Allow to run masterBus and workerBus separately. Possible values are 'master', 'worker'
+- UT_APP - Used to determine in which folder the implementation configuration and json files are placed. Default place is 'server' folder in the root
+- UT_METHOD - Currently only 'debug' is suported. If not passed default 'debug' is used
+- UT_ENV - In which environment implementation will be started and which configuration will be used. Default configuration is 'dev'. Possible values are 'dev', 'test', 'uat', 'jenkins'
+
+### Working directory
+Ut-run sets also working directory for the implementation. This folder is used for file uploads, log files. Location of this directory depends on the operating system:
+- windows C:/ProgramData/SoftwareGroup/UnderTree/[implementation]
+- linux /var/lib/SoftwareGroup/UnderTree/[implementation]
+- macOS ~/Library/Application Support/SoftwareGroup/UnderTree/[implementation]
+
+<br><br>
 ## Run subtests
 
 ### Sample test script:
