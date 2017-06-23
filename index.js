@@ -123,7 +123,7 @@ module.exports = {
         } else {
             var config = params.config;
             if (!config) {
-                config = {params: {}, runMaster: true, runWorker: true};
+                config = {params: {}, runMaster: true, runWorker: true, utVersion:params.utVersion};
                 var argv = require('minimist')(process.argv.slice(2));
                 var busMode = process.env.UT_BUS_MODE || params.busMode;
                 if (busMode === 'master') {
