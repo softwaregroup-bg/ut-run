@@ -1,3 +1,13 @@
+<a name="8.2.0"></a>
+# [8.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.16...v8.2.0) (2017-06-29)
+
+
+### Features
+
+* pass version ([3058167](https://github.com/softwaregroup-bg/ut-run/commit/3058167))
+
+
+
 <a name="8.1.16"></a>
 ## [8.1.16](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.15...v8.1.16) (2017-06-16)
 
