@@ -1,3 +1,13 @@
+<a name="8.2.1"></a>
+## [8.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.0...v8.2.1) (2017-06-30)
+
+
+### Bug Fixes
+
+* version bump ([#26](https://github.com/softwaregroup-bg/ut-run/issues/26)) ([d406284](https://github.com/softwaregroup-bg/ut-run/commit/d406284))
+
+
+
 <a name="8.2.0"></a>
 # [8.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.16...v8.2.0) (2017-06-29)
 
