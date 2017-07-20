@@ -59,8 +59,7 @@ function sequence(options, test, bus, flow, params) {
                         step: index
                     });
                 }
-                test.comment(getName(step.name));
-                return step.params(context, {
+                var fn = assert => step.params(context, {
                     sequence: function() {
                         printSubtest(step.name, true);
                         return runSequence.apply(null, arguments)
@@ -84,7 +83,7 @@ function sequence(options, test, bus, flow, params) {
                             performanceWrite();
                             context[step.name] = result;
                             if (typeof step.result === 'function') {
-                                step.result.call(context, result, test);
+                                step.result.call(context, result, assert);
                             } else if (typeof step.error === 'function') {
                                 test.fail('Result is expected to be an error');
                             } else {
@@ -97,13 +96,13 @@ function sequence(options, test, bus, flow, params) {
                             passed && passed(0);
                             performanceWrite();
                             if (typeof step.error === 'function') {
-                                step.error.call(context, error, test);
+                                step.error.call(context, error, assert);
                             } else {
                                 throw error;
                             }
                         });
-                })
-                .catch(test.error);
+                });
+                return test.test(getName(step.methodName + ' // ' + step.name), fn);
             });
         });
         return promise;
@@ -234,7 +233,7 @@ module.exports = function(params, cache) {
         return;
     }
 
-    var server = {
+    var serverConfig = {
         main: params.server,
         config: params.serverConfig,
         app: params.serverApp || '../../server',
@@ -252,7 +251,7 @@ module.exports = function(params, cache) {
     var serverRun;
     tap.jobs = 4;
     var tests = tape('server start', (assert) => {
-        serverRun = run.run(server, module.parent);
+        serverRun = run.run(serverConfig, module.parent);
         return serverRun.then((server) => {
             !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
             var result = client ? server : Promise.all(server.ports.map(port => port.isReady)).then(() =>
@@ -263,7 +262,8 @@ module.exports = function(params, cache) {
 
     client && (tests = tape('client start', (assert) => {
         return serverRun
-            .then(() => {
+            .then(server => {
+                client.config && (client.config.server = () => server);
                 clientRun = client && run.run(client, module.parent);
                 return clientRun.then((client) => {
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
@@ -276,14 +276,14 @@ module.exports = function(params, cache) {
 
     function stop(assert, x) {
         x.ports.forEach((port) => {
-            assert.test('stopping port ' + port.config.id, (assert) => new Promise((resolve) => {
+            tape('stopping port ' + port.config.id, (assert) => new Promise((resolve) => {
                 resolve(port.stop());
             }));
         });
-        assert.test('stopping worker bus', (assert) => new Promise((resolve) => {
+        tape('stopping worker bus', (assert) => new Promise((resolve) => {
             resolve(x.bus.destroy());
         }));
-        assert.test('stopping master bus', (assert) => new Promise((resolve) => {
+        tape('stopping master bus', (assert) => new Promise((resolve) => {
             resolve(x.master.destroy().then(function(res) {
                 // log();
                 return res;
@@ -300,7 +300,7 @@ module.exports = function(params, cache) {
             });
             return x;
         });
-        client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
+        client && tape('client stop', {bufferred: false}, (assert) => clientRun.then(stop.bind(null, assert)));
         tape('server stop', {bufferred: false}, (assert) => serverRun
             .then(stop.bind(null, assert))
             .catch(() => Promise.reject(new Error('Server did not start')))
