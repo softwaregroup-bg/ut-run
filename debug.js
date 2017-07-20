@@ -118,6 +118,14 @@ module.exports = {
         var workerBus;
         var workerRun;
 
+        if (mergedConfig.masterBus.socketPid) {
+            if (mergedConfig.masterBus.socket) {
+                mergedConfig.masterBus.socket = mergedConfig.masterBus.socket + '[' + process.pid + ']';
+            } else {
+                mergedConfig.masterBus.socket = process.pid;
+            }
+        }
+
         if (mergedConfig.runMaster) {
             masterBus = Object.assign(new Bus(), {
                 server: true,
@@ -174,6 +182,12 @@ module.exports = {
             .then(function(ports) {
                 return {
                     ports: ports,
+                    portsMap: ports.reduce((prev, cur) => {
+                        if (cur && cur.config && (typeof cur.config.id === 'string')) {
+                            prev[cur.config.id] = cur;
+                        }
+                        return prev;
+                    }, {}),
                     master: masterBus,
                     bus: workerBus,
                     log: logFactory,
