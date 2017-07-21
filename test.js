@@ -204,7 +204,7 @@ function performanceTest(params, assert, bus, flow) {
 
 module.exports = function(params, cache) {
     var client;
-    if (cache) {
+    if (cache && cache.uttest) {
         if (!cache.first) {
             cache.first = true;
             if (params.peerImplementations) {
@@ -307,5 +307,5 @@ module.exports = function(params, cache) {
         );
     };
 
-    return cache ? {tests, stop: stopAll} : stopAll();
+    return (cache && cache.uttest) ? {tests, stop: stopAll} : tests.then(stopAll);
 };
