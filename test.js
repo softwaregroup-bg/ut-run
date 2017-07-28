@@ -10,7 +10,7 @@ function promisify(fn) {
     };
 }
 
-function sequence(options, test, bus, flow, params) {
+function sequence(options, test, bus, flow, params, parent) {
     function printSubtest(name, start) {
         if (start) {
             test.comment('-'.repeat(previous.length + 1) + '> subtest start: ' + getName(name));
@@ -24,8 +24,8 @@ function sequence(options, test, bus, flow, params) {
     function getName(name) {
         return previous.concat(name).join(' / ');
     }
-    return (function runSequence(flow, params) {
-        var context = {
+    return (function runSequence(flow, params, parent) {
+        var context = parent || {
             params: params || {}
         };
         var steps = flow.map(function(f) {
@@ -37,6 +37,7 @@ function sequence(options, test, bus, flow, params) {
                 methodName: f.method,
                 method: f.method ? bus.importMethod(f.method) : (params) => Promise.resolve(params),
                 params: (typeof f.params === 'function') ? promisify(f.params) : () => Promise.resolve(f.params),
+                steps: f.steps,
                 result: f.result,
                 error: f.error
             };
@@ -47,6 +48,7 @@ function sequence(options, test, bus, flow, params) {
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
         var promise = Promise.resolve();
+        var passing = true;
         steps.forEach(function(step, index) {
             promise = promise.then(function() {
                 var start = Date.now();
@@ -59,54 +61,71 @@ function sequence(options, test, bus, flow, params) {
                         step: index
                     });
                 }
-                var fn = assert => step.params(context, {
-                    sequence: function() {
-                        printSubtest(step.name, true);
-                        return runSequence.apply(null, arguments)
-                            .then(function(params) {
-                                printSubtest(step.name);
-                                return params;
+                var fn = assert => {
+                    if (!passing && parent) {
+                        assert.fail('aborted', {skip: true});
+                        return Promise.resolve();
+                    }
+
+                    return step.params(context, {
+                        sequence: function() {
+                            printSubtest(step.name, true);
+                            return runSequence.apply(null, arguments)
+                                .then(function(params) {
+                                    printSubtest(step.name);
+                                    return params;
+                                });
+                        },
+                        skip: function() {
+                            skip = true;
+                        }
+                    })
+                    .then(function(params) {
+                        if (skip) {
+                            return test.comment('^ ' + getName(step.name) + ' - skipped');
+                        }
+                        if (Array.isArray(step.steps)) {
+                            return sequence(options, assert, bus, step.steps, undefined, context);
+                        }
+                        return step.method(params)
+                            .then(function(result) {
+                                duration && duration(Date.now() - start);
+                                passed && passed((result && result._isOk) ? 1 : 0);
+                                performanceWrite();
+                                context[step.name] = result;
+                                if (typeof step.result === 'function') {
+                                    step.result.call(context, result, assert);
+                                } else if (typeof step.error === 'function') {
+                                    assert.fail('Result is expected to be an error');
+                                } else {
+                                    assert.fail('Test is missing result and error handlers');
+                                }
+                                return result;
+                            }, function(error) {
+                                duration && duration(Date.now() - start);
+                                passed && passed(0);
+                                performanceWrite();
+                                if (typeof step.error === 'function') {
+                                    step.error.call(context, error, assert);
+                                } else {
+                                    throw error;
+                                }
                             });
-                    },
-                    skip: function() {
-                        skip = true;
-                    }
-                })
-                .then(function(params) {
-                    if (skip) {
-                        return test.comment('^ ' + getName(step.name) + ' - skipped');
-                    }
-                    return step.method(params)
-                        .then(function(result) {
-                            duration && duration(Date.now() - start);
-                            passed && passed((result && result._isOk) ? 1 : 0);
-                            performanceWrite();
-                            context[step.name] = result;
-                            if (typeof step.result === 'function') {
-                                step.result.call(context, result, assert);
-                            } else if (typeof step.error === 'function') {
-                                test.fail('Result is expected to be an error');
-                            } else {
-                                test.fail('Test is missing result and error handlers');
-                            }
-                            return result;
-                        })
-                        .catch(function(error) {
-                            duration && duration(Date.now() - start);
-                            passed && passed(0);
-                            performanceWrite();
-                            if (typeof step.error === 'function') {
-                                step.error.call(context, error, assert);
-                            } else {
-                                throw error;
-                            }
-                        });
-                });
-                return test.test(getName(step.methodName + ' // ' + step.name), fn);
+                    })
+                    .then(result => {
+                        passing = passing && assert.passing();
+                        return result;
+                    }, error => {
+                        passing = false;
+                        throw error;
+                    });
+                };
+
+                return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing && parent}, fn);
             });
         });
-        return promise;
-    })(flow, params);
+        return promise.catch(test.threw);
+    })(flow, params, parent);
 }
 
 function performanceTest(params, assert, bus, flow) {
