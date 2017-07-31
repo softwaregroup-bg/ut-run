@@ -61,11 +61,6 @@ function sequence(options, test, bus, flow, params, parent) {
                     });
                 }
                 var fn = assert => {
-                    if (!passing && parent) {
-                        assert.fail('aborted', {skip: true});
-                        return Promise.resolve();
-                    }
-
                     return step.params(context, {
                         sequence: function() {
                             printSubtest(step.name, true);
@@ -112,7 +107,7 @@ function sequence(options, test, bus, flow, params, parent) {
                             });
                     })
                     .then(result => {
-                        passing = passing && assert.passing();
+                        passing = passing && (Array.isArray(step.steps) || assert.passing());
                         return result;
                     }, error => {
                         passing = false;
@@ -120,7 +115,7 @@ function sequence(options, test, bus, flow, params, parent) {
                     });
                 };
 
-                return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing && parent}, fn);
+                return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing}, fn);
             });
         });
         return promise.catch(test.threw);
