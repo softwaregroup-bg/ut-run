@@ -1,6 +1,5 @@
 // var log = require('why-is-node-running');
 var tap = require('tap');
-var tape = tap.test;
 var run = require('./index');
 var loadtest = require('loadtest');
 
@@ -222,16 +221,16 @@ function performanceTest(params, assert, bus, flow) {
 }
 
 module.exports = function(params, cache) {
-    var client;
+    var clientConfig;
     if (cache && cache.uttest) {
         if (!cache.first) {
             cache.first = true;
             if (params.peerImplementations) {
-                tape('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
+                tap.test('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
             }
         } else {
             return {
-                tests: tape('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports))
+                tests: tap.test('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports))
             };
         }
     }
@@ -239,13 +238,13 @@ module.exports = function(params, cache) {
     var clientRun;
 
     if (params.type && params.type === 'performance') {
-        client = {
+        clientConfig = {
             main: params.client,
             config: params.clientConfig,
             method: 'debug'
         };
-        clientRun = run.run(client);
-        tape('Performance test start', (assert) => clientRun.then((client) => {
+        clientRun = run.run(clientConfig);
+        tap.test('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
             return true;
         }));
@@ -259,7 +258,7 @@ module.exports = function(params, cache) {
         env: params.serverEnv || 'test',
         method: params.serverMethod || 'debug'
     };
-    client = params.client && {
+    clientConfig = params.client && {
         main: params.client,
         config: params.clientConfig,
         app: params.clientApp || '../../desktop',
@@ -268,63 +267,65 @@ module.exports = function(params, cache) {
     };
 
     var serverRun;
-    tap.jobs = 4;
-    var tests = tape('server start', (assert) => {
-        serverRun = run.run(serverConfig, module.parent);
+    var testObj;
+    // tap.jobs = 1;
+    var tests = tap.test('server start', {bufferred: false, bail: true}, assert => {
+        serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
-            !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
-            var result = client ? server : Promise.all(server.ports.map(port => port.isReady)).then(() =>
-                params.steps(assert, server.bus, sequence.bind(null, params), server.ports));
+            testObj = server;
+            !clientConfig && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
+            var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isReady));
             return result;
         });
     });
 
-    client && (tests = tape('client start', (assert) => {
+    clientConfig && (tests = tap.test('client start', {bufferred: false, bail: true}, assert => {
         return serverRun
             .then(server => {
-                client.config && (client.config.server = () => server);
-                clientRun = client && run.run(client, module.parent);
+                clientConfig.config && (clientConfig.config.server = () => server);
+                clientRun = clientConfig && run.run(clientConfig, module.parent, assert);
                 return clientRun.then((client) => {
+                    testObj = client;
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
-                    return tape('parallel', {bufferred: true}, () => Promise.all(client.ports.map(port => port.isReady)).then(() =>
-                        params.steps(assert, client.bus, sequence.bind(null, params), client.ports))
-                    );
+                    return Promise.all(client.ports.map(port => port.isReady));
                 });
             });
     }));
 
+    tests = tests.then((test) => params.steps(test, testObj.bus, sequence.bind(null, params), testObj.ports));
+
     function stop(assert, x) {
-        x.ports.forEach((port) => {
-            tape('stopping port ' + port.config.id, (assert) => new Promise((resolve) => {
-                resolve(port.stop());
-            }));
-        });
-        tape('stopping worker bus', (assert) => new Promise((resolve) => {
-            resolve(x.bus.destroy());
-        }));
-        tape('stopping master bus', (assert) => new Promise((resolve) => {
-            resolve(x.master.destroy().then(function(res) {
-                // log();
-                return res;
-            }));
-        }));
-        return new Promise((resolve) => resolve(x));
+        var promise = Promise.resolve();
+        var step = (name, fn) => {
+            promise = promise.then(fn).then(result => {
+                assert.ok(true, name);
+                return result;
+            }, error => {
+                assert.fail(name);
+                return error;
+            });
+        };
+
+        x.ports.forEach(port => step('stopped port ' + port.config.id, () => port.stop()));
+        step('stopped worker bus', () => x.bus.destroy());
+        step('stopped master bus', () => x.master.destroy());
+        return promise;
     }
 
-    var stopAll = function() {
-        params.peerImplementations && tape('Stopping peer implementations', (assert) => {
+    var stopAll = function(test) {
+        params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
             var x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
                 x = x.then(() => (promise.then((impl) => (impl.stop()))));
             });
             return x;
         });
-        client && tape('client stop', {bufferred: false}, (assert) => clientRun.then(stop.bind(null, assert)));
-        tape('server stop', {bufferred: false}, (assert) => serverRun
-            .then(stop.bind(null, assert))
+        clientConfig && test.test('client stop', {bufferred: false}, assert => clientRun.then(result => stop(assert, result)));
+        return test.test('server stop', {bufferred: false}, assert => serverRun
+            .then(result => stop(assert, result))
             .catch(() => Promise.reject(new Error('Server did not start')))
         );
     };
 
-    return (cache && cache.uttest) ? {tests, stop: stopAll} : tests.then(stopAll);
+    return tests.then(stopAll);
 };

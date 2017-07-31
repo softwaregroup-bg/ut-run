@@ -21,7 +21,7 @@ module.exports = {
         }
     },
 
-    load: function(implementation, config) {
+    load: function(implementation, config, test) {
         if (typeof implementation === 'string') {
             implementation = require(implementation);
         }
@@ -72,7 +72,15 @@ module.exports = {
         ).then(function(contexts) {
             return when.reduce(contexts, function(prev, context, idx) {
                 portsStarted.push(context); // collect ports that are started
-                return context.start();
+                var started = context.start();
+                if (test && started && typeof started.then === 'function') {
+                    return started.then(result => {
+                        test.ok(true, 'started port ' + context.config.id);
+                        return result;
+                    });
+                } else {
+                    return started;
+                }
             }, [])
             .then(function() {
                 return contexts;
@@ -86,12 +94,12 @@ module.exports = {
         });
     },
 
-    loadImpl: function(implementation, config) {
+    loadImpl: function(implementation, config, test) {
         if (typeof implementation === 'function') {
             return new Promise(resolve => resolve(implementation({config})))
-                .then(result => this.load(result, config));
+                .then(result => this.load(result, config, test));
         } else {
-            return this.load(implementation, config);
+            return this.load(implementation, config, test);
         }
     },
 
@@ -115,7 +123,7 @@ module.exports = {
         });
     },
 
-    runParams: function(params, parent) {
+    runParams: function(params, parent, test) {
         params = params || {};
         parent = parent || module.parent;
         if (process.type === 'browser') {
@@ -154,11 +162,11 @@ module.exports = {
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
-            return run[params.method || config.params.method](main, config);
+            return run[params.method || config.params.method](main, config, test);
         }
     },
-    run: function(params, parent) {
-        return this.runParams(params, parent)
+    run: function(params, parent, test) {
+        return this.runParams(params, parent, test)
         .then((result) => {
             process.send && process.send('ready');
             return result;
