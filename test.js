@@ -80,6 +80,10 @@ function sequence(options, test, bus, flow, params, parent) {
                         }
                         if (Array.isArray(step.steps)) {
                             return sequence(options, assert, bus, step.steps, undefined, context);
+                        } else if (typeof step.steps === 'function') {
+                            return Promise.resolve()
+                                .then(() => step.steps(context))
+                                .then(steps => sequence(options, assert, bus, steps, undefined, context));
                         }
                         return step.method(params)
                             .then(function(result) {
@@ -107,7 +111,7 @@ function sequence(options, test, bus, flow, params, parent) {
                             });
                     })
                     .then(result => {
-                        passing = passing && (Array.isArray(step.steps) || assert.passing());
+                        passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
                         return result;
                     }, error => {
                         passing = false;
