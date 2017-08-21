@@ -28,9 +28,14 @@ module.exports = {
 
         if (Array.isArray(implementation)) {
             implementation = implementation.reduce((prev, impl) => {
-                impl.ports && (prev.ports = prev.ports.concat(impl.ports));
-                impl.modules && Object.assign(prev.modules, impl.modules);
-                impl.validations && Object.assign(prev.validations, impl.validations);
+                if (impl) {
+                    if (impl instanceof Function) {
+                        impl = impl(config);
+                    }
+                    impl.ports && (prev.ports = prev.ports.concat(impl.ports));
+                    impl.modules && Object.assign(prev.modules, impl.modules);
+                    impl.validations && Object.assign(prev.validations, impl.validations);
+                }
                 return prev;
             }, {ports: [], modules: {}, validations: {}});
         }
@@ -43,30 +48,45 @@ module.exports = {
         if (implementation.modules instanceof Object) {
             Object.keys(implementation.modules).forEach(function(moduleName) {
                 var module = implementation.modules[moduleName];
-                (module.init instanceof Function) && (module.init(this.bus));
-                module.routeConfig = [];
-                this.bus.registerLocal(module, moduleName);
+                if (module) {
+                    if (module instanceof Function) {
+                        module = module(config);
+                    }
+                    (module.init instanceof Function) && (module.init(this.bus));
+                    module.routeConfig = [];
+                    this.bus.registerLocal(module, moduleName);
+                }
             }.bind(this));
         }
 
         if (implementation.validations instanceof Object) {
             Object.keys(implementation.validations).forEach(function(validationKey) {
-                var routeConfigNames = validationKey.split('.');
-                var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
-                var module = implementation.modules[moduleName];
                 var routeConfig = implementation.validations[validationKey];
-                module && Object.keys(routeConfig).forEach(function(value) {
-                    module.routeConfig.push({
-                        method: routeConfigNames.join('.') + '.' + value,
-                        config: routeConfig[value]
+                if (routeConfig) {
+                    if (routeConfig instanceof Function) {
+                        routeConfig = routeConfig(config);
+                    }
+                    var routeConfigNames = validationKey.split('.');
+                    var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
+                    var module = implementation.modules[moduleName];
+                    module && Object.keys(routeConfig).forEach(function(value) {
+                        module.routeConfig.push({
+                            method: routeConfigNames.join('.') + '.' + value,
+                            config: routeConfig[value]
+                        });
                     });
-                });
+                }
             });
         }
 
         return when.all(
             ports.reduce(function(all, port) {
-                config[port.id] !== false && all.push(this.loadConfig(merge(port, config[port.id])));
+                if (port) {
+                    if (port instanceof Function) {
+                        port = port(config);
+                    }
+                    config[port.id] !== false && all.push(this.loadConfig(merge(port, config[port.id])));
+                }
                 return all;
             }.bind(this), [])
         ).then(function(contexts) {
