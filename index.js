@@ -75,7 +75,14 @@ module.exports = {
                 return context.start();
             }, [])
             .then(function() {
-                return contexts;
+                return portsStarted
+                    .reduce(function(promise, port) {
+                        if (typeof port.ready === 'function') {
+                            promise = promise.then(() => port.ready());
+                        }
+                        return promise;
+                    }, Promise.resolve())
+                    .then(() => contexts);
             })
             .catch(function(err) {
                 return when.reduce(portsStarted.reverse(), function(prev, context, idx) {
