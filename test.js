@@ -102,7 +102,7 @@ function sequence(options, test, bus, flow, params) {
                             }
                         });
                 })
-                .catch(test.error.bind(test));
+                .catch((error) => test.error(error));
             });
         });
         return promise;
