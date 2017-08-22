@@ -215,8 +215,6 @@ module.exports = function(params, cache) {
             tape('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
             return;
         }
-    } else if (params.peerImplementations) {
-        tape('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
     }
 
     var clientRun;
