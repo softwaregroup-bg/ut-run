@@ -1,3 +1,48 @@
+<a name="8.2.2"></a>
+## [8.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.1...v8.2.2) (2017-07-17)
+
+
+### Bug Fixes
+
+* pass log config to transformData method ([#27](https://github.com/softwaregroup-bg/ut-run/issues/27)) ([f113f38](https://github.com/softwaregroup-bg/ut-run/commit/f113f38))
+
+
+
+<a name="8.2.1"></a>
+## [8.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.0...v8.2.1) (2017-06-30)
+
+
+### Bug Fixes
+
+* version bump ([#26](https://github.com/softwaregroup-bg/ut-run/issues/26)) ([d406284](https://github.com/softwaregroup-bg/ut-run/commit/d406284))
+
+
+
+<a name="8.2.0"></a>
+# [8.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.16...v8.2.0) (2017-06-29)
+
+
+### Features
+
+* pass version ([3058167](https://github.com/softwaregroup-bg/ut-run/commit/3058167))
+
+
+
+<a name="8.1.16"></a>
+## [8.1.16](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.15...v8.1.16) (2017-06-16)
+
+
+
+<a name="8.1.15"></a>
+## [8.1.15](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.14...v8.1.15) (2017-06-09)
+
+
+### Bug Fixes
+
+* pass config to port console ([#23](https://github.com/softwaregroup-bg/ut-run/issues/23)) ([d5a9f30](https://github.com/softwaregroup-bg/ut-run/commit/d5a9f30))
+
+
+
 <a name="8.1.14"></a>
 ## [8.1.14](https://github.com/softwaregroup-bg/ut-run/compare/v8.1.13...v8.1.14) (2017-05-22)
 

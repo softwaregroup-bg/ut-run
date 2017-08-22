@@ -89,6 +89,7 @@ module.exports = {
                 type: 'bunyan',
                 name: 'bunyan_test',
                 workDir: mergedConfig.workDir,
+                transformData: (mergedConfig.log && (mergedConfig.log.transformData || {})),
                 streams: Array.prototype.concat(streams, mergedConfig.log.streams)
             });
 
@@ -103,7 +104,7 @@ module.exports = {
         }
         if (mergedConfig.console && mergedConfig.console.server) {
             var Console = serverRequire('ut-port-console');
-            consolePort = new Console();
+            consolePort = new Console((mergedConfig && mergedConfig.console));
             consolePort.logFactory = logFactory;
             merge(consolePort.config, mergedConfig.console);
         }
