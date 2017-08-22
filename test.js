@@ -47,64 +47,63 @@ function sequence(options, test, bus, flow, params) {
 
         var promise = Promise.resolve();
         steps.forEach(function(step, index) {
-            promise = promise
-                .then(function() {
-                    var start = Date.now();
-                    var skip = false;
-                    function performanceWrite() {
-                        bus.performance && bus.performance.write({
-                            testName: options.name,
-                            stepName: step.name,
-                            method: step.methodName,
-                            step: index
-                        });
-                    }
-                    test.comment(getName(step.name));
-                    return step.params(context, {
-                        sequence: function() {
-                            printSubtest(step.name, true);
-                            return runSequence.apply(null, arguments)
-                                .then(function(params) {
-                                    printSubtest(step.name);
-                                    return params;
-                                });
-                        },
-                        skip: function() {
-                            skip = true;
-                        }
-                    })
-                    .then(function(params) {
-                        if (skip) {
-                            return test.comment('^ ' + getName(step.name) + ' - skipped');
-                        }
-                        return step.method(params)
-                            .then(function(result) {
-                                duration && duration(Date.now() - start);
-                                passed && passed(result._isOk ? 1 : 0);
-                                performanceWrite();
-                                context[step.name] = result;
-                                if (typeof step.result === 'function') {
-                                    step.result.call(context, result, test);
-                                } else if (typeof step.error === 'function') {
-                                    test.fail('Result is expected to be an error');
-                                } else {
-                                    test.fail('Test is missing result and error handlers');
-                                }
-                                return result;
-                            })
-                            .catch(function(error) {
-                                duration && duration(Date.now() - start);
-                                passed && passed(0);
-                                performanceWrite();
-                                if (typeof step.error === 'function') {
-                                    step.error.call(context, error, test);
-                                } else {
-                                    throw error;
-                                }
-                            });
+            promise = promise.then(function() {
+                var start = Date.now();
+                var skip = false;
+                function performanceWrite() {
+                    bus.performance && bus.performance.write({
+                        testName: options.name,
+                        stepName: step.name,
+                        method: step.methodName,
+                        step: index
                     });
+                }
+                test.comment(getName(step.name));
+                return step.params(context, {
+                    sequence: function() {
+                        printSubtest(step.name, true);
+                        return runSequence.apply(null, arguments)
+                            .then(function(params) {
+                                printSubtest(step.name);
+                                return params;
+                            });
+                    },
+                    skip: function() {
+                        skip = true;
+                    }
+                })
+                .then(function(params) {
+                    if (skip) {
+                        return test.comment('^ ' + getName(step.name) + ' - skipped');
+                    }
+                    return step.method(params)
+                        .then(function(result) {
+                            duration && duration(Date.now() - start);
+                            passed && passed(result._isOk ? 1 : 0);
+                            performanceWrite();
+                            context[step.name] = result;
+                            if (typeof step.result === 'function') {
+                                step.result.call(context, result, test);
+                            } else if (typeof step.error === 'function') {
+                                test.fail('Result is expected to be an error');
+                            } else {
+                                test.fail('Test is missing result and error handlers');
+                            }
+                            return result;
+                        })
+                        .catch(function(error) {
+                            duration && duration(Date.now() - start);
+                            passed && passed(0);
+                            performanceWrite();
+                            if (typeof step.error === 'function') {
+                                step.error.call(context, error, test);
+                            } else {
+                                throw error;
+                            }
+                        });
                 })
                 .catch(test.error.bind(test));
+            });
         });
         return promise;
     })(flow, params);
