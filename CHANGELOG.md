@@ -1,3 +1,13 @@
+<a name="8.2.3"></a>
+## [8.2.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.2...v8.2.3) (2017-08-22)
+
+
+### Bug Fixes
+
+* call ready eventHandler when starting the implementation ([158629f](https://github.com/softwaregroup-bg/ut-run/commit/158629f))
+
+
+
 <a name="8.2.2"></a>
 ## [8.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.1...v8.2.2) (2017-07-17)
 
