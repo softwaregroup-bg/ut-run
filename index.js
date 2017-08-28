@@ -34,15 +34,24 @@ module.exports = {
                 return prev;
             }, {ports: [], modules: {}, validations: {}});
         }
+        config = config || {};
         var ports = [];
         if (config.registry) {
-            ports.push({createPort: require('ut-port-registry')});
+            if (config.registry === true) {
+                config.registry = {};
+            }
+            config.registry.context = {
+                version: config.version
+            }
+            ports.push({
+                id: 'registry',
+                createPort: require('ut-port-registry')
+            });
         }
         if (Array.isArray(implementation.ports)) {
             ports.push.apply(ports, implementation.ports);
         }
         var portsStarted = [];
-        config = config || {};
         this.bus.config = config;
 
         if (implementation.modules instanceof Object) {
@@ -135,7 +144,13 @@ module.exports = {
         } else {
             var config = params.config;
             if (!config) {
-                config = {params: {}, runMaster: true, runWorker: true, version: params.version};
+                var pckgJson;
+                try {
+                    pckgJson = parent.require('./package.json');
+                } catch (e) {
+                    pckgJson = {};
+                }
+                config = {params: {}, runMaster: true, runWorker: true, version: params.version || pckgJson.version};
                 var argv = require('minimist')(process.argv.slice(2));
                 var busMode = process.env.UT_BUS_MODE || params.busMode;
                 if (busMode === 'master') {
@@ -147,7 +162,7 @@ module.exports = {
                 config.params.app = process.env.UT_APP || params.app || argv._[0] || 'server';
                 config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
                 config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
-                config = Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
+                Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
             }
             var main = params.main || parent.require('./' + config.params.app);
 
