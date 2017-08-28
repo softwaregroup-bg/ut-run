@@ -34,8 +34,13 @@ module.exports = {
                 return prev;
             }, {ports: [], modules: {}, validations: {}});
         }
-
-        var ports = implementation.ports;
+        var ports = [];
+        if (config.registry) {
+            ports.push({createPort: require('ut-port-registry')})
+        }
+        if (Array.isArray(implementation.ports)) {
+            ports.push.apply(ports, implementation.ports);
+        }
         var portsStarted = [];
         config = config || {};
         this.bus.config = config;
