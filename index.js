@@ -36,7 +36,7 @@ module.exports = {
         }
         var ports = [];
         if (config.registry) {
-            ports.push({createPort: require('ut-port-registry')})
+            ports.push({createPort: require('ut-port-registry')});
         }
         if (Array.isArray(implementation.ports)) {
             ports.push.apply(ports, implementation.ports);
