@@ -57,6 +57,27 @@ Location on this file in windows is C:/Users/[user]
 - Passing params to run function when calling index.js
 This params can specify where ut-run should search for json files and index.js (in the sample above 'server' folder).
 Priority of configs is in the following order rc file, [environment].json, default config.
+
+#### special cases
+
+* optionally in the configuration one could provide information about automatic service discovery like follows:
+    ```json
+        {
+            ...
+
+            registry: {
+                type: 'consul',
+                params: {}
+            }
+        }
+    ```
+
+    If you set `registry: true` then consul will be used by default trying to connect to the default consul port on `8500`.
+    Currently only consul is supported as a service registry backend. For `params` specification please refer to the available consul initialization properties [here](https://github.com/silas/node-consul#consuloptions).
+
+    In order not to use any automatic service discovery just set `registry: false` or completely omit the `registry` property.
+
+
 ### Environment variables and their meaning.
 - UT_BUS_MODE - Allow to run masterBus and workerBus separately. Possible values are 'master', 'worker'
 - UT_APP - Used to determine in which folder the implementation configuration and json files are placed. Default place is 'server' folder in the root
