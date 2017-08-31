@@ -37,15 +37,12 @@ module.exports = {
         config = config || {};
         var ports = [];
         if (config.registry) {
-            if (config.registry === true) {
-                config.registry = {};
-            }
-            config.registry.context = {
-                version: config.version
-            };
             ports.push({
                 id: 'registry',
-                createPort: require('ut-port-registry')
+                createPort: require('ut-port-registry'),
+                context: {
+                    version: config.version
+                }
             });
         }
         if (Array.isArray(implementation.ports)) {
