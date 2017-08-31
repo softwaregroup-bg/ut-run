@@ -1,3 +1,13 @@
+<a name="8.3.0"></a>
+# [8.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.3...v8.3.0) (2017-08-31)
+
+
+### Features
+
+* add registry dynamically if the respective configuration has been specified ([3514a27](https://github.com/softwaregroup-bg/ut-run/commit/3514a27))
+
+
+
 <a name="8.2.3"></a>
 ## [8.2.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.2...v8.2.3) (2017-08-22)
 
