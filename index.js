@@ -41,7 +41,8 @@ module.exports = {
                 id: 'registry',
                 createPort: require('ut-port-registry'),
                 context: {
-                    version: config.version
+                    version: config.version,
+                    impl: config.implementation
                 }
             });
         }
