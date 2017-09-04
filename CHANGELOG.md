@@ -1,3 +1,14 @@
+<a name="8.3.1"></a>
+## [8.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.3.0...v8.3.1) (2017-09-04)
+
+
+### Bug Fixes
+
+* test ([657fc72](https://github.com/softwaregroup-bg/ut-run/commit/657fc72))
+* update dependency to ut-port-registr ([0d0e7a6](https://github.com/softwaregroup-bg/ut-run/commit/0d0e7a6))
+
+
+
 <a name="8.3.0"></a>
 # [8.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.3...v8.3.0) (2017-08-31)
 
