@@ -46,6 +46,18 @@ module.exports = {
                 }
             });
         }
+
+        if (config.queue) {
+            ports.push({
+                id: 'queue',
+                createPort: require('ut-port-queue'),
+                context: {
+                    version: config.version,
+                    impl: config.implementation
+                }
+            });
+        }
+
         if (Array.isArray(implementation.ports)) {
             ports.push.apply(ports, implementation.ports);
         }
