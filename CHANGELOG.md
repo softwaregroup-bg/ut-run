@@ -1,3 +1,34 @@
+<a name="8.3.1"></a>
+## [8.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.3.0...v8.3.1) (2017-09-04)
+
+
+### Bug Fixes
+
+* test ([657fc72](https://github.com/softwaregroup-bg/ut-run/commit/657fc72))
+* update dependency to ut-port-registr ([0d0e7a6](https://github.com/softwaregroup-bg/ut-run/commit/0d0e7a6))
+
+
+
+<a name="8.3.0"></a>
+# [8.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.3...v8.3.0) (2017-08-31)
+
+
+### Features
+
+* add registry dynamically if the respective configuration has been specified ([3514a27](https://github.com/softwaregroup-bg/ut-run/commit/3514a27))
+
+
+
+<a name="8.2.3"></a>
+## [8.2.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.2...v8.2.3) (2017-08-22)
+
+
+### Bug Fixes
+
+* call ready eventHandler when starting the implementation ([158629f](https://github.com/softwaregroup-bg/ut-run/commit/158629f))
+
+
+
 <a name="8.2.2"></a>
 ## [8.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.1...v8.2.2) (2017-07-17)
 

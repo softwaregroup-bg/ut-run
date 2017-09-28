@@ -39,10 +39,22 @@ module.exports = {
                 return prev;
             }, {ports: [], modules: {}, validations: {}});
         }
-
-        var ports = implementation.ports;
-        var portsStarted = [];
         config = config || {};
+        var ports = [];
+        if (config.registry) {
+            ports.push({
+                id: 'registry',
+                createPort: require('ut-port-registry'),
+                context: {
+                    version: config.version,
+                    impl: config.implementation
+                }
+            });
+        }
+        if (Array.isArray(implementation.ports)) {
+            ports.push.apply(ports, implementation.ports);
+        }
+        var portsStarted = [];
         this.bus.config = config;
 
         if (implementation.modules instanceof Object) {
@@ -103,7 +115,14 @@ module.exports = {
                 }
             }, [])
             .then(function() {
-                return contexts;
+                return portsStarted
+                    .reduce(function(promise, port) {
+                        if (typeof port.ready === 'function') {
+                            promise = promise.then(() => port.ready());
+                        }
+                        return promise;
+                    }, Promise.resolve())
+                    .then(() => contexts);
             })
             .catch(function(err) {
                 return when.reduce(portsStarted.reverse(), function(prev, context, idx) {
@@ -163,7 +182,7 @@ module.exports = {
                 config.params.app = process.env.UT_APP || params.app || argv._[0] || 'server';
                 config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
                 config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
-                config = Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
+                Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
             }
             var main = params.main || parent.require('./' + config.params.app);
 
