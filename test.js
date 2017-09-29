@@ -234,6 +234,10 @@ module.exports = function(params, cache) {
         }
     }
 
+    if (params.init) {
+        tap.test('Initialization', (assert) => params.init(assert));
+    }
+
     var clientRun;
 
     if (params.type && params.type === 'performance') {
