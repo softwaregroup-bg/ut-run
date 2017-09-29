@@ -146,7 +146,7 @@ module.exports = {
                 logFactory: logFactory,
                 performance: performancePort
             });
-            workerRun = Object.assign({}, require('./index'), {
+            workerRun = require('./service')({
                 bus: workerBus,
                 logFactory: logFactory
             });
@@ -171,8 +171,7 @@ module.exports = {
                 promise = promise.then(workerBus.start.bind(workerBus));
             }
             promise = promise
-                .then(workerRun.ready.bind(workerRun))
-                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig, assert));
+                .then(workerRun.impl.load.bind(workerRun, impl, mergedConfig, assert));
         } else {
             promise = promise
             .then(masterBus.start.bind(masterBus))
