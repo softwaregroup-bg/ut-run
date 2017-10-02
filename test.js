@@ -238,7 +238,7 @@ module.exports = function(params, cache) {
         tap.test('Starting services...', (assert) => {
             return Promise.all(Object.keys(params.services).map((service) => {
                 let config = params.services[service];
-                return config.src.then((app) => {
+                return config.init().then((app) => {
                     if (app.bus.config.registry) {
                         return app.bus.importMethod('registry.service.fetch')({
                             service: config.service,
