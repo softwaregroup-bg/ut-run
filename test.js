@@ -234,8 +234,42 @@ module.exports = function(params, cache) {
         }
     }
 
-    if (params.init) {
-        tap.test('Initialization', (assert) => params.init(assert));
+    if (params.services) {
+        tap.test('Starting services...', (assert) => {
+            return Promise.all(Object.keys(params.services).map((service) => {
+                let config = params.services[service];
+                return config.src.then((app) => {
+                    if (app.bus.config.registry) {
+                        return app.bus.importMethod('registry.service.fetch')({
+                            service: config.service,
+                            type: 'http',
+                            pid: process.pid
+                        })
+                        .then((result) => {
+                            let serviceDefinition = result[0];
+                            if (serviceDefinition) {
+                                params.serverConfig[service].url = `http://${serviceDefinition.host}:${serviceDefinition.port}`;
+                                return app;
+                            }
+                            throw new Error(`Service '${config.service}' (type: http, pid: ${process.pid}) Not Found.`);
+                        });
+                    }
+                    if (app.portsMap && app.portsMap[config.service] && typeof app.portsMap[config.service].status === 'function') {
+                        params.serverConfig[service].url = 'http://localhost:' + app.portsMap[config.service].status().port;
+                    }
+                    assert.ok(true, `Started ${service} service`);
+                    return app;
+                });
+            }))
+            .then((apps) => {
+                params.stop = () => {
+                    return Promise.all(apps.map((app) => {
+                        return app.stop();
+                    }));
+                };
+                return apps;
+            });
+        });
     }
 
     var clientRun;
@@ -316,6 +350,7 @@ module.exports = function(params, cache) {
     }
 
     var stopAll = function(test) {
+        params.stop && test.test('stopping services', {bufferred: false}, () => params.stop());
         params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
             var x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
