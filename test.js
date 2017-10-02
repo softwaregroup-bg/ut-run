@@ -249,6 +249,7 @@ module.exports = function(params, cache) {
                             let serviceDefinition = result[0];
                             if (serviceDefinition) {
                                 params.serverConfig[service].url = `http://${serviceDefinition.host}:${serviceDefinition.port}`;
+                                assert.ok(true, `Started ${service} service`);
                                 return app;
                             }
                             throw new Error(`Service '${config.service}' (type: http, pid: ${process.pid}) Not Found.`);
