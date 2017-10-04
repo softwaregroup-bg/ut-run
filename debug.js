@@ -29,7 +29,7 @@ module.exports = {
                 logLevel: 'debug'
             },
             console: {
-                host: '127.0.0.1',
+                host: 'localhost',
                 port: 30001,
                 logLevel: 'info'
             },
@@ -75,14 +75,11 @@ module.exports = {
             if (mergedConfig.console) {
                 streams.push({
                     level: mergedConfig.console.level || 'trace',
-                    stream: require('ut-log/socketStream'),
+                    stream: require('ut-log/udpStream'),
                     streamConfig: {
-                        protocol: process.browser && global.location.protocol,
                         host: mergedConfig.console.host,
-                        port: mergedConfig.console.port,
-                        objectMode: true
-                    },
-                    type: 'raw'
+                        port: mergedConfig.console.port
+                    }
                 });
             }
             logFactory = new UTLog({

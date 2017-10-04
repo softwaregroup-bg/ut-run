@@ -1,12 +1,12 @@
 {
   "name": "ut-run",
-  "version": "8.3.1",
+  "version": "8.4.0-rc.1",
   "dependencies": {
     "loadtest": "2.2.1",
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
-    "ut-log": "^5.10.8",
+    "ut-log": "^5.11.0",
     "ut-port-registry": "^0.1.1",
     "when": "3.7.7"
   },
