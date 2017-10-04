@@ -6,7 +6,7 @@
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.1.6",
-    "ut-log": ">=5.11.0-rc.0 <5.11.0",
+    "ut-log": "^5.11.0",
     "ut-port-registry": "^0.1.1",
     "when": "3.7.7"
   },

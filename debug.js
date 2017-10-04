@@ -77,8 +77,8 @@ module.exports = {
                     level: mergedConfig.console.level || 'trace',
                     stream: require('ut-log/udpStream'),
                     streamConfig: {
-                        host: 'localhost',
-                        port: 30001
+                        host: mergedConfig.console.host,
+                        port: mergedConfig.console.port
                     }
                 });
             }
