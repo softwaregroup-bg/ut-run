@@ -79,6 +79,7 @@ module.exports = {
             logFactory = new UTLog({
                 type: 'bunyan',
                 name: 'bunyan_test',
+                service: mergedConfig.service,
                 workDir: mergedConfig.workDir,
                 transformData: (mergedConfig.log && (mergedConfig.log.transformData || {})),
                 streams: Array.prototype.concat(streams, mergedConfig.log.streams)
