@@ -233,42 +233,27 @@ module.exports = function(params, cache) {
             };
         }
     }
-
-    if (params.services) {
+    var stopServices;
+    if (Array.isArray(params.services)) {
         tap.test('Starting services...', (assert) => {
-            return Promise.all(Object.keys(params.services).map((service) => {
-                let config = params.services[service];
-                return config.init().then((app) => {
-                    if (app.bus.config.registry) {
-                        return app.bus.importMethod('registry.service.fetch')({
-                            service: config.service,
-                            type: 'http',
-                            pid: process.pid
-                        })
-                        .then((result) => {
-                            let serviceDefinition = result[0];
-                            if (serviceDefinition) {
-                                params.serverConfig[service].url = `http://${serviceDefinition.host}:${serviceDefinition.port}`;
-                                assert.ok(true, `Started ${service} service`);
-                                return app;
-                            }
-                            throw new Error(`Service '${config.service}' (type: http, pid: ${process.pid}) Not Found.`);
+            return params.services.reduce((promise, service) => {
+                return promise.then((apps) => {
+                    return service()
+                        .then((app) => {
+                            assert.ok(true, `${service.name} service started`);
+                            apps.unshift(app);
+                            return apps;
                         });
-                    }
-                    if (app.portsMap && app.portsMap[config.service] && typeof app.portsMap[config.service].status === 'function') {
-                        params.serverConfig[service].url = 'http://localhost:' + app.portsMap[config.service].status().port;
-                    }
-                    assert.ok(true, `Started ${service} service`);
-                    return app;
                 });
-            }))
+            }, Promise.resolve([]))
             .then((apps) => {
-                params.stop = () => {
-                    return Promise.all(apps.map((app) => {
-                        return app.stop();
-                    }));
+                stopServices = () => {
+                    return apps.reduce((promise, app) => {
+                        return promise.then(() => {
+                            return app.stop();
+                        });
+                    }, Promise.resolve());
                 };
-                return apps;
             });
         });
     }
@@ -351,7 +336,7 @@ module.exports = function(params, cache) {
     }
 
     var stopAll = function(test) {
-        params.stop && test.test('stopping services', {bufferred: false}, () => params.stop());
+        stopServices && test.test('stopping services', {bufferred: false}, () => stopServices());
         params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
             var x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
