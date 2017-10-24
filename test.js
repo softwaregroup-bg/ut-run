@@ -233,9 +233,29 @@ module.exports = function(params, cache) {
             };
         }
     }
-
-    if (params.init) {
-        tap.test('Initialization', (assert) => params.init(assert));
+    var stopServices;
+    if (Array.isArray(params.services)) {
+        tap.test('Starting services...', (assert) => {
+            return params.services.reduce((promise, service) => {
+                return promise.then((apps) => {
+                    return service()
+                        .then((app) => {
+                            assert.ok(true, `${service.name} service started`);
+                            apps.unshift(app);
+                            return apps;
+                        });
+                });
+            }, Promise.resolve([]))
+            .then((apps) => {
+                stopServices = () => {
+                    return apps.reduce((promise, app) => {
+                        return promise.then(() => {
+                            return app.stop();
+                        });
+                    }, Promise.resolve());
+                };
+            });
+        });
     }
 
     var clientRun;
@@ -316,6 +336,7 @@ module.exports = function(params, cache) {
     }
 
     var stopAll = function(test) {
+        stopServices && test.test('stopping services', {bufferred: false}, () => stopServices());
         params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
             var x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
