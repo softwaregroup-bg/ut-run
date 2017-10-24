@@ -2,19 +2,19 @@
   "name": "ut-run",
   "version": "8.3.1",
   "dependencies": {
-    "loadtest": "2.2.1",
+    "loadtest": "2.3.0",
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
-    "rc": "1.1.6",
-    "ut-log": "^5.10.8",
-    "ut-port-registry": "^0.1.1",
-    "ut-port": "^5.0.0"
+    "rc": "1.2.2",
+    "ut-log": "^5.11.0",
+    "ut-port-registry": "^0.1.2",
+    "ut-port": "^6.0.2"
   },
   "peerDependencies": {
-    "ut-bus": "^5.12.1"
+    "ut-bus": "^5.17.0"
   },
   "devDependencies": {
-    "tap": "10.7.1",
+    "tap": "10.7.2",
     "ut-tools": "*"
   },
   "scripts": {
