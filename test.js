@@ -233,27 +233,39 @@ module.exports = function(params, cache) {
             };
         }
     }
-    var stopServices;
-    if (Array.isArray(params.services)) {
-        tap.test('Starting services...', (assert) => {
-            return params.services.reduce((promise, service) => {
-                return promise.then((apps) => {
-                    return service()
-                        .then((app) => {
-                            assert.ok(true, `${service.name} service started`);
-                            apps.unshift(app);
-                            return apps;
+    var services = [];
+    var stopServices = (test) => {
+        if (!services.length) {
+            return Promise.resolve();
+        }
+        return test.test('Stopping services...', {bufferred: false}, (assert) => {
+            return services.reduce((promise, service) => {
+                return promise.then(() => {
+                    return service.app.stop()
+                        .then(() => {
+                            return assert.ok(true, `${service.name} service stopped.`);
                         });
                 });
-            }, Promise.resolve([]))
-            .then((apps) => {
-                stopServices = () => {
-                    return apps.reduce((promise, app) => {
-                        return promise.then(() => {
-                            return app.stop();
+            }, Promise.resolve());
+        });
+    };
+    if (Array.isArray(params.services)) {
+        tap.test('Starting services...', {bufferred: false}, (assert) => {
+            return params.services.reduce((promise, service) => {
+                return promise.then(() => {
+                    return service()
+                        .then((app) => {
+                            assert.ok(true, `${service.name} service started.`);
+                            return services.unshift({
+                                app,
+                                name: service.name
+                            });
                         });
-                    }, Promise.resolve());
-                };
+                });
+            }, Promise.resolve())
+            .catch((e) => {
+                return stopServices(assert)
+                    .then(() => Promise.reject(e));
             });
         });
     }
@@ -336,7 +348,7 @@ module.exports = function(params, cache) {
     }
 
     var stopAll = function(test) {
-        stopServices && test.test('stopping services', {bufferred: false}, () => stopServices());
+        stopServices(test);
         params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
             var x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
