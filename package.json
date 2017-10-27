@@ -7,7 +7,7 @@
     "minimist": "1.2.0",
     "rc": "1.1.6",
     "ut-log": "^5.11.0",
-    "ut-port-registry": "^0.1.1",
+    "ut-port-registry": "^0.2.0",
     "when": "3.7.7"
   },
   "peerDependencies": {
