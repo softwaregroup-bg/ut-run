@@ -1,3 +1,23 @@
+<a name="8.4.1"></a>
+## [8.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.0...v8.4.1) (2017-10-27)
+
+
+### Bug Fixes
+
+* ut-port-registry initialization and updated dependency version ([515290c](https://github.com/softwaregroup-bg/ut-run/commit/515290c))
+
+
+
+<a name="8.4.0"></a>
+# [8.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.3.1...v8.4.0) (2017-10-04)
+
+
+### Bug Fixes
+
+* switch to udp ([4eb81b8](https://github.com/softwaregroup-bg/ut-run/commit/4eb81b8))
+
+
+
 <a name="8.3.1"></a>
 ## [8.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.3.0...v8.3.1) (2017-09-04)
 
