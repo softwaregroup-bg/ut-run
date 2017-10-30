@@ -157,6 +157,14 @@ module.exports = {
                 config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
                 config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
                 Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
+            } else {
+                config.params = Object.assign(
+                    {},
+                    config.params, {
+                        app: params.app,
+                        method: params.method,
+                        env: params.env
+                    });
             }
             var main = params.main || parent.require('./' + config.params.app);
 
