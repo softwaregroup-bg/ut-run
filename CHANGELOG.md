@@ -1,3 +1,13 @@
+<a name="8.4.2"></a>
+## [8.4.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.1...v8.4.2) (2017-10-30)
+
+
+### Bug Fixes
+
+* lost props ([#35](https://github.com/softwaregroup-bg/ut-run/issues/35)) ([fc6f3c7](https://github.com/softwaregroup-bg/ut-run/commit/fc6f3c7))
+
+
+
 <a name="8.4.1"></a>
 ## [8.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.0...v8.4.1) (2017-10-27)
 
