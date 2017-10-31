@@ -6,11 +6,11 @@
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.2.2",
-    "ut-log": "^5.11.0",
-    "ut-port": "^6.0.3"
+    "ut-log": "^6.0.0-ut6.0",
+    "ut-port": "^6.0.4"
   },
   "peerDependencies": {
-    "ut-bus": "^5.18.0"
+    "ut-bus": "^6.0.0-ut6.1"
   },
   "devDependencies": {
     "tap": "10.7.2",
