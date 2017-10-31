@@ -32,18 +32,6 @@ module.exports = ({bus, logFactory}) => {
         }
         config = config || {};
         var ports = [];
-        if (config.registry) {
-            ports.push({
-                id: 'registry',
-                createPort: require('ut-port-registry'),
-                client: {
-                    context: {
-                        version: config.version,
-                        impl: config.implementation
-                    }
-                }
-            });
-        }
         if (Array.isArray(serviceConfig.ports)) {
             ports.push.apply(ports, serviceConfig.ports);
         }
