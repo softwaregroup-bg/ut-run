@@ -26,6 +26,11 @@ module.exports = {
                 config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
                 config.service = config.params.app + '/' + config.params.env;
                 Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
+            } else {
+                config.params = config.params || {};
+                config.params.app = params.app;
+                config.params.method = params.method;
+                config.params.env = params.env;
             }
             var main = params.main || parent.require('./' + config.params.app);
 
