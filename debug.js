@@ -19,7 +19,7 @@ function getDataDirectory() {
 }
 
 module.exports = {
-    debug: function(impl, config) {
+    debug: function(impl, config, assert) {
         var mergedConfig = merge({
             masterBus: {
                 logLevel: 'debug',
@@ -115,6 +115,14 @@ module.exports = {
         var workerBus;
         var workerRun;
 
+        if (mergedConfig.masterBus.socketPid) {
+            if (mergedConfig.masterBus.socket) {
+                mergedConfig.masterBus.socket = mergedConfig.masterBus.socket + '[' + process.pid + ']';
+            } else {
+                mergedConfig.masterBus.socket = process.pid;
+            }
+        }
+
         if (mergedConfig.runMaster) {
             masterBus = Object.assign(new Bus(), {
                 server: true,
@@ -161,7 +169,7 @@ module.exports = {
             }
             promise = promise
                 .then(workerRun.ready.bind(workerRun))
-                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
+                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig, assert));
         } else {
             promise = promise
             .then(masterBus.start.bind(masterBus))
@@ -171,6 +179,12 @@ module.exports = {
             .then(function(ports) {
                 return {
                     ports: ports,
+                    portsMap: ports.reduce((prev, cur) => {
+                        if (cur && cur.config && (typeof cur.config.id === 'string')) {
+                            prev[cur.config.id] = cur;
+                        }
+                        return prev;
+                    }, {}),
                     master: masterBus,
                     bus: workerBus,
                     log: logFactory,

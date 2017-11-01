@@ -1,5 +1,5 @@
 // var log = require('why-is-node-running');
-var tape = require('blue-tape');
+var tap = require('tap');
 var run = require('./index');
 var loadtest = require('loadtest');
 
@@ -9,7 +9,7 @@ function promisify(fn) {
     };
 }
 
-function sequence(options, test, bus, flow, params) {
+function sequence(options, test, bus, flow, params, parent) {
     function printSubtest(name, start) {
         if (start) {
             test.comment('-'.repeat(previous.length + 1) + '> subtest start: ' + getName(name));
@@ -23,8 +23,8 @@ function sequence(options, test, bus, flow, params) {
     function getName(name) {
         return previous.concat(name).join(' / ');
     }
-    return (function runSequence(flow, params) {
-        var context = {
+    return (function runSequence(flow, params, parent) {
+        var context = parent || {
             params: params || {}
         };
         var steps = flow.map(function(f) {
@@ -36,6 +36,7 @@ function sequence(options, test, bus, flow, params) {
                 methodName: f.method,
                 method: f.method ? bus.importMethod(f.method) : (params) => Promise.resolve(params),
                 params: (typeof f.params === 'function') ? promisify(f.params) : () => Promise.resolve(f.params),
+                steps: f.steps,
                 result: f.result,
                 error: f.error
             };
@@ -46,6 +47,7 @@ function sequence(options, test, bus, flow, params) {
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
         var promise = Promise.resolve();
+        var passing = true;
         steps.forEach(function(step, index) {
             promise = promise.then(function() {
                 var start = Date.now();
@@ -58,55 +60,70 @@ function sequence(options, test, bus, flow, params) {
                         step: index
                     });
                 }
-                test.comment(getName(step.name));
-                return step.params(context, {
-                    sequence: function() {
-                        printSubtest(step.name, true);
-                        return runSequence.apply(null, arguments)
-                            .then(function(params) {
-                                printSubtest(step.name);
-                                return params;
+                var fn = assert => {
+                    return step.params(context, {
+                        sequence: function() {
+                            printSubtest(step.name, true);
+                            return runSequence.apply(null, arguments)
+                                .then(function(params) {
+                                    printSubtest(step.name);
+                                    return params;
+                                });
+                        },
+                        skip: function() {
+                            skip = true;
+                        }
+                    })
+                    .then(function(params) {
+                        if (skip) {
+                            return test.comment('^ ' + getName(step.name) + ' - skipped');
+                        }
+                        if (Array.isArray(step.steps)) {
+                            return sequence(options, assert, bus, step.steps, undefined, context);
+                        } else if (typeof step.steps === 'function') {
+                            return Promise.resolve()
+                                .then(() => step.steps(context))
+                                .then(steps => sequence(options, assert, bus, steps, undefined, context));
+                        }
+                        return step.method(params)
+                            .then(function(result) {
+                                duration && duration(Date.now() - start);
+                                passed && passed((result && result._isOk) ? 1 : 0);
+                                performanceWrite();
+                                context[step.name] = result;
+                                if (typeof step.result === 'function') {
+                                    step.result.call(context, result, assert);
+                                } else if (typeof step.error === 'function') {
+                                    assert.fail('Result is expected to be an error');
+                                } else {
+                                    assert.fail('Test is missing result and error handlers');
+                                }
+                                return result;
+                            }, function(error) {
+                                duration && duration(Date.now() - start);
+                                passed && passed(0);
+                                performanceWrite();
+                                if (typeof step.error === 'function') {
+                                    step.error.call(context, error, assert);
+                                } else {
+                                    throw error;
+                                }
                             });
-                    },
-                    skip: function() {
-                        skip = true;
-                    }
-                })
-                .then(function(params) {
-                    if (skip) {
-                        return test.comment('^ ' + getName(step.name) + ' - skipped');
-                    }
-                    return step.method(params)
-                        .then(function(result) {
-                            duration && duration(Date.now() - start);
-                            passed && passed(result._isOk ? 1 : 0);
-                            performanceWrite();
-                            context[step.name] = result;
-                            if (typeof step.result === 'function') {
-                                step.result.call(context, result, test);
-                            } else if (typeof step.error === 'function') {
-                                test.fail('Result is expected to be an error');
-                            } else {
-                                test.fail('Test is missing result and error handlers');
-                            }
-                            return result;
-                        })
-                        .catch(function(error) {
-                            duration && duration(Date.now() - start);
-                            passed && passed(0);
-                            performanceWrite();
-                            if (typeof step.error === 'function') {
-                                step.error.call(context, error, test);
-                            } else {
-                                throw error;
-                            }
-                        });
-                })
-                .catch((error) => test.error(error));
+                    })
+                    .then(result => {
+                        passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
+                        return result;
+                    }, error => {
+                        passing = false;
+                        throw error;
+                    });
+                };
+
+                return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing}, fn);
             });
         });
-        return promise;
-    })(flow, params);
+        return promise.catch(test.threw);
+    })(flow, params, parent);
 }
 
 function performanceTest(params, assert, bus, flow) {
@@ -132,7 +149,7 @@ function performanceTest(params, assert, bus, flow) {
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'MaxLatencyMs', 'Max latency');
 
     var errors = [];
-    assert.test(step.name || ('testing method ' + step.methodName), (methodAssert) => {
+    assert.test(step.name || ('testing method ' + step.methodName), {bufferred: false}, (methodAssert) => {
         var state = true;
         var httpSettings = {
             url: step.url || params.url,
@@ -203,43 +220,80 @@ function performanceTest(params, assert, bus, flow) {
 }
 
 module.exports = function(params, cache) {
-    var client;
-    if (cache) {
+    var clientConfig;
+    if (cache && cache.uttest) {
         if (!cache.first) {
             cache.first = true;
             if (params.peerImplementations) {
-                tape('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
+                tap.test('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
             }
         } else {
-            tape('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports));
-            return;
+            return {
+                tests: tap.test('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports))
+            };
         }
+    }
+    var services = [];
+    var stopServices = (test) => {
+        if (!services.length) {
+            return Promise.resolve();
+        }
+        return test.test('Stopping services...', {bufferred: false}, (assert) => {
+            return services.reduce((promise, service) => {
+                return promise.then(() => {
+                    return service.app.stop()
+                        .then(() => {
+                            return assert.ok(true, `${service.name} service stopped.`);
+                        });
+                });
+            }, Promise.resolve());
+        });
+    };
+    if (Array.isArray(params.services)) {
+        tap.test('Starting services...', {bufferred: false}, (assert) => {
+            return params.services.reduce((promise, service) => {
+                return promise.then(() => {
+                    return service()
+                        .then((app) => {
+                            assert.ok(true, `${service.name} service started.`);
+                            return services.unshift({
+                                app,
+                                name: service.name
+                            });
+                        });
+                });
+            }, Promise.resolve())
+            .catch((e) => {
+                return stopServices(assert)
+                    .then(() => Promise.reject(e));
+            });
+        });
     }
 
     var clientRun;
 
     if (params.type && params.type === 'performance') {
-        client = {
+        clientConfig = {
             main: params.client,
             config: params.clientConfig,
             method: 'debug'
         };
-        clientRun = run.run(client);
-        tape('Performance test start', (assert) => clientRun.then((client) => {
+        clientRun = run.run(clientConfig);
+        tap.test('Performance test start', (assert) => clientRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
             return true;
         }));
         return;
     }
 
-    var server = {
+    var serverConfig = {
         main: params.server,
         config: params.serverConfig,
         app: params.serverApp || '../../server',
         env: params.serverEnv || 'test',
         method: params.serverMethod || 'debug'
     };
-    client = params.client && {
+    clientConfig = params.client && {
         main: params.client,
         config: params.clientConfig,
         app: params.clientApp || '../../desktop',
@@ -248,60 +302,66 @@ module.exports = function(params, cache) {
     };
 
     var serverRun;
-    tape('server start', (assert) => {
-        serverRun = run.run(server, module.parent);
+    var testObj;
+    // tap.jobs = 1;
+    var tests = tap.test('server start', {bufferred: false, bail: true}, assert => {
+        serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
-            !client && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
-            var result = client ? server : Promise.all(server.ports.map(port => port.isReady)).then(() =>
-                params.steps(assert, server.bus, sequence.bind(null, params), server.ports));
+            testObj = server;
+            !clientConfig && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
+            var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isReady));
             return result;
         });
     });
 
-    client && tape('client start', (assert) => {
+    clientConfig && (tests = tap.test('client start', {bufferred: false, bail: true}, assert => {
         return serverRun
-            .then(() => {
-                clientRun = client && run.run(client, module.parent);
+            .then(server => {
+                clientConfig.config && (clientConfig.config.server = () => server);
+                clientRun = clientConfig && run.run(clientConfig, module.parent, assert);
                 return clientRun.then((client) => {
+                    testObj = client;
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
-                    return Promise.all(client.ports.map(port => port.isReady)).then(() =>
-                        params.steps(assert, client.bus, sequence.bind(null, params), client.ports));
+                    return Promise.all(client.ports.map(port => port.isReady));
                 });
             });
-    });
+    }));
+
+    tests = tests.then((test) => params.steps(test, testObj.bus, sequence.bind(null, params), testObj.ports));
 
     function stop(assert, x) {
-        x.ports.forEach((port) => {
-            assert.test('stopping port ' + port.config.id, (assert) => new Promise((resolve) => {
-                resolve(port.stop());
-            }));
-        });
-        assert.test('stopping worker bus', (assert) => new Promise((resolve) => {
-            resolve(x.bus.destroy());
-        }));
-        assert.test('stopping master bus', (assert) => new Promise((resolve) => {
-            resolve(x.master.destroy().then(function(res) {
-                // log();
-                return res;
-            }));
-        }));
-        return new Promise((resolve) => resolve(x));
+        var promise = Promise.resolve();
+        var step = (name, fn) => {
+            promise = promise.then(fn).then(result => {
+                assert.ok(true, name);
+                return result;
+            }, error => {
+                assert.fail(name);
+                return error;
+            });
+        };
+
+        x.ports.forEach(port => step('stopped port ' + port.config.id, () => port.stop()));
+        step('stopped worker bus', () => x.bus.destroy());
+        step('stopped master bus', () => x.master.destroy());
+        return promise;
     }
 
-    var stopAll = function() {
-        params.peerImplementations && tape('Stopping peer implementations', (assert) => {
+    var stopAll = function(test) {
+        stopServices(test);
+        params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
             var x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
                 x = x.then(() => (promise.then((impl) => (impl.stop()))));
             });
             return x;
         });
-        client && tape('client stop', (assert) => clientRun.then(stop.bind(null, assert)));
-        tape('server stop', (assert) => serverRun
-            .then(stop.bind(null, assert))
+        clientConfig && test.test('client stop', {bufferred: false}, assert => clientRun.then(result => stop(assert, result)));
+        return test.test('server stop', {bufferred: false}, assert => serverRun
+            .then(result => stop(assert, result))
             .catch(() => Promise.reject(new Error('Server did not start')))
         );
     };
 
-    return cache ? stopAll : stopAll();
+    return tests.then(stopAll);
 };

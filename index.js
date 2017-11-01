@@ -21,16 +21,21 @@ module.exports = {
         }
     },
 
-    load: function(implementation, config) {
+    load: function(implementation, config, test) {
         if (typeof implementation === 'string') {
             implementation = require(implementation);
         }
 
         if (Array.isArray(implementation)) {
             implementation = implementation.reduce((prev, impl) => {
-                impl.ports && (prev.ports = prev.ports.concat(impl.ports));
-                impl.modules && Object.assign(prev.modules, impl.modules);
-                impl.validations && Object.assign(prev.validations, impl.validations);
+                if (impl) {
+                    if (impl instanceof Function) {
+                        impl = impl(config);
+                    }
+                    impl.ports && (prev.ports = prev.ports.concat(impl.ports));
+                    impl.modules && Object.assign(prev.modules, impl.modules);
+                    impl.validations && Object.assign(prev.validations, impl.validations);
+                }
                 return prev;
             }, {ports: [], modules: {}, validations: {}});
         }
@@ -57,36 +62,59 @@ module.exports = {
         if (implementation.modules instanceof Object) {
             Object.keys(implementation.modules).forEach(function(moduleName) {
                 var module = implementation.modules[moduleName];
-                (module.init instanceof Function) && (module.init(this.bus));
-                module.routeConfig = [];
-                this.bus.registerLocal(module, moduleName);
+                if (module) {
+                    if (module instanceof Function) {
+                        module = module(config);
+                    }
+                    (module.init instanceof Function) && (module.init(this.bus));
+                    module.routeConfig = [];
+                    this.bus.registerLocal(module, moduleName);
+                }
             }.bind(this));
         }
 
         if (implementation.validations instanceof Object) {
             Object.keys(implementation.validations).forEach(function(validationKey) {
-                var routeConfigNames = validationKey.split('.');
-                var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
-                var module = implementation.modules[moduleName];
                 var routeConfig = implementation.validations[validationKey];
-                module && Object.keys(routeConfig).forEach(function(value) {
-                    module.routeConfig.push({
-                        method: routeConfigNames.join('.') + '.' + value,
-                        config: routeConfig[value]
+                if (routeConfig) {
+                    if (routeConfig instanceof Function) {
+                        routeConfig = routeConfig(config);
+                    }
+                    var routeConfigNames = validationKey.split('.');
+                    var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
+                    var module = implementation.modules[moduleName];
+                    module && Object.keys(routeConfig).forEach(function(value) {
+                        module.routeConfig.push({
+                            method: routeConfigNames.join('.') + '.' + value,
+                            config: routeConfig[value]
+                        });
                     });
-                });
+                }
             });
         }
 
         return when.all(
             ports.reduce(function(all, port) {
-                config[port.id] !== false && all.push(this.loadConfig(merge(port, config[port.id])));
+                if (port) {
+                    if (port instanceof Function) {
+                        port = port(config);
+                    }
+                    config[port.id] !== false && all.push(this.loadConfig(merge(port, config[port.id])));
+                }
                 return all;
             }.bind(this), [])
         ).then(function(contexts) {
             return when.reduce(contexts, function(prev, context, idx) {
                 portsStarted.push(context); // collect ports that are started
-                return context.start();
+                var started = context.start();
+                if (test && started && typeof started.then === 'function') {
+                    return started.then(result => {
+                        test.ok(true, 'started port ' + context.config.id);
+                        return result;
+                    });
+                } else {
+                    return started;
+                }
             }, [])
             .then(function() {
                 return portsStarted
@@ -107,12 +135,12 @@ module.exports = {
         });
     },
 
-    loadImpl: function(implementation, config) {
+    loadImpl: function(implementation, config, test) {
         if (typeof implementation === 'function') {
             return new Promise(resolve => resolve(implementation({config})))
-                .then(result => this.load(result, config));
+                .then(result => this.load(result, config, test));
         } else {
-            return this.load(implementation, config);
+            return this.load(implementation, config, test);
         }
     },
 
@@ -136,7 +164,7 @@ module.exports = {
         });
     },
 
-    runParams: function(params, parent) {
+    runParams: function(params, parent, test) {
         params = params || {};
         parent = parent || module.parent;
         if (process.type === 'browser') {
@@ -183,11 +211,11 @@ module.exports = {
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
-            return run[params.method || config.params.method](main, config);
+            return run[params.method || config.params.method](main, config, test);
         }
     },
-    run: function(params, parent) {
-        return this.runParams(params, parent)
+    run: function(params, parent, test) {
+        return this.runParams(params, parent, test)
         .then((result) => {
             process.send && process.send('ready');
             return result;
