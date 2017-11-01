@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "8.5.0-rc-acapulco.0",
+  "version": "8.5.0-rc-acapulco.1",
   "dependencies": {
     "loadtest": "2.2.1",
     "lodash.merge": "4.6.0",
