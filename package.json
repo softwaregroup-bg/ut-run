@@ -7,7 +7,7 @@
     "minimist": "1.2.0",
     "rc": "1.2.2",
     "ut-log": "^6.0.0-ut6.0",
-    "ut-port": "^6.0.4"
+    "ut-port": "^6.0.5"
   },
   "peerDependencies": {
     "ut-bus": "^6.0.0-ut6.1"
