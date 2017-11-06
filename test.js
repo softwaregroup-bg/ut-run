@@ -104,6 +104,9 @@ function sequence(options, test, bus, flow, params, parent) {
                                 passed && passed(0);
                                 performanceWrite();
                                 if (typeof step.error === 'function') {
+                                    if (error && error.type === 'portHTTP') { // temp workaround
+                                        error.type = 'PortHTTP';
+                                    }
                                     step.error.call(context, error, assert);
                                 } else {
                                     throw error;
