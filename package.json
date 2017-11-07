@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.0.0-ut6.7",
+  "version": "9.0.0-ut6.8",
   "dependencies": {
     "why-is-node-running": "1.2.3",
     "loadtest": "2.3.0",
