@@ -2,6 +2,7 @@
   "name": "ut-run",
   "version": "9.0.0-ut6.7",
   "dependencies": {
+    "why-is-node-running": "1.2.3",
     "loadtest": "2.3.0",
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",

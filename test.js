@@ -1,4 +1,5 @@
-// var log = require('why-is-node-running');
+require('crypto');
+var log = require('why-is-node-running');
 var tap = require('tap');
 var run = require('./index');
 var loadtest = require('loadtest');
@@ -362,6 +363,7 @@ module.exports = function(params, cache) {
         clientConfig && test.test('client stop', {bufferred: false}, assert => clientRun.then(result => stop(assert, result)));
         return test.test('server stop', {bufferred: false}, assert => serverRun
             .then(result => stop(assert, result))
+            .then(() => setTimeout(log, 2000))
             .catch(() => Promise.reject(new Error('Server did not start')))
         );
     };
