@@ -63,6 +63,7 @@ module.exports = {
                 streams.push({
                     level: mergedConfig.stdOut.level || 'trace',
                     stream: 'process.stdout',
+                    type: 'raw',
                     streamConfig: mergedConfig.stdOut
                 });
             }
