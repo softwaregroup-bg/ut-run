@@ -108,6 +108,9 @@ function sequence(options, test, bus, flow, params, parent) {
                                     if (error && error.type === 'portHTTP') { // temp workaround
                                         error.type = 'PortHTTP';
                                     }
+                                    if (error && error.type === 'httpServerPort.notPermitted') { // temp workaround
+                                        error.type = 'HttpServer.NotPermitted';
+                                    }
                                     step.error.call(context, error, assert);
                                 } else {
                                     throw error;
