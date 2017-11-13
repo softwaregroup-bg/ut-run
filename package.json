@@ -6,15 +6,15 @@
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.2.2",
-    "ut-log": "^6.0.0-ut6.0",
-    "ut-port": "^6.0.5"
+    "ut-log": "^6.0.0-ut6.2",
+    "ut-port": "^6.0.12"
   },
   "peerDependencies": {
-    "ut-bus": "^6.0.0-ut6.1"
+    "ut-bus": "^6.0.0-ut6.7"
   },
   "devDependencies": {
-    "tap": "10.7.2",
-    "ut-tools": "^5.24.0"
+    "tap": "10.7.3",
+    "ut-tools": "^5.29.12"
   },
   "scripts": {
     "lint": "ut-lint .",
