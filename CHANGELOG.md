@@ -1,3 +1,18 @@
+<a name="9.1.0"></a>
+# [9.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.2...v9.1.0) (2017-12-06)
+
+
+### Bug Fixes
+
+* version ([683ba0e](https://github.com/softwaregroup-bg/ut-run/commit/683ba0e))
+
+
+### Features
+
+* parallel tests and ut-bus upgrade ([1b65671](https://github.com/softwaregroup-bg/ut-run/commit/1b65671))
+
+
+
 <a name="8.4.2"></a>
 ## [8.4.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.1...v8.4.2) (2017-10-30)
 
