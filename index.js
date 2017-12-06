@@ -1,142 +1,10 @@
 /* eslint no-process-env:0, no-console:0, no-process-exit:0 */
-
-var when = require('when');
-var merge = require('lodash.merge');
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
 
 module.exports = {
-
-    bus: null,
-    config: null,
-    logFactory: null,
-
-    ready: function() {
-        this.config = this.config || {};
-        if (this.bus) {
-            return this.bus.register({
-                run: this.run.bind(this)
-            });
-        }
-    },
-
-    load: function(implementation, config) {
-        if (typeof implementation === 'string') {
-            implementation = require(implementation);
-        }
-
-        if (Array.isArray(implementation)) {
-            implementation = implementation.reduce((prev, impl) => {
-                impl.ports && (prev.ports = prev.ports.concat(impl.ports));
-                impl.modules && Object.assign(prev.modules, impl.modules);
-                impl.validations && Object.assign(prev.validations, impl.validations);
-                return prev;
-            }, {ports: [], modules: {}, validations: {}});
-        }
-        config = config || {};
-        var ports = [];
-        if (config.registry) {
-            ports.push({
-                id: 'registry',
-                createPort: require('ut-port-registry'),
-                client: {
-                    context: {
-                        version: config.version,
-                        impl: config.implementation
-                    }
-                }
-            });
-        }
-        if (Array.isArray(implementation.ports)) {
-            ports.push.apply(ports, implementation.ports);
-        }
-        var portsStarted = [];
-        this.bus.config = config;
-
-        if (implementation.modules instanceof Object) {
-            Object.keys(implementation.modules).forEach(function(moduleName) {
-                var module = implementation.modules[moduleName];
-                (module.init instanceof Function) && (module.init(this.bus));
-                module.routeConfig = [];
-                this.bus.registerLocal(module, moduleName);
-            }.bind(this));
-        }
-
-        if (implementation.validations instanceof Object) {
-            Object.keys(implementation.validations).forEach(function(validationKey) {
-                var routeConfigNames = validationKey.split('.');
-                var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
-                var module = implementation.modules[moduleName];
-                var routeConfig = implementation.validations[validationKey];
-                module && Object.keys(routeConfig).forEach(function(value) {
-                    module.routeConfig.push({
-                        method: routeConfigNames.join('.') + '.' + value,
-                        config: routeConfig[value]
-                    });
-                });
-            });
-        }
-
-        return when.all(
-            ports.reduce(function(all, port) {
-                config[port.id] !== false && all.push(this.loadConfig(merge(port, config[port.id])));
-                return all;
-            }.bind(this), [])
-        ).then(function(contexts) {
-            return when.reduce(contexts, function(prev, context, idx) {
-                portsStarted.push(context); // collect ports that are started
-                return context.start();
-            }, [])
-            .then(function() {
-                return portsStarted
-                    .reduce(function(promise, port) {
-                        if (typeof port.ready === 'function') {
-                            promise = promise.then(() => port.ready());
-                        }
-                        return promise;
-                    }, Promise.resolve())
-                    .then(() => contexts);
-            })
-            .catch(function(err) {
-                return when.reduce(portsStarted.reverse(), function(prev, context, idx) {
-                    return new Promise((resolve) => resolve(context.stop())).catch(() => true); // continue on error
-                }, [])
-                .then(() => Promise.reject(err)); // reject with the original error
-            });
-        });
-    },
-
-    loadImpl: function(implementation, config) {
-        if (typeof implementation === 'function') {
-            return new Promise(resolve => resolve(implementation({config})))
-                .then(result => this.load(result, config));
-        } else {
-            return this.load(implementation, config);
-        }
-    },
-
-    loadConfig: function(config) {
-        var Port;
-        if (config.createPort instanceof Function) {
-            Port = config.createPort;
-        } else {
-            if (config.type) {
-                throw new Error('Use createPort:require(\'ut-port-' + config.type + '\') instead of type:\'' + config.type + '\'');
-            } else {
-                throw new Error('Missing createPort property');
-            }
-        }
-        var port = new Port();
-        port.bus = this.bus;
-        port.logFactory = this.logFactory;
-        merge(port.config, config);
-        return when(port.init()).then(function() {
-            return port;
-        });
-    },
-
-    runParams: function(params, parent) {
+    runParams: function(params, parent, test) {
         params = params || {};
         parent = parent || module.parent;
         if (process.type === 'browser') {
@@ -156,15 +24,13 @@ module.exports = {
                 config.params.app = process.env.UT_APP || params.app || argv._[0] || 'server';
                 config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
                 config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
+                config.service = config.params.app + '/' + config.params.env;
                 Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
             } else {
-                config.params = Object.assign(
-                    {},
-                    config.params, {
-                        app: params.app,
-                        method: params.method,
-                        env: params.env
-                    });
+                config.params = config.params || {};
+                config.params.app = params.app;
+                config.params.method = params.method;
+                config.params.env = params.env;
             }
             var main = params.main || parent.require('./' + config.params.app);
 
@@ -183,11 +49,11 @@ module.exports = {
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
-            return run[params.method || config.params.method](main, config);
+            return run[params.method || config.params.method](main, config, test);
         }
     },
-    run: function(params, parent) {
-        return this.runParams(params, parent)
+    run: function(params, parent, test) {
+        return this.runParams(params, parent, test)
         .then((result) => {
             process.send && process.send('ready');
             return result;
