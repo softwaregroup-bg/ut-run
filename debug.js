@@ -28,7 +28,7 @@ module.exports = {
                 logLevel: 'debug'
             },
             console: {
-                host: '127.0.0.1',
+                host: 'localhost',
                 port: 30001,
                 logLevel: 'info'
             },
