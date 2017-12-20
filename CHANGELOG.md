@@ -1,3 +1,13 @@
+<a name="9.1.1"></a>
+## [9.1.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.0...v9.1.1) (2017-12-20)
+
+
+### Bug Fixes
+
+* tests now wait for all ports to connect ([5186e5d](https://github.com/softwaregroup-bg/ut-run/commit/5186e5d))
+
+
+
 <a name="9.1.0"></a>
 # [9.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.2...v9.1.0) (2017-12-06)
 
