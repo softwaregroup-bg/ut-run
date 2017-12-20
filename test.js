@@ -316,7 +316,7 @@ module.exports = function(params, cache) {
         return serverRun.then((server) => {
             testObj = server;
             !clientConfig && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
-            var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isReady));
+            var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
         });
     });
@@ -329,7 +329,7 @@ module.exports = function(params, cache) {
                 return clientRun.then((client) => {
                     testObj = client;
                     cache && (cache.bus = client.bus) && (cache.ports = client.ports);
-                    return Promise.all(client.ports.map(port => port.isReady));
+                    return Promise.all(client.ports.map(port => port.isConnected));
                 });
             });
     }));
