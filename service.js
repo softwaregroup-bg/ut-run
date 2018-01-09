@@ -61,7 +61,7 @@ module.exports = ({bus, logFactory}) => {
                     if (routeConfig instanceof Function) {
                         routeConfig = routeConfig(config);
                     }
-                    var routeConfigNames = validationKey.split('.')[0];
+                    var routeConfigNames = validationKey.split('.');
                     var moduleName = routeConfigNames[0];
                     var module = modules[moduleName];
                     module && Object.keys(routeConfig).forEach(function(value) {
