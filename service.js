@@ -38,6 +38,7 @@ module.exports = ({bus, logFactory}) => {
 
         bus.config = config;
 
+        let modules = {};
         if (serviceConfig.modules instanceof Object) {
             Object.keys(serviceConfig.modules).forEach(function(moduleName) {
                 var module = serviceConfig.modules[moduleName];
@@ -48,6 +49,7 @@ module.exports = ({bus, logFactory}) => {
                     (module.init instanceof Function) && (module.init(bus.publicApi));
                     module.routeConfig = [];
                     bus.registerLocal(module, moduleName);
+                    modules[moduleName] = module;
                 }
             });
         }
@@ -60,8 +62,8 @@ module.exports = ({bus, logFactory}) => {
                         routeConfig = routeConfig(config);
                     }
                     var routeConfigNames = validationKey.split('.');
-                    var moduleName = routeConfigNames.length > 1 ? routeConfigNames.shift() : routeConfigNames;
-                    var module = serviceConfig.modules[moduleName];
+                    var moduleName = routeConfigNames[0];
+                    var module = modules[moduleName];
                     module && Object.keys(routeConfig).forEach(function(value) {
                         module.routeConfig.push({
                             method: routeConfigNames.join('.') + '.' + value,
