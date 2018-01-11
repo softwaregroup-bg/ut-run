@@ -10,7 +10,7 @@ module.exports = ({bus, logFactory}) => {
     //     }
     // };
 
-    let servicePorts = utport.ports({bus, logFactory});
+    let servicePorts = utport.ports({bus: bus.piblicApi, logFactory});
 
     let load = (serviceConfig, config, test) => {
         if (typeof serviceConfig === 'string') {
