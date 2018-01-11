@@ -10,7 +10,7 @@ module.exports = ({bus, logFactory}) => {
     //     }
     // };
 
-    let servicePorts = utport.ports({bus, logFactory});
+    let servicePorts = utport.ports({bus: bus.publicApi, logFactory});
 
     let load = (serviceConfig, config, test) => {
         if (typeof serviceConfig === 'string') {
@@ -46,7 +46,7 @@ module.exports = ({bus, logFactory}) => {
                     if (module instanceof Function) {
                         module = module(config);
                     }
-                    (module.init instanceof Function) && (module.init(bus));
+                    (module.init instanceof Function) && (module.init(bus.publicApi));
                     module.routeConfig = [];
                     bus.registerLocal(module, moduleName);
                     modules[moduleName] = module;
@@ -79,7 +79,7 @@ module.exports = ({bus, logFactory}) => {
 
     let create = (serviceConfig, config, test) => {
         if (typeof serviceConfig === 'function') {
-            return new Promise(resolve => resolve(serviceConfig({config})))
+            return new Promise(resolve => resolve(serviceConfig({config, bus: bus.publicApi})))
                 .then(result => load(result, config, test));
         } else {
             return load(serviceConfig, config, test);
