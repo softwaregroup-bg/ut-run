@@ -10,7 +10,7 @@
     "ut-port": "^6.1.5"
   },
   "peerDependencies": {
-    "ut-bus": "^6.0.0"
+    "ut-bus": ">=6.2.0-rc-bahur.1 <6.2.0"
   },
   "devDependencies": {
     "tap": "10.7.3",
