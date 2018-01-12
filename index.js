@@ -2,7 +2,7 @@
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
-
+var merge = require('lodash.merge');
 module.exports = {
     runParams: function(params, parent, test) {
         params = params || {};
@@ -25,7 +25,27 @@ module.exports = {
                 config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
                 config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
                 config.service = config.params.app + '/' + config.params.env;
-                Object.assign(config, parent.require('./' + config.params.app + '/' + config.params.env));
+                var envConfig = {};
+                var commonConfig = {};
+                var shouldThrow = false;
+                try {
+                    try {
+                        commonConfig = parent.require('./' + config.params.app + '/common');
+                    } catch (e) {
+                        shouldThrow = true;
+                        if (e.code !== 'MODULE_NOT_FOUND') {
+                            throw e;
+                        }
+                    }
+                    envConfig = parent.require('./' + config.params.app + '/' + config.params.env);
+                } catch (e) {
+                    if (e.code !== 'MODULE_NOT_FOUND') {
+                        throw e;
+                    } else if (shouldThrow) {
+                        throw new Error(`'common' and/or '${config.params.env}' configuration must be provided`);
+                    }
+                }
+                merge(config, commonConfig, envConfig);
             } else {
                 config.params = config.params || {};
                 config.params.app = params.app;
