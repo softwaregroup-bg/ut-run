@@ -56,16 +56,27 @@ module.exports = {
 
             config = rc(['ut', (config.implementation || 'ut5').replace(/[-/\\]/g, '_'), process.env.UT_ENV || params.env || 'dev'].join('_'), config);
 
-            if (config.cluster && config.masterBus && config.masterBus.socket && config.masterBus.socket.port) {
+            if (config.cluster && config.masterBus && config.masterBus.socket) {
                 var cluster = serverRequire('cluster');
                 if (cluster.isMaster) {
                     var workerCount = config.cluster.workers || require('os').cpus().length;
                     for (var i = 0; i < workerCount; i += 1) {
                         cluster.fork();
                     }
-                    return true;
+                    return Promise.resolve();
                 } else {
-                    config.masterBus.socket.port = config.masterBus.socket.port + cluster.worker.id;
+                    if (config.runMaster) { // ensure that multiple master bus instances don't try to use the same socket / pipe.
+                        if (typeof config.masterBus.socket === 'string') {
+                            config.masterBus.socketPid = true;
+                        } else if (typeof config.masterBus.socket === 'number') {
+                            config.masterBus.socket += cluster.worker.id;
+                        } else if (config.masterBus.socket.port) {
+                            config.masterBus.socket.port += cluster.worker.id;
+                        } else {
+                            var printableConfigValue = require('util').inspect(config.masterBus.socket);
+                            throw new Error(`Unsupported masterBus.socket configuration: ${printableConfigValue}`);
+                        }
+                    }
                     config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
             }
