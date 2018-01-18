@@ -132,7 +132,7 @@ module.exports = {
             });
         }
 
-        if (envConfig.repl !== false) {
+        if (envConfig.repl !== false && envConfig.repl !== 'false') {
             var repl = serverRequire('repl').start({prompt: 'ut>'});
             repl.context.app = global.app = {masterBus: masterBus, workerBus: workerBus, service};
         }
