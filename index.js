@@ -73,7 +73,7 @@ module.exports = {
                         } else if (config.masterBus.socket.port) {
                             config.masterBus.socket.port += cluster.worker.id;
                         } else {
-                            var printableConfigValue = require('util').inspect(config.masterBus.socket);
+                            var printableConfigValue = serverRequire('util').inspect(config.masterBus.socket);
                             throw new Error(`Unsupported masterBus.socket configuration: ${printableConfigValue}`);
                         }
                     }
