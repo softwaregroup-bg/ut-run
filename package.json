@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.2.0-rc-bahur.2",
+  "version": "9.2.0-rc-bahur.3",
   "dependencies": {
     "loadtest": "2.3.0",
     "lodash.merge": "4.6.0",
