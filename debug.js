@@ -67,7 +67,7 @@ module.exports = {
                     streamConfig: mergedConfig.stdOut
                 });
             }
-            if (mergedConfig.console) {
+            if (mergedConfig.console && mergedConfig.console !== 'false') {
                 streams.push({
                     level: mergedConfig.console.level || 'trace',
                     stream: require('ut-log/udpStream'),
