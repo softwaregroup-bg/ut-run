@@ -19,13 +19,29 @@ module.exports = ({bus, logFactory}) => {
 
         if (Array.isArray(serviceConfig)) {
             serviceConfig = serviceConfig.reduce((prev, impl) => {
-                if (impl) {
-                    if (impl instanceof Function) {
-                        impl = impl(config);
+                let implConfig;
+                if (impl instanceof Function) {
+                    if (impl.name) {
+                        implConfig = config[impl.name];
+                        impl = implConfig !== false && impl(implConfig || {});
+                    } else {
+                        impl = impl();
                     }
+                }
+                let configure = obj => {
+                    Object.keys(obj).forEach(name => {
+                        let value = obj[name];
+                        if (value instanceof Function) {
+                            let propConfig = (implConfig || {})[name];
+                            obj[name] = propConfig !== false && value(propConfig);
+                        }
+                    });
+                    return obj;
+                };
+                if (impl) {
                     impl.ports && (prev.ports = prev.ports.concat(impl.ports));
-                    impl.modules && Object.assign(prev.modules, impl.modules);
-                    impl.validations && Object.assign(prev.validations, impl.validations);
+                    impl.modules && Object.assign(prev.modules, configure(impl.modules));
+                    impl.validations && Object.assign(prev.validations, configure(impl.validations));
                 }
                 return prev;
             }, {ports: [], modules: {}, validations: {}});
@@ -43,9 +59,6 @@ module.exports = ({bus, logFactory}) => {
             Object.keys(serviceConfig.modules).forEach(function(moduleName) {
                 var module = serviceConfig.modules[moduleName];
                 if (module) {
-                    if (module instanceof Function) {
-                        module = module(config);
-                    }
                     (module.init instanceof Function) && (module.init(bus.publicApi));
                     module.routeConfig = [];
                     bus.registerLocal(module, moduleName);
@@ -58,9 +71,6 @@ module.exports = ({bus, logFactory}) => {
             Object.keys(serviceConfig.validations).forEach(function(validationKey) {
                 var routeConfig = serviceConfig.validations[validationKey];
                 if (routeConfig) {
-                    if (routeConfig instanceof Function) {
-                        routeConfig = routeConfig(config);
-                    }
                     var routeConfigNames = validationKey.split('.');
                     var moduleName = routeConfigNames[0];
                     var module = modules[moduleName];
