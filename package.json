@@ -1,13 +1,13 @@
 {
   "name": "ut-run",
-  "version": "9.2.0-rc-bahur.7",
+  "version": "9.2.0-rc-bahur.6",
   "dependencies": {
     "loadtest": "2.3.0",
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.2.2",
     "ut-log": "^6.1.0-rc-bahur.1",
-    "ut-port": "^6.1.5"
+    "ut-port": "^6.4.6"
   },
   "peerDependencies": {
     "ut-bus": ">=6.2.0-rc-bahur.1 <6.2.0"
