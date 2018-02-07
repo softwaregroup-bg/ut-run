@@ -23,7 +23,7 @@ module.exports = ({bus, logFactory}) => {
                 if (impl instanceof Function) {
                     if (impl.name) {
                         implConfig = config[impl.name];
-                        impl = implConfig !== false && impl(implConfig || {});
+                        impl = implConfig !== false && implConfig !== 'false' && impl(implConfig);
                     } else {
                         impl = impl();
                     }
@@ -33,7 +33,7 @@ module.exports = ({bus, logFactory}) => {
                         let value = obj[name];
                         if (value instanceof Function) {
                             let propConfig = (implConfig || {})[name];
-                            obj[name] = propConfig !== false && value(propConfig);
+                            obj[name] = propConfig !== false && propConfig !== 'false' && value(propConfig);
                         }
                     });
                     return obj;
