@@ -3,6 +3,18 @@ var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
 var merge = require('lodash.merge');
+
+function mount(parent, m) {
+    if (m && process.pkg) {
+        var fs = require('fs');
+        var path = require('path');
+        if (fs.existsSync(path.resolve(m))) {
+            console.log(path.resolve(path.dirname(parent.filename), m), path.resolve(m));
+            process.pkg.mount(path.resolve(path.dirname(parent.filename), m), path.resolve(m));
+        }
+    }
+}
+
 module.exports = {
     runParams: function(params, parent, test) {
         params = params || {};
@@ -28,6 +40,7 @@ module.exports = {
                 var envConfig = {};
                 var commonConfig = {};
                 var shouldThrow = false;
+                mount(parent, config.params.app);
                 try {
                     try {
                         commonConfig = parent.require('./' + config.params.app + '/common');
@@ -85,13 +98,13 @@ module.exports = {
     },
     run: function(params, parent, test) {
         return this.runParams(params, parent, test)
-        .then((result) => {
-            process.send && process.send('ready');
-            return result;
-        })
-        .catch((err) => {
-            console.error(err);
-            process.exit(1); // this should be removed
-        });
+            .then((result) => {
+                process.send && process.send('ready');
+                return result;
+            })
+            .catch((err) => {
+                console.error(err);
+                process.exit(1); // this should be removed
+            });
     }
 };

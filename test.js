@@ -75,55 +75,55 @@ function sequence(options, test, bus, flow, params, parent) {
                             skip = true;
                         }
                     })
-                    .then(function(params) {
-                        if (skip) {
-                            return test.comment('^ ' + getName(step.name) + ' - skipped');
-                        }
-                        if (Array.isArray(step.steps)) {
-                            return sequence(options, assert, bus, step.steps, undefined, context);
-                        } else if (typeof step.steps === 'function') {
-                            return Promise.resolve()
-                                .then(() => step.steps(context))
-                                .then(steps => sequence(options, assert, bus, steps, undefined, context));
-                        }
-                        return step.method(params)
-                            .then(function(result) {
-                                duration && duration(Date.now() - start);
-                                passed && passed((result && result._isOk) ? 1 : 0);
-                                performanceWrite();
-                                context[step.name] = result;
-                                if (typeof step.result === 'function') {
-                                    step.result.call(context, result, assert);
-                                } else if (typeof step.error === 'function') {
-                                    assert.fail('Result is expected to be an error');
-                                } else {
-                                    assert.fail('Test is missing result and error handlers');
-                                }
-                                return result;
-                            }, function(error) {
-                                duration && duration(Date.now() - start);
-                                passed && passed(0);
-                                performanceWrite();
-                                if (typeof step.error === 'function') {
-                                    if (error && error.type === 'portHTTP') { // temp workaround
-                                        error.type = 'PortHTTP';
+                        .then(function(params) {
+                            if (skip) {
+                                return test.comment('^ ' + getName(step.name) + ' - skipped');
+                            }
+                            if (Array.isArray(step.steps)) {
+                                return sequence(options, assert, bus, step.steps, undefined, context);
+                            } else if (typeof step.steps === 'function') {
+                                return Promise.resolve()
+                                    .then(() => step.steps(context))
+                                    .then(steps => sequence(options, assert, bus, steps, undefined, context));
+                            }
+                            return step.method(params)
+                                .then(function(result) {
+                                    duration && duration(Date.now() - start);
+                                    passed && passed((result && result._isOk) ? 1 : 0);
+                                    performanceWrite();
+                                    context[step.name] = result;
+                                    if (typeof step.result === 'function') {
+                                        step.result.call(context, result, assert);
+                                    } else if (typeof step.error === 'function') {
+                                        assert.fail('Result is expected to be an error');
+                                    } else {
+                                        assert.fail('Test is missing result and error handlers');
                                     }
-                                    if (error && error.type === 'httpServerPort.notPermitted') { // temp workaround
-                                        error.type = 'HttpServer.NotPermitted';
+                                    return result;
+                                }, function(error) {
+                                    duration && duration(Date.now() - start);
+                                    passed && passed(0);
+                                    performanceWrite();
+                                    if (typeof step.error === 'function') {
+                                        if (error && error.type === 'portHTTP') { // temp workaround
+                                            error.type = 'PortHTTP';
+                                        }
+                                        if (error && error.type === 'httpServerPort.notPermitted') { // temp workaround
+                                            error.type = 'HttpServer.NotPermitted';
+                                        }
+                                        step.error.call(context, error, assert);
+                                    } else {
+                                        throw error;
                                     }
-                                    step.error.call(context, error, assert);
-                                } else {
-                                    throw error;
-                                }
-                            });
-                    })
-                    .then(result => {
-                        passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
-                        return result;
-                    }, error => {
-                        passing = false;
-                        throw error;
-                    });
+                                });
+                        })
+                        .then(result => {
+                            passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
+                            return result;
+                        }, error => {
+                            passing = false;
+                            throw error;
+                        });
                 };
 
                 return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing}, fn);
@@ -270,10 +270,10 @@ module.exports = function(params, cache) {
                         });
                 });
             }, Promise.resolve())
-            .catch((e) => {
-                return stopServices(assert)
-                    .then(() => Promise.reject(e));
-            });
+                .catch((e) => {
+                    return stopServices(assert)
+                        .then(() => Promise.reject(e));
+                });
         });
     }
 
