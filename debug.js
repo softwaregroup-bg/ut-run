@@ -153,8 +153,8 @@ module.exports = {
                 .then(() => service.start());
         } else {
             promise = promise
-            .then(masterBus.start.bind(masterBus))
-            .then(() => ([])); // no ports
+                .then(masterBus.start.bind(masterBus))
+                .then(() => ([])); // no ports
         }
         return promise
             .then(function(ports) {
