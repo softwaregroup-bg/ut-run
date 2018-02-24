@@ -277,16 +277,14 @@ module.exports = function(params, cache) {
         });
     }
 
-    var clientRun;
-
     if (params.type && params.type === 'performance') {
         clientConfig = {
             main: params.client,
             config: params.clientConfig,
             method: 'debug'
         };
-        clientRun = run.run(clientConfig);
-        tap.test('Performance test start', (assert) => clientRun.then((client) => {
+        var clientsRun = run.run(clientConfig);
+        tap.test('Performance test start', (assert) => clientsRun.then((client) => {
             params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
             return true;
         }));
@@ -309,32 +307,60 @@ module.exports = function(params, cache) {
     };
 
     var serverRun;
-    var testObj;
+    var serverObj;
     // tap.jobs = 1;
     var tests = tap.test('server start', {bufferred: false, bail: true}, assert => {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
-            testObj = server;
+            serverObj = server;
             !clientConfig && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
             var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
         });
     });
 
-    clientConfig && (tests = tap.test('client start', {bufferred: false, bail: true}, assert => {
+    function startClient(assert) {
+        if (!clientConfig) return Promise.resolve(serverObj);
         return serverRun
             .then(server => {
                 clientConfig.config && (clientConfig.config.server = () => server);
-                clientRun = clientConfig && run.run(clientConfig, module.parent, assert);
-                return clientRun.then((client) => {
-                    testObj = client;
-                    cache && (cache.bus = client.bus) && (cache.ports = client.ports);
-                    return Promise.all(client.ports.map(port => port.isConnected));
+                return run.run(clientConfig, module.parent, assert)
+                    .then((client) => {
+                        cache && (cache.bus = client.bus) && (cache.ports = client.ports);
+                        return Promise.all(client.ports.map(port => port.isConnected))
+                            .then(() => client);
+                    });
+            });
+    }
+
+    if (params.jobs) {
+        tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
+            test.plan(params.jobs.length);
+            params.jobs.forEach(job => {
+                test.test(job.name, assert => {
+                    var client;
+                    return assert.test('client start', a => startClient(a).then(c => {
+                        client = c;
+                        return c;
+                    }))
+                        .then(assert => job.steps(assert, client.bus, sequence.bind(null, job), client.ports))
+                        .then(assert => assert.test('client stop', a => stop(a, client)))
+                        .catch(assert.threw);
                 });
             });
-    }));
-
-    tests = tests.then((test) => params.steps(test, testObj.bus, sequence.bind(null, params), testObj.ports));
+        }));
+    } else {
+        tests = tests.then(assert => {
+            var client;
+            return assert.test('client start', a => startClient(a).then(c => {
+                client = c;
+                return c;
+            }))
+                .then(assert => params.steps(assert, client.bus, sequence.bind(null, params), client.ports))
+                .then(assert => assert.test('client stop', a => stop(a, client)))
+                .catch(assert.threw);
+        });
+    }
 
     function stop(assert, x) {
         var promise = Promise.resolve();
@@ -363,7 +389,6 @@ module.exports = function(params, cache) {
             });
             return x;
         });
-        clientConfig && test.test('client stop', {bufferred: false}, assert => clientRun.then(result => stop(assert, result)));
         return test.test('server stop', {bufferred: false}, assert => serverRun
             .then(result => stop(assert, result))
             // .then(() => setTimeout(log, 2000))
