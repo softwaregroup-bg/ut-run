@@ -1,3 +1,29 @@
+<a name="9.2.0"></a>
+# [9.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.1...v9.2.0) (2018-03-02)
+
+
+### Bug Fixes
+
+* define modules as functions ([903630d](https://github.com/softwaregroup-bg/ut-run/commit/903630d))
+* dependencies ([179bca5](https://github.com/softwaregroup-bg/ut-run/commit/179bca5))
+* disable console port with runtime arguments ([b48c7c5](https://github.com/softwaregroup-bg/ut-run/commit/b48c7c5))
+* do not pass global config ([de3a9e2](https://github.com/softwaregroup-bg/ut-run/commit/de3a9e2))
+* improve falsy handling ([21ac11d](https://github.com/softwaregroup-bg/ut-run/commit/21ac11d))
+* support pkg ([244fabe](https://github.com/softwaregroup-bg/ut-run/commit/244fabe))
+* upgrade ut-log ([e2eed3f](https://github.com/softwaregroup-bg/ut-run/commit/e2eed3f))
+* upgrade ut-port ([58f1353](https://github.com/softwaregroup-bg/ut-run/commit/58f1353))
+* use bus public api only instead of having full access to the bus ([5a794ee](https://github.com/softwaregroup-bg/ut-run/commit/5a794ee))
+* version ([56b63b5](https://github.com/softwaregroup-bg/ut-run/commit/56b63b5))
+
+
+### Features
+
+* fix cluster mode support ([#41](https://github.com/softwaregroup-bg/ut-run/issues/41)) ([2ab9899](https://github.com/softwaregroup-bg/ut-run/commit/2ab9899))
+* provide possibility to define common config on implementation level ([abcfee9](https://github.com/softwaregroup-bg/ut-run/commit/abcfee9))
+* run jobs in parallel ([dd4b720](https://github.com/softwaregroup-bg/ut-run/commit/dd4b720))
+
+
+
 <a name="9.1.1"></a>
 ## [9.1.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.0...v9.1.1) (2017-12-20)
 
