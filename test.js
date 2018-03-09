@@ -24,24 +24,32 @@ function sequence(options, test, bus, flow, params, parent) {
     function getName(name) {
         return previous.concat(name).join(' / ');
     }
+    function buildStep(step) {
+        if (!step.name) {
+            throw new Error('step name is required');
+        }
+        return {
+            name: step.name,
+            methodName: step.method,
+            method: step.method ? bus.importMethod(step.method) : (params) => Promise.resolve(params),
+            params: (typeof step.params === 'function') ? promisify(step.params) : () => Promise.resolve(step.params),
+            steps: step.steps,
+            result: step.result,
+            error: step.error
+        };
+    }
     return (function runSequence(flow, params, parent) {
         var context = parent || {
             params: params || {}
         };
-        var steps = flow.map(function(f) {
-            if (!f.name) {
-                throw new Error('step name is required');
+
+        var steps = flow.reduce((all, step) => {
+            if (Array.isArray(step)) {
+                return all.concat(step.map(buildStep));
             }
-            return {
-                name: f.name,
-                methodName: f.method,
-                method: f.method ? bus.importMethod(f.method) : (params) => Promise.resolve(params),
-                params: (typeof f.params === 'function') ? promisify(f.params) : () => Promise.resolve(f.params),
-                steps: f.steps,
-                result: f.result,
-                error: f.error
-            };
-        });
+            all.push(buildStep(step));
+            return all;
+        }, []);
         var passed = options.type && bus.performance &&
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
         var duration = options.type && bus.performance &&
