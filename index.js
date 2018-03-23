@@ -2,7 +2,7 @@
 var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
-var merge = require('lodash.merge');
+var merge = require('ut-port/merge');
 
 function mount(parent, m) {
     if (m && process.pkg) {
