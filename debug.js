@@ -1,6 +1,6 @@
 /* eslint no-process-env:0 */
 
-var merge = require('lodash.merge');
+var merge = require('ut-port/merge');
 var serverRequire = require;// hide some of the requires from lasso
 var path = require('path');
 
