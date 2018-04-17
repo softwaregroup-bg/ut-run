@@ -1,3 +1,13 @@
+<a name="9.3.0"></a>
+# [9.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.2.0...v9.3.0) (2018-04-17)
+
+
+### Features
+
+* add possibility for the flow steps to be arrays of steps ([315b08b](https://github.com/softwaregroup-bg/ut-run/commit/315b08b))
+
+
+
 <a name="9.2.0"></a>
 # [9.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.1...v9.2.0) (2018-03-02)
 
