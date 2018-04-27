@@ -345,7 +345,6 @@ module.exports = function(params, cache) {
     if (params.jobs) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
             let jobs;
-            console.log('original', params.jobs.map(job => job.name).join(', '));
             if (params.exclude) {
                 let exclude;
                 switch (params.exclude.constructor.name) {
@@ -363,7 +362,6 @@ module.exports = function(params, cache) {
                 }
                 if (exclude) {
                     jobs = params.jobs.filter(job => !exclude.test(job.name));
-                    console.log('filtered', jobs.map(job => job.name).join(', '));
                 } else {
                     throw new Error('Invalid \'exclude\' property [', params.exclude, '] Must be one of: RegExp, Array, String');
                 }
