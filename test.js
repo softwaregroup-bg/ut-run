@@ -344,8 +344,32 @@ module.exports = function(params, cache) {
 
     if (params.jobs) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
-            test.plan(params.jobs.length);
-            params.jobs.forEach(job => {
+            let jobs;
+            if (params.exclude) {
+                let exclude;
+                switch (params.exclude.constructor.name) {
+                    case 'RegExp':
+                        exclude = params.exclude;
+                        break;
+                    case 'Array':
+                        exclude = new RegExp(`^(${params.exclude.join('|')})$`);
+                        break;
+                    case 'String':
+                        exclude = new RegExp(`^${params.exclude}$`);
+                        break;
+                    default:
+                        break;
+                }
+                if (exclude) {
+                    jobs = params.jobs.filter(job => !exclude.test(job.name));
+                } else {
+                    throw new Error('Invalid \'exclude\' property [', params.exclude, '] Must be one of: RegExp, Array, String');
+                }
+            } else {
+                jobs = params.jobs;
+            }
+            test.plan(jobs.length);
+            jobs.forEach(job => {
                 test.test(job.name, assert => {
                     var client;
                     return assert.test('client start', a => startClient(a).then(c => {
