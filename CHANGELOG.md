@@ -1,3 +1,13 @@
+<a name="9.4.0"></a>
+# [9.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.3.0...v9.4.0) (2018-04-30)
+
+
+### Features
+
+* provide exclude property for tests ([9ec553c](https://github.com/softwaregroup-bg/ut-run/commit/9ec553c))
+
+
+
 <a name="9.3.0"></a>
 # [9.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.2.0...v9.3.0) (2018-04-17)
 
