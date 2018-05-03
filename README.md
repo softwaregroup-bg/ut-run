@@ -1,78 +1,281 @@
 # UT Run
 
 ## Purpose
+
 The module is used to start ut5 implementations which includes initialising logging, starting worker and master busses, starting performance port, creating other ports, initializing them, pass config to ports, clustering between cpu-s.
 
 ## Usage
+
 In the root of the implementation in index.js file module ut-run should be required and its function 'run' should be called.
-Sample run of implementation is node index.js.
-### Sample project structure and default run of the implementation:
-Default running of the implementation means that no params are passed to run function, no environment variables are passed and no rc files are used when running node index.js
+Sample run of implementation is `node index`.
 
-By default the file structure is this:
-```
-implementation
-│   index.js
-└───server
-│   ├──index.js
-│   └──dev.json
-```
+### Recommended project structure and default run of the implementation
 
-Sample index.js file:
+The recommended filesystem structure, when running only one service looks like this:
+
+    implementation
+    ├───index.js
+    └───server
+        ├──common.js     - common configuration for all environments
+        ├──index.js      - service startup file
+        ├──prod.json     - environment configuration file
+        ├──test.json     - environment configuration file
+        └──dev.json      - environment configuration file
+
+The file `index.js` in the root is used to start the implementation. Typical `index.js` file looks like:
+
 ```js
-require('ut-run').run()
+require('ut-run').run({version: require('./package.json').version});
 ```
 
-Sample server/dev.json look like this.
-```javascript
+It uses `ut-run` package to start the implementation and passes the version to it.
+
+### Starting
+
+Starting the implementation from the command line can be done by passing these command line arguments:
+
+```bash
+node index {app} {method} {env}
+```
+
+- `{app}` - specifies the name of sub-folder, where to find the app/service to start. Defaults to 'server'.
+- `{method}` - specifies the way of running, currently only the 'debug' is supported, while in future other modes can be supported. Defaults to 'debug'.
+- `{env}` - specifies the name of configuration file related to the environment. Environments like 'dev', 'prod' and 'test' are commonly used. Defaults to 'dev'.
+
+Using environment variables is also possible
+
+```bash
+UT_APP=server UT_METHOD=debug UT_ENV=dev node index
+```
+
+When multiple services exists in a single implementation, usually the folder structure is:
+
+    implementation
+    │   index.js
+    └───server
+        ├──service1
+        │   ├──common.js
+        │   ├──index.js
+        │   ├──prod.json
+        │   ├──test.json
+        │   └──dev.json
+        └──service2
+            ├──common.js
+            ├──index.js
+            ├──prod.json
+            ├──test.json
+            └──dev.json
+
+To run specific service in such cases, either set `UT_APP=server/service1` or pass as argument `node index server/service1`
+
+### Environment configuration files
+
+Environment configuration files can be either `.json` or `.js` file.
+If it is a `.js` file, it must export an object. If a file named `common.js` or `common.json` exists,
+it is used as a base object for all environments where the actual environment configuration is merged.
+When using `.js` file, more complex configuration is possible - like having functions or other objects, not supported by JSON.
+Minimal environment file `server/dev.json` may look like:
+
+```json
 {
-    "implementation": "impl-test"
+    "implementation": "impl-test",
+    "service": "admin"
 }
 ```
 
-Sample server/index.js look like this.
+### Services
+
+Service startup file `server/index.js` are recommended to follow this pattern:
+
 ```javascript
-module.exports = ({config}) => [{
-    ports: [],
-    modules: {},
-    validations: {}
-}];
+module.exports = ({config}) => [
+    package1,
+    package2,
+    //...
+    packageN
+];
 ```
 
-- ports - holds ports configurations with which ut-run will instantiate corresponding port that will be registered in ut-bus. Config for every ut-port-* module can be added here. For example port registering and usage see
-[ut-port-sql](https://github.com/softwaregroup-bg/ut-port-sql)
-- modules - Used for registering http routes or backend methods in ut-bus
-- validations - validations that will be applied on input requests
-- config - param which holds merged config from default configs, dev.json, rc files
+The `config` parameter holds the environment configuration and can be used to implement complex logic, when
+the default logic is not sufficient.
+It is not recommended to pass this configuration to the packages, as they should only be allowed to access their own
+section within the configuration.
 
-### Configuration of implementation and ports can be set in the following ways:
-- In server/[environment]json file (default - server/dev.json)
-- In rc file. The name of this file is .ut_[implementation]_[environment]rc where
-[implementation] is implementation from server/index.js file,
-[environment] is passed UT_ENV environment or 'dev' (by default)
-For the sample starting the result is .ut_impl_test_devrc
-Note:
-In this filename there should be no dashes! Dashes from implementation (server/index.js) will be replaced with underscores!
-Location on this file in windows is C:/Users/[user]
-- Passing params to run function when calling index.js
-This params can specify where ut-run should search for json files and index.js (in the sample above 'server' folder).
-Priority of configs is in the following order rc file, [environment].json, default config.
-### Environment variables and their meaning.
+Usually `packageX` is eiter reusing some standard functionality `require('ut-something')` or some
+implementation specific functionality `require('../something')` or inlining this structure:
+
+```js
+{
+    ports:[],
+    modules:{},
+    validations:{}
+}
+```
+
+### Business module packages
+
+Business module packages usually represent a related set of business functionality, that is either available as npm package or is developed
+within the implementation. Each package is either an object with the above structure or a function, returning such object:
+
+```javascript
+function utPackageName(packageConfig) {
+    return {
+        ports: [
+            port1,
+            port2,
+            // ...
+            portN
+        ],
+        modules: {
+            module1: module1,
+            module2: module2,
+            //...
+            module2: moduleN
+        },
+        validations: {
+            validation1: validation1,
+            validation2: validation2,
+            //...
+            validation1: validation1
+        }
+    }
+}
+```
+
+Parameters:
+
+- `packageConifig` - if the function has name, then the passed parameter value is taken from the environment configuration property with the same name. Otherwise, `undefined` is passed. Loading of the whole package can be turned off from environment configuration by setting the mentioned property to `false`
+
+Return value:
+
+- `ports` - array of port configuration objects or functions, that return port configuration objects. In cases when a named function is used, the function will be invoked with a parameter that equals the environment configuration property with name same as the name of the function. In these cases the port configuration object returned by the function may skip the 'id' property and the port will have id that equals the function name. Ports can be excluded by setting `false` the configuration property that corresponds to the port name.
+- `modules` - holds a map of the used modules. Each property can be an object or function. If it is a function, then it will be called with a value taken from the environment configuration. The value is taken by first looking for a property named after the name of the package function (utPackageName in the above example), then within that object a the value of a property that equals the module name is taken. When using named function, the module can be excluded by setting `false` the mentioned property.
+- `validations` - validations that will be applied on input requests. Validations can again be objects or functions. For functions, the same way of passing configuration applies as explained for `modules`.
+
+In addition to using environment configuration files within the implementation, the following additional options are available,
+which will override the configuraiton
+
+- Configuration file
+- Using command line parameters
+- Using environment variables
+
+The algorithm of how these are applied is described in the `rc` package, [here](https://github.com/dominictarr/rc).
+This is adapted from `rc` package readme:
+
+- command line arguments, parsed by minimist _(e.g. `--foo baz`, also nested: `--foo.bar=baz`)_
+- environment variables prefixed with `ut_${impl}_${env}_`
+  - or use "\_\_" to indicate nested properties _(e.g. `ut_${impl}_${env}_foo__bar__baz` => `foo.bar.baz`)_
+- if you passed an option `--config file` then from that file
+- a local `.ut_${impl}_${env}rc` or the first found looking in `./ ../ ../../ ../../../` etc.
+- `$HOME/.ut_${impl}_${env}rc`
+- `$HOME/.ut_${impl}_${env}/config`
+- `$HOME/.config/ut_${impl}_${env}`
+- `$HOME/.config/ut_${impl}_${env}/config`
+- `/etc/ut_${impl}_${env}rc`
+- `/etc/ut_${impl}_${env}/config`
+- the object taken from environment configuration file within service folder (dev.js[on], test.js[on], etc.)
+
+All configuration sources that were found will be flattened into one object,
+so that sources **earlier** in this list override later ones.
+
+${impl} is implementation identifier taken from environment configuration file,
+${env} is the environment passed throu command line or UT_ENV environment variable, or 'dev' (by default)
+
+### Example
+
+The example below illustrates the way configuration is passed to business module packages, ports, modules and validations.
+For brevity, the usual `require('...')` calls are inlined.
+
+- `server/dev.json`
+
+```json
+{
+    "businessPackage1": {
+        "module1": {
+        },
+        "validation1": {
+        }
+    },
+    "businessPackage2": {
+        "module1": {
+        },
+        "validation1": {
+        }
+    },
+    "port1": {
+    },
+    "port2": {
+    },}
+```
+
+- `server/index.js`
+
+```js
+module.exports = [
+    function businessPackage1(b1) { // b1 will equal to businessPackage1 taken under configuration root
+        return {
+            ports: [
+                function port1(p1) { // p1 will equal to port1 taken under configuration root
+                    return {
+                        createPort: require('ut-port-sql')
+                    }
+                },
+                {
+                    id: 'port2', // this port configuration object will be merged with port2 taken under configuration root
+                    createPort: require('ut-port-http')
+                }
+            ],
+            modules: {
+                module1: m1 => ({/* some methods */}), // m1 will equal to module1 under businessPackage1 under configuration root
+                module2: {/* some methods */}
+            },
+            validations: {
+                validation1: v1 => {/* joi validations */}, // v1 will equal to validation1 under businessPackage1 under configuration root
+                validation2: {/* joi validations */}
+            }
+        };
+    },
+    function businessPackage1(b2) { // b2 will equal to businessPackage1 taken under configuration root
+        // return {ports, modules, validations}
+    }
+]
+```
+
+### Special cases
+
+- optionally in the configuration one could provide information about automatic service discovery like follows:
+    ```json
+        {
+            "registry": {
+                "type": "consul",
+                "params": {}
+            }
+        }
+    ```
+
+    If you set `registry: true` then consul will be used by default trying to connect to the default consul port on `8500`.
+    Currently only consul is supported as a service registry backend. For `params` specification please refer to the available consul initialization properties [here](https://github.com/silas/node-consul#consuloptions).
+
+    In order not to use any automatic service discovery just set `registry: false` or completely omit the `registry` property.
+
+### Additional environment variables
+
 - UT_BUS_MODE - Allow to run masterBus and workerBus separately. Possible values are 'master', 'worker'
-- UT_APP - Used to determine in which folder the implementation configuration and json files are placed. Default place is 'server' folder in the root
-- UT_METHOD - Currently only 'debug' is suported. If not passed default 'debug' is used
-- UT_ENV - In which environment implementation will be started and which configuration will be used. Default configuration is 'dev'. Possible values are 'dev', 'test', 'uat', 'jenkins'
 
 ### Working directory
-Ut-run sets also working directory for the implementation. This folder is used for file uploads, log files. Location of this directory depends on the operating system:
+
+ut-run sets also working directory for the implementation. This folder is used for file uploads, log files. Location of this directory depends on the operating system:
+
 - windows C:/ProgramData/SoftwareGroup/UnderTree/[implementation]
 - linux /var/lib/SoftwareGroup/UnderTree/[implementation]
 - macOS ~/Library/Application Support/SoftwareGroup/UnderTree/[implementation]
 
-<br><br>
-## Run subtests
+## Automated tests
 
-### Sample test script:
+ut-run provides a standard way of structuring automated tests.
+
+### Sample test script
+
 ```js
 var test = require('ut-run/test');
 test({
@@ -124,7 +327,8 @@ test({
   }
 });
 ```
-### Sample output:
+
+### Sample output
 
 ```sh
 # name1
@@ -138,7 +342,8 @@ ok 2 return assertion for name 2
 # <- subtest end: [name1]
 ok 3 return assertion for name 1
 ```
-### Sample output with skipped step:
+
+### Sample output with skipped step
 
 ```sh
 # name1

@@ -1,3 +1,105 @@
+<a name="9.2.0"></a>
+# [9.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.1...v9.2.0) (2018-03-02)
+
+
+### Bug Fixes
+
+* define modules as functions ([903630d](https://github.com/softwaregroup-bg/ut-run/commit/903630d))
+* dependencies ([179bca5](https://github.com/softwaregroup-bg/ut-run/commit/179bca5))
+* disable console port with runtime arguments ([b48c7c5](https://github.com/softwaregroup-bg/ut-run/commit/b48c7c5))
+* do not pass global config ([de3a9e2](https://github.com/softwaregroup-bg/ut-run/commit/de3a9e2))
+* improve falsy handling ([21ac11d](https://github.com/softwaregroup-bg/ut-run/commit/21ac11d))
+* support pkg ([244fabe](https://github.com/softwaregroup-bg/ut-run/commit/244fabe))
+* upgrade ut-log ([e2eed3f](https://github.com/softwaregroup-bg/ut-run/commit/e2eed3f))
+* upgrade ut-port ([58f1353](https://github.com/softwaregroup-bg/ut-run/commit/58f1353))
+* use bus public api only instead of having full access to the bus ([5a794ee](https://github.com/softwaregroup-bg/ut-run/commit/5a794ee))
+* version ([56b63b5](https://github.com/softwaregroup-bg/ut-run/commit/56b63b5))
+
+
+### Features
+
+* fix cluster mode support ([#41](https://github.com/softwaregroup-bg/ut-run/issues/41)) ([2ab9899](https://github.com/softwaregroup-bg/ut-run/commit/2ab9899))
+* provide possibility to define common config on implementation level ([abcfee9](https://github.com/softwaregroup-bg/ut-run/commit/abcfee9))
+* run jobs in parallel ([dd4b720](https://github.com/softwaregroup-bg/ut-run/commit/dd4b720))
+
+
+
+<a name="9.1.1"></a>
+## [9.1.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.0...v9.1.1) (2017-12-20)
+
+
+### Bug Fixes
+
+* tests now wait for all ports to connect ([5186e5d](https://github.com/softwaregroup-bg/ut-run/commit/5186e5d))
+
+
+
+<a name="9.1.0"></a>
+# [9.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.2...v9.1.0) (2017-12-06)
+
+
+### Bug Fixes
+
+* version ([683ba0e](https://github.com/softwaregroup-bg/ut-run/commit/683ba0e))
+
+
+### Features
+
+* parallel tests and ut-bus upgrade ([1b65671](https://github.com/softwaregroup-bg/ut-run/commit/1b65671))
+
+
+
+<a name="8.4.2"></a>
+## [8.4.2](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.1...v8.4.2) (2017-10-30)
+
+
+### Bug Fixes
+
+* lost props ([#35](https://github.com/softwaregroup-bg/ut-run/issues/35)) ([fc6f3c7](https://github.com/softwaregroup-bg/ut-run/commit/fc6f3c7))
+
+
+
+<a name="8.4.1"></a>
+## [8.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.4.0...v8.4.1) (2017-10-27)
+
+
+### Bug Fixes
+
+* ut-port-registry initialization and updated dependency version ([515290c](https://github.com/softwaregroup-bg/ut-run/commit/515290c))
+
+
+
+<a name="8.4.0"></a>
+# [8.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.3.1...v8.4.0) (2017-10-04)
+
+
+### Bug Fixes
+
+* switch to udp ([4eb81b8](https://github.com/softwaregroup-bg/ut-run/commit/4eb81b8))
+
+
+
+<a name="8.3.1"></a>
+## [8.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v8.3.0...v8.3.1) (2017-09-04)
+
+
+### Bug Fixes
+
+* test ([657fc72](https://github.com/softwaregroup-bg/ut-run/commit/657fc72))
+* update dependency to ut-port-registr ([0d0e7a6](https://github.com/softwaregroup-bg/ut-run/commit/0d0e7a6))
+
+
+
+<a name="8.3.0"></a>
+# [8.3.0](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.3...v8.3.0) (2017-08-31)
+
+
+### Features
+
+* add registry dynamically if the respective configuration has been specified ([3514a27](https://github.com/softwaregroup-bg/ut-run/commit/3514a27))
+
+
+
 <a name="8.2.3"></a>
 ## [8.2.3](https://github.com/softwaregroup-bg/ut-run/compare/v8.2.2...v8.2.3) (2017-08-22)
 

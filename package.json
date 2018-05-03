@@ -1,20 +1,20 @@
 {
   "name": "ut-run",
-  "version": "8.2.3",
+  "version": "9.2.0",
   "dependencies": {
-    "loadtest": "2.2.1",
+    "loadtest": "2.3.0",
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
-    "rc": "1.1.6",
-    "ut-log": "^5.10.8",
-    "when": "3.7.7"
+    "rc": "1.2.2",
+    "ut-log": "^6.1.0-rc-bahur.1",
+    "ut-port": "^6.4.6"
   },
   "peerDependencies": {
-    "ut-bus": "^5.12.1"
+    "ut-bus": "^6.2.0-rc-bahur.1"
   },
   "devDependencies": {
-    "blue-tape": "1.0.0",
-    "ut-tools": "*"
+    "tap": "^10.7.3",
+    "ut-tools": "^5.30.0"
   },
   "scripts": {
     "lint": "ut-lint .",

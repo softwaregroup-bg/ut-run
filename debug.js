@@ -1,7 +1,6 @@
 /* eslint no-process-env:0 */
 
 var merge = require('lodash.merge');
-var when = require('when');
 var serverRequire = require;// hide some of the requires from lasso
 var path = require('path');
 
@@ -19,7 +18,7 @@ function getDataDirectory() {
 }
 
 module.exports = {
-    debug: function(impl, config) {
+    debug: function(serviceConfig, envConfig, assert) {
         var mergedConfig = merge({
             masterBus: {
                 logLevel: 'debug',
@@ -29,7 +28,7 @@ module.exports = {
                 logLevel: 'debug'
             },
             console: {
-                host: '127.0.0.1',
+                host: 'localhost',
                 port: 30001,
                 logLevel: 'info'
             },
@@ -41,7 +40,7 @@ module.exports = {
             },
             runMaster: true,
             runWorker: true
-        }, config);
+        }, envConfig);
 
         if (!process.browser && !mergedConfig.workDir) {
             if (!mergedConfig.implementation) {
@@ -51,16 +50,11 @@ module.exports = {
             mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree', mergedConfig.implementation);
         }
 
-        require('when/monitor/console');
-
         var Bus = require('ut-bus');
-        var Port = require('ut-bus/port');
         var logFactory;
         var log;
-        var consolePort;
-        var performancePort;
 
-        if (config.log === false || config.log === 'false') {
+        if (envConfig.log === false || envConfig.log === 'false') {
             logFactory = null;
         } else {
             var UTLog = require('ut-log');
@@ -69,25 +63,24 @@ module.exports = {
                 streams.push({
                     level: mergedConfig.stdOut.level || 'trace',
                     stream: 'process.stdout',
+                    type: 'raw',
                     streamConfig: mergedConfig.stdOut
                 });
             }
-            if (mergedConfig.console) {
+            if (mergedConfig.console && mergedConfig.console !== 'false') {
                 streams.push({
                     level: mergedConfig.console.level || 'trace',
-                    stream: require('ut-log/socketStream'),
+                    stream: require('ut-log/udpStream'),
                     streamConfig: {
-                        protocol: process.browser && global.location.protocol,
                         host: mergedConfig.console.host,
-                        port: mergedConfig.console.port,
-                        objectMode: true
-                    },
-                    type: 'raw'
+                        port: mergedConfig.console.port
+                    }
                 });
             }
             logFactory = new UTLog({
                 type: 'bunyan',
                 name: 'bunyan_test',
+                service: mergedConfig.service,
                 workDir: mergedConfig.workDir,
                 transformData: (mergedConfig.log && (mergedConfig.log.transformData || {})),
                 streams: Array.prototype.concat(streams, mergedConfig.log.streams)
@@ -102,21 +95,17 @@ module.exports = {
                 repl: mergedConfig.repl
             });
         }
-        if (mergedConfig.console && mergedConfig.console.server) {
-            var Console = serverRequire('ut-port-console');
-            consolePort = new Console((mergedConfig && mergedConfig.console));
-            consolePort.logFactory = logFactory;
-            merge(consolePort.config, mergedConfig.console);
-        }
-        if (mergedConfig.performance) {
-            var Performance = serverRequire('ut-port-performance')(Port);
-            performancePort = new Performance();
-            performancePort.logFactory = logFactory;
-            merge(performancePort.config, mergedConfig.performance);
-        }
         var masterBus;
         var workerBus;
-        var workerRun;
+        var service;
+
+        if (mergedConfig.masterBus.socketPid) {
+            if (mergedConfig.masterBus.socket) {
+                mergedConfig.masterBus.socket = mergedConfig.masterBus.socket + '[' + process.pid + ']';
+            } else {
+                mergedConfig.masterBus.socket = process.pid;
+            }
+        }
 
         if (mergedConfig.runMaster) {
             masterBus = Object.assign(new Bus(), {
@@ -124,8 +113,7 @@ module.exports = {
                 logLevel: mergedConfig.masterBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 id: 'master',
-                logFactory: logFactory,
-                performance: performancePort
+                logFactory: logFactory
             });
         }
 
@@ -135,21 +123,19 @@ module.exports = {
                 logLevel: mergedConfig.workerBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 id: 'worker',
-                logFactory: logFactory,
-                performance: performancePort
-            });
-            workerRun = Object.assign({}, require('./index'), {
-                bus: workerBus,
                 logFactory: logFactory
+            });
+            service = require('./service')({
+                bus: workerBus,
+                logFactory,
+                assert
             });
         }
 
-        if (config.repl !== false) {
+        if (envConfig.repl !== false && envConfig.repl !== 'false') {
             var repl = serverRequire('repl').start({prompt: 'ut>'});
-            repl.context.app = global.app = {masterBus: masterBus, workerBus: workerBus, workerRun: workerRun};
+            repl.context.app = global.app = {masterBus: masterBus, workerBus: workerBus, service};
         }
-        consolePort && when(consolePort.init()).then(consolePort.start());
-        performancePort && when(performancePort.init()).then(performancePort.start());
 
         var promise = Promise.resolve();
         if (masterBus) {
@@ -163,17 +149,23 @@ module.exports = {
                 promise = promise.then(workerBus.start.bind(workerBus));
             }
             promise = promise
-                .then(workerRun.ready.bind(workerRun))
-                .then(workerRun.loadImpl.bind(workerRun, impl, mergedConfig));
+                .then(() => service.create(serviceConfig, mergedConfig, assert))
+                .then(() => service.start());
         } else {
             promise = promise
-            .then(masterBus.start.bind(masterBus))
-            .then(() => ([])); // no ports
+                .then(masterBus.start.bind(masterBus))
+                .then(() => ([])); // no ports
         }
         return promise
             .then(function(ports) {
                 return {
                     ports: ports,
+                    portsMap: ports.reduce((prev, cur) => {
+                        if (cur && cur.config && (typeof cur.config.id === 'string')) {
+                            prev[cur.config.id] = cur;
+                        }
+                        return prev;
+                    }, {}),
                     master: masterBus,
                     bus: workerBus,
                     log: logFactory,
@@ -190,8 +182,6 @@ module.exports = {
                 };
             })
             .catch((err) => {
-                consolePort && consolePort.stop();
-                performancePort && performancePort.stop();
                 workerBus && workerBus.destroy();
                 masterBus && masterBus.destroy();
                 return Promise.reject(err);
