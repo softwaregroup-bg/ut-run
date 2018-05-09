@@ -3,6 +3,7 @@ var serverRequire = require;// hide some of the requires from lasso
 var run = require('./debug');
 var rc = require('rc');
 var merge = require('ut-port/merge');
+var path = require('path');
 
 function mount(parent, m) {
     if (m && process.pkg) {
@@ -40,17 +41,18 @@ module.exports = {
                 var envConfig = {};
                 var commonConfig = {};
                 var shouldThrow = false;
+                const appPath = (params.resolve && path.dirname(params.resolve('./' + config.params.app))) || ('./' + config.params.app);
                 mount(parent, config.params.app);
                 try {
                     try {
-                        commonConfig = parent.require('./' + config.params.app + '/common');
+                        commonConfig = parent.require(appPath + '/common');
                     } catch (e) {
                         shouldThrow = true;
                         if (e.code !== 'MODULE_NOT_FOUND') {
                             throw e;
                         }
                     }
-                    envConfig = parent.require('./' + config.params.app + '/' + config.params.env);
+                    envConfig = parent.require(appPath + '/' + config.params.env);
                 } catch (e) {
                     if (e.code !== 'MODULE_NOT_FOUND') {
                         throw e;
