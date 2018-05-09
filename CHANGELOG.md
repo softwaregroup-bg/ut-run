@@ -1,3 +1,13 @@
+<a name="9.5.0"></a>
+# [9.5.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.4.0...v9.5.0) (2018-05-09)
+
+
+### Features
+
+* look for env config in microservice folder ([347c08a](https://github.com/softwaregroup-bg/ut-run/commit/347c08a))
+
+
+
 <a name="9.4.0"></a>
 # [9.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.3.0...v9.4.0) (2018-04-30)
 
