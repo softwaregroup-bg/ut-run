@@ -284,6 +284,7 @@ ut-run provides a standard way of structuring automated tests.
 - clientConfig: specific client configuration
 - services: one or set of services to be started before the server and to be stopped after the test finishes (for example different implementation)
 - jobs: set of tests to be executed (a specified module could be required and all tests in it will be run)
+- exclude: used with jobs, exludes tests from the run, could be a string, array or regExp
 - steps: the test steps (login, add user, etc.)
 
 ### Sample test script with jobs
@@ -298,6 +299,7 @@ test({
   client: config.client,
   clientConfig: config.clientConfig,
   services: require('../index-test'),
+  exclude: [test1, test2],
   jobs: require('ut-test/test/integration')
 });
 ```
