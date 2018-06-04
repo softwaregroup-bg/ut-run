@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.6.0-rc-diesel.1",
+  "version": "9.6.0-rc-diesel.2",
   "dependencies": {
     "loadtest": "2.3.0",
     "minimist": "1.2.0",
