@@ -1,3 +1,8 @@
+<a name="9.6.0"></a>
+# [9.6.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.6.0-rc-diesel.3...v9.6.0) (2018-06-07)
+
+
+
 <a name="9.5.0"></a>
 # [9.5.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.4.0...v9.5.0) (2018-05-09)
 
