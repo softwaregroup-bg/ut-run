@@ -25,7 +25,8 @@ module.exports = {
                 socket: 'bus'
             },
             workerBus: {
-                logLevel: 'debug'
+                logLevel: 'debug',
+                channel: envConfig.implementation
             },
             console: {
                 host: 'localhost',
@@ -122,6 +123,8 @@ module.exports = {
                 server: false,
                 logLevel: mergedConfig.workerBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
+                channel: mergedConfig.workerBus.channel,
+                nats: mergedConfig.workerBus.nats,
                 id: 'worker',
                 logFactory: logFactory
             });
