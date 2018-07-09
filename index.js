@@ -56,10 +56,18 @@ function getConfig(params = {}, parent = module.parent) {
         }
         merge(config, commonConfig, envConfig);
     } else {
-        config.params = config.params || {};
-        config.params.app = params.app;
-        config.params.method = params.method;
-        config.params.env = params.env;
+        if (!config.params) {
+            config.params = {};
+        }
+        if (!config.params.app) {
+            config.params.app = params.app;
+        }
+        if (!config.params.method) {
+            config.params.method = params.method;
+        }
+        if (config.params.env) {
+            config.params.env = params.env;
+        }
     }
 
     return rc([
