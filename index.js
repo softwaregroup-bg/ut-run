@@ -65,7 +65,7 @@ function getConfig(params = {}, parent = module.parent) {
         if (!config.params.method) {
             config.params.method = params.method;
         }
-        if (config.params.env) {
+        if (!config.params.env) {
             config.params.env = params.env;
         }
     }
