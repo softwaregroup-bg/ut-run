@@ -1,13 +1,13 @@
 {
   "name": "ut-run",
-  "version": "9.6.0",
+  "version": "9.7.0-rc-einstein.9",
   "dependencies": {
     "loadtest": "2.3.0",
     "minimist": "1.2.0",
     "rc": "1.2.6",
-    "ut-log": "^6.2.0",
-    "ut-port": "^6.6.0",
-    "ut-bus": "^6.5.0-rc-diesel.0"
+    "ut-log": "^6.3.0-rc-einstein.2",
+    "ut-port": "^6.7.0-rc-einstein.4",
+    "ut-bus": "^6.6.0-rc-einstein.5"
   },
   "devDependencies": {
     "tap": "^10.7.3",

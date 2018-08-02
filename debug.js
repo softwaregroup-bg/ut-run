@@ -124,7 +124,8 @@ module.exports = {
                 logLevel: mergedConfig.workerBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 channel: mergedConfig.workerBus.channel,
-                nats: mergedConfig.workerBus.nats,
+                hemera: mergedConfig.workerBus.hemera,
+                moleculer: mergedConfig.workerBus.moleculer,
                 id: 'worker',
                 logFactory: logFactory
             });
