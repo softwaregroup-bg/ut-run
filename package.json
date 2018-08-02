@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.7.0-rc-einstein.9",
+  "version": "9.7.0",
   "dependencies": {
     "loadtest": "2.3.0",
     "minimist": "1.2.0",

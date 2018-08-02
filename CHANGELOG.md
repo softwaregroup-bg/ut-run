@@ -1,3 +1,8 @@
+<a name="9.7.0"></a>
+# [9.7.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.7.0-rc-einstein.9...v9.7.0) (2018-08-02)
+
+
+
 <a name="9.6.0"></a>
 # [9.6.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.6.0-rc-diesel.3...v9.6.0) (2018-06-07)
 
