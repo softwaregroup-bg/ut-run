@@ -32,29 +32,23 @@ function getConfig(params = {}, parent = module.parent) {
         config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
         config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
         config.service = config.params.app + '/' + config.params.env;
-        var envConfig = {};
-        var commonConfig = {};
-        var shouldThrow = false;
         const appPath = (params.resolve && path.dirname(params.resolve('./' + config.params.app))) || ('./' + config.params.app);
         mount(parent, config.params.app);
-        try {
-            try {
-                commonConfig = parent.require(appPath + '/common');
-            } catch (e) {
-                shouldThrow = true;
-                if (e.code !== 'MODULE_NOT_FOUND') {
-                    throw e;
-                }
-            }
-            envConfig = parent.require(appPath + '/' + config.params.env);
-        } catch (e) {
-            if (e.code !== 'MODULE_NOT_FOUND') {
-                throw e;
-            } else if (shouldThrow) {
-                throw new Error(`'common' and/or '${config.params.env}' configuration must be provided`);
-            }
+        // load and merge configurations
+        const configFilenames = ['common', config.params.env];
+        const configs = configFilenames
+            .map(filename => {
+                let configPath;
+                try {
+                    configPath = require.resolve(path.join(path.dirname(parent.filename), appPath, filename));
+                } catch (e) {}
+                return configPath && require(configPath);
+            })
+            .filter(x => x);
+        if (!configs.length) {
+            throw new Error(`${configFilenames.join(' and/or ')} configuration must be provided`);
         }
-        merge(config, commonConfig, envConfig);
+        merge(config, ...configs);
     } else {
         if (!config.params) {
             config.params = {};
