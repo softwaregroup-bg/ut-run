@@ -1,3 +1,13 @@
+<a name="9.7.1"></a>
+## [9.7.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.7.0...v9.7.1) (2018-09-13)
+
+
+### Bug Fixes
+
+* improve error handling by destinguishing missing configuration files from configuration files with errors ([40cc10b](https://github.com/softwaregroup-bg/ut-run/commit/40cc10b))
+
+
+
 <a name="9.7.0"></a>
 # [9.7.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.7.0-rc-einstein.9...v9.7.0) (2018-08-02)
 
