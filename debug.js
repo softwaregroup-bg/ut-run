@@ -125,6 +125,7 @@ module.exports = {
                 socket: mergedConfig.masterBus.socket,
                 channel: mergedConfig.workerBus.channel,
                 hemera: mergedConfig.workerBus.hemera,
+                jsonrpc: mergedConfig.workerBus.jsonrpc,
                 moleculer: mergedConfig.workerBus.moleculer,
                 id: 'worker',
                 logFactory: logFactory
