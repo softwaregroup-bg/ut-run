@@ -83,6 +83,8 @@ module.exports = {
                 name: 'bunyan_test',
                 service: mergedConfig.service,
                 workDir: mergedConfig.workDir,
+                version: mergedConfig.version,
+                env: mergedConfig.params && mergedConfig.params.env,
                 transformData: (mergedConfig.log && (mergedConfig.log.transformData || {})),
                 streams: Array.prototype.concat(streams, mergedConfig.log.streams)
             });
