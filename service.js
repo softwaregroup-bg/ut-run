@@ -98,7 +98,7 @@ module.exports = ({bus, logFactory}) => {
 
     let create = (serviceConfig, config, test) => {
         if (typeof serviceConfig === 'function') {
-            return Promise.resolve(serviceConfig({config, bus: bus.publicApi}))
+            return new Promise(resolve => resolve(serviceConfig({config, bus: bus.publicApi})))
                 .then(result => load(result, config, test));
         } else {
             return load(serviceConfig, config, test);
