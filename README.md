@@ -108,7 +108,8 @@ implementation specific functionality `require('../something')` or inlining this
 {
     ports:[],
     modules:{},
-    validations:{}
+    validations:{},
+    errors: []
 }
 ```
 
@@ -239,7 +240,12 @@ module.exports = [
             validations: {
                 validation1: v1 => {/* joi validations */}, // v1 will equal to validation1 under businessPackage1 under configuration root
                 validation2: {/* joi validations */}
-            }
+            },
+            errors: [
+                ({defineError, getError, fetchErrors}) => { // error api will be passed as argument
+                    // error definitions
+                }
+            ]
         };
     },
     function businessPackage1(b2) { // b2 will equal to businessPackage1 taken under configuration root
