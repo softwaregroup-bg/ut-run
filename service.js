@@ -40,11 +40,12 @@ module.exports = ({bus, logFactory}) => {
                 };
                 if (impl) {
                     impl.ports && (prev.ports = prev.ports.concat(impl.ports));
+                    impl.errors && (prev.errors = prev.errors.concat(impl.errors));
                     impl.modules && Object.assign(prev.modules, configure(impl.modules));
                     impl.validations && Object.assign(prev.validations, configure(impl.validations));
                 }
                 return prev;
-            }, {ports: [], modules: {}, validations: {}});
+            }, {ports: [], modules: {}, validations: {}, errors: []});
         }
         config = config || {};
         var ports = [];
@@ -80,6 +81,14 @@ module.exports = ({bus, logFactory}) => {
                             config: routeConfig[value]
                         });
                     });
+                }
+            });
+        }
+
+        if (Array.isArray(serviceConfig.errors)) {
+            serviceConfig.errors.forEach(errorFactory => {
+                if (errorFactory instanceof Function) {
+                    errorFactory(bus.errors);
                 }
             });
         }
