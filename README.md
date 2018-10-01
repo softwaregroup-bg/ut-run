@@ -108,7 +108,8 @@ implementation specific functionality `require('../something')` or inlining this
 {
     ports:[],
     modules:{},
-    validations:{}
+    validations:{},
+    errors: []
 }
 ```
 
@@ -137,7 +138,13 @@ function utPackageName(packageConfig) {
             validation2: validation2,
             //...
             validation1: validation1
-        }
+        },
+        errors: [
+            errors1,
+            errors2,
+            //...,
+            errorsN
+        ]
     }
 }
 ```
@@ -151,6 +158,7 @@ Return value:
 - `ports` - array of port configuration objects or functions, that return port configuration objects. In cases when a named function is used, the function will be invoked with a parameter that equals the environment configuration property with name same as the name of the function. In these cases the port configuration object returned by the function may skip the 'id' property and the port will have id that equals the function name. Ports can be excluded by setting `false` the configuration property that corresponds to the port name.
 - `modules` - holds a map of the used modules. Each property can be an object or function. If it is a function, then it will be called with a value taken from the environment configuration. The value is taken by first looking for a property named after the name of the package function (utPackageName in the above example), then within that object a the value of a property that equals the module name is taken. When using named function, the module can be excluded by setting `false` the mentioned property.
 - `validations` - validations that will be applied on input requests. Validations can again be objects or functions. For functions, the same way of passing configuration applies as explained for `modules`.
+- `errors` - array of error factory functions that will be invoked with error api argument.
 
 In addition to using environment configuration files within the implementation, the following additional options are available,
 which will override the configuraiton
@@ -232,7 +240,12 @@ module.exports = [
             validations: {
                 validation1: v1 => {/* joi validations */}, // v1 will equal to validation1 under businessPackage1 under configuration root
                 validation2: {/* joi validations */}
-            }
+            },
+            errors: [
+                ({defineError, getError, fetchErrors}) => { // error api will be passed as argument
+                    // error definitions
+                }
+            ]
         };
     },
     function businessPackage1(b2) { // b2 will equal to businessPackage1 taken under configuration root
