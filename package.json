@@ -5,9 +5,9 @@
     "loadtest": "2.3.0",
     "minimist": "1.2.0",
     "rc": "1.2.6",
-    "ut-log": "^6.3.0-rc-einstein.2",
-    "ut-port": "^6.7.0-rc-einstein.4",
-    "ut-bus": "^6.6.0-rc-einstein.5"
+    "ut-log": ">=6.4.0-rc-godfather.0 <=6.4.0-rc-godfather.999",
+    "ut-port": ">=6.8.0-rc-godfather.0 <=6.8.0-rc-godfather.999",
+    "ut-bus": ">=6.8.0-rc-godfather.0 <=6.8.0-rc-godfather.999"
   },
   "devDependencies": {
     "tap": "^10.7.3",
