@@ -34,7 +34,7 @@ module.exports = {
                 logLevel: 'info'
             },
             log: {
-                streams: []
+                streams: {}
             },
             stdOut: {
                 mode: 'dev'
@@ -86,7 +86,7 @@ module.exports = {
                 version: mergedConfig.version,
                 env: mergedConfig.params && mergedConfig.params.env,
                 transformData: (mergedConfig.log && (mergedConfig.log.transformData || {})),
-                streams: Array.prototype.concat(streams, mergedConfig.log.streams)
+                streams: Array.prototype.concat(streams, Object.values(mergedConfig.log.streams))
             });
 
             log = logFactory.createLog((mergedConfig && mergedConfig.run && mergedConfig.run.logLevel) || 'info', {name: 'run', context: 'run'});
