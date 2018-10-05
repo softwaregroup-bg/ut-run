@@ -40,7 +40,7 @@ function getConfig(params = {}, parent = module.parent) {
             .map(filename => {
                 let configPath;
                 try {
-                    configPath = require.resolve(path.join(path.dirname(parent.filename), appPath, filename));
+                    configPath = require.resolve(path.join(appPath, filename));
                 } catch (e) {}
                 return configPath && require(configPath);
             })
