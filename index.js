@@ -32,7 +32,7 @@ function getConfig(params = {}, parent = module.parent) {
         config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
         config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
         config.service = config.params.app + '/' + config.params.env;
-        const appPath = (params.resolve && path.dirname(params.resolve('./' + config.params.app))) || ('./' + config.params.app);
+        const appPath = (params.resolve && path.dirname(params.resolve('./' + config.params.app))) || path.join(path.dirname(parent.filename), config.params.app);
         mount(parent, config.params.app);
         // load and merge configurations
         const configFilenames = ['common', config.params.env];
