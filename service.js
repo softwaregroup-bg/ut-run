@@ -55,6 +55,14 @@ module.exports = ({bus, logFactory}) => {
 
         bus.config = config;
 
+        if (Array.isArray(serviceConfig.errors)) {
+            serviceConfig.errors.forEach(errorFactory => {
+                if (errorFactory instanceof Function) {
+                    errorFactory(bus.errors);
+                }
+            });
+        }
+
         let modules = {};
         if (serviceConfig.modules instanceof Object) {
             Object.keys(serviceConfig.modules).forEach(function(moduleName) {
@@ -81,14 +89,6 @@ module.exports = ({bus, logFactory}) => {
                             config: routeConfig[value]
                         });
                     });
-                }
-            });
-        }
-
-        if (Array.isArray(serviceConfig.errors)) {
-            serviceConfig.errors.forEach(errorFactory => {
-                if (errorFactory instanceof Function) {
-                    errorFactory(bus.errors);
                 }
             });
         }
