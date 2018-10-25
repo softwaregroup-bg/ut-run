@@ -2,7 +2,6 @@
 // var log = require('why-is-node-running');
 var tap = require('tap');
 var run = require('./index');
-var loadtest = require('loadtest');
 
 function promisify(fn) {
     return function() {
@@ -143,6 +142,7 @@ function sequence(options, test, bus, flow, params, parent) {
 }
 
 function performanceTest(params, assert, bus, flow) {
+    var loadtest = require('loadtest');
     var step = flow.shift();
     var start = Date.now();
     params.context = params.context || {};

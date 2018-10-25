@@ -2,16 +2,16 @@
   "name": "ut-run",
   "version": "9.8.0-rc-godfather.6",
   "dependencies": {
-    "loadtest": "2.3.0",
+    "loadtest": "3.0.4",
     "minimist": "1.2.0",
-    "rc": "1.2.6",
+    "rc": "1.2.8",
     "ut-log": ">=6.4.0-rc-godfather.3 <=6.4.0-rc-godfather.999",
     "ut-port": ">=6.8.0-rc-godfather.2 <=6.8.0-rc-godfather.999",
     "ut-bus": ">=6.8.0-rc-godfather.2 <=6.8.0-rc-godfather.999"
   },
   "devDependencies": {
-    "tap": "^10.7.3",
-    "ut-tools": "^5.32.10"
+    "tap": "^12.0.1",
+    "ut-tools": "^6.3.4"
   },
   "scripts": {
     "lint": "ut-lint .",
