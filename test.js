@@ -332,7 +332,11 @@ module.exports = function(params, cache) {
         if (!clientConfig) return Promise.resolve(serverObj);
         return serverRun
             .then(server => {
-                clientConfig.config && (clientConfig.config.server = () => server);
+                if (Array.isArray(clientConfig.config)) {
+                    clientConfig.config.push({server: () => server});
+                } else {
+                    clientConfig.config && (clientConfig.config.server = () => server);
+                }
                 return run.run(clientConfig, module.parent, assert)
                     .then((client) => {
                         cache && (cache.bus = client.bus) && (cache.ports = client.ports);

@@ -18,6 +18,7 @@ function mount(parent, m) {
 
 function getConfig(params = {}, parent = module.parent) {
     let config = params.config;
+    if (Array.isArray(config)) config = merge(...config);
     if (!config) {
         config = {params: {}, runMaster: true, runWorker: true, version: params.version};
         var argv = require('minimist')(process.argv.slice(2));
