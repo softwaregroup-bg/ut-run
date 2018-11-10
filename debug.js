@@ -135,7 +135,8 @@ module.exports = {
             service = require('./service')({
                 bus: workerBus,
                 logFactory,
-                assert
+                assert,
+                log
             });
         }
 

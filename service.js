@@ -1,6 +1,6 @@
 var utport = require('ut-port');
 
-module.exports = ({bus, logFactory}) => {
+module.exports = ({bus, logFactory, log}) => {
     // let ready = () => {
     //     this.config = this.config || {};
     //     if (this.bus) {
@@ -12,51 +12,62 @@ module.exports = ({bus, logFactory}) => {
 
     let servicePorts = utport.ports({bus: bus.publicApi, logFactory});
 
-    let load = (serviceConfig, config, test) => {
-        if (typeof serviceConfig === 'string') {
-            serviceConfig = require(serviceConfig);
+    let load = (utModules, config, test) => {
+        if (typeof utModules === 'string') {
+            utModules = require(utModules);
         }
 
-        if (Array.isArray(serviceConfig)) {
-            serviceConfig = serviceConfig.reduce((prev, impl) => {
-                let implConfig;
-                if (impl instanceof Function) {
-                    if (impl.name) {
-                        implConfig = config[impl.name];
-                        impl = implConfig !== false && implConfig !== 'false' && impl(implConfig);
+        if (Array.isArray(utModules)) {
+            utModules = utModules.reduce((prev, utModule) => {
+                let moduleConfig;
+                let moduleName;
+                if (utModule instanceof Function) {
+                    if (utModule.name) {
+                        moduleConfig = config[utModule.name];
+                        moduleName = utModule.name;
+                        utModule = moduleConfig && utModule(moduleConfig);
                     } else {
-                        impl = impl();
+                        moduleName = '';
+                        utModule = utModule();
                     }
                 }
                 let configure = obj => {
                     Object.keys(obj).forEach(name => {
                         let value = obj[name];
                         if (value instanceof Function) {
-                            let propConfig = (implConfig || {})[name];
-                            obj[name] = propConfig !== false && propConfig !== 'false' && value(propConfig);
+                            let propConfig = (moduleConfig || {})[value.name || name];
+                            if (propConfig) {
+                                log && log.debug && log.debug({
+                                    $meta: {mtid: 'event', opcode: 'service.load'},
+                                    module: moduleName + '.' + (value.name || name)
+                                });
+                            }
+                            obj[name] = propConfig && value(propConfig);
                         }
                     });
                     return obj;
                 };
-                if (impl) {
-                    impl.ports && (prev.ports = prev.ports.concat(impl.ports));
-                    impl.errors && (prev.errors = prev.errors.concat(impl.errors));
-                    impl.modules && Object.assign(prev.modules, configure(impl.modules));
-                    impl.validations && Object.assign(prev.validations, configure(impl.validations));
-                }
+                configure([].concat(utModule)).forEach((utService) => {
+                    if (utService) {
+                        utService.ports && (prev.ports = prev.ports.concat(utService.ports));
+                        utService.errors && (prev.errors = prev.errors.concat(utService.errors));
+                        utService.modules && Object.assign(prev.modules, configure(utService.modules));
+                        utService.validations && Object.assign(prev.validations, configure(utService.validations));
+                    }
+                });
                 return prev;
             }, {ports: [], modules: {}, validations: {}, errors: []});
         }
         config = config || {};
         var ports = [];
-        if (Array.isArray(serviceConfig.ports)) {
-            ports.push.apply(ports, serviceConfig.ports);
+        if (Array.isArray(utModules.ports)) {
+            ports.push.apply(ports, utModules.ports);
         }
 
         bus.config = config;
 
-        if (Array.isArray(serviceConfig.errors)) {
-            serviceConfig.errors.forEach(errorFactory => {
+        if (Array.isArray(utModules.errors)) {
+            utModules.errors.forEach(errorFactory => {
                 if (errorFactory instanceof Function) {
                     errorFactory(bus.errors);
                 }
@@ -64,27 +75,32 @@ module.exports = ({bus, logFactory}) => {
         }
 
         let modules = {};
-        if (serviceConfig.modules instanceof Object) {
-            Object.keys(serviceConfig.modules).forEach(function(moduleName) {
-                var module = serviceConfig.modules[moduleName];
-                if (module) {
-                    (module.init instanceof Function) && (module.init(bus.publicApi));
-                    module.routeConfig = [];
-                    bus.registerLocal(module, moduleName);
-                    modules[moduleName] = module;
+        if (utModules.modules instanceof Object) {
+            Object.keys(utModules.modules).forEach(function(moduleName) {
+                var mod = utModules.modules[moduleName];
+                if (mod) {
+                    (mod.init instanceof Function) && (mod.init(bus.publicApi));
+                    mod.routeConfig = [];
+                    bus.registerLocal(mod, moduleName);
+                    modules[moduleName] = mod;
                 }
             });
         }
 
-        if (serviceConfig.validations instanceof Object) {
-            Object.keys(serviceConfig.validations).forEach(function(validationKey) {
-                var routeConfig = serviceConfig.validations[validationKey];
+        if (utModules.validations instanceof Object) {
+            Object.keys(utModules.validations).forEach(function(validationKey) {
+                var routeConfig = utModules.validations[validationKey];
                 if (routeConfig) {
                     var routeConfigNames = validationKey.split('.');
                     var moduleName = routeConfigNames[0];
-                    var module = modules[moduleName];
-                    module && Object.keys(routeConfig).forEach(function(value) {
-                        module.routeConfig.push({
+                    var mod = modules[moduleName];
+                    if (!mod) {
+                        mod = {routeConfig: []};
+                        bus.registerLocal(mod, moduleName);
+                        modules[moduleName] = mod;
+                    }
+                    mod && Object.keys(routeConfig).forEach(function(value) {
+                        mod.routeConfig.push({
                             method: routeConfigNames.join('.') + '.' + value,
                             config: routeConfig[value]
                         });
