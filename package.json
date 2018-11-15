@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.8.0-rc-godfather.11",
+  "version": "9.8.0-rc-godfather.12",
   "dependencies": {
     "loadtest": "3.0.4",
     "minimist": "1.2.0",
