@@ -11,14 +11,15 @@ module.exports = ({bus, logFactory, log}) => {
     // };
 
     let servicePorts = utport.ports({bus: bus.publicApi, logFactory});
+    let iterable = value => Array.isArray(value) || Object.values(value).find(value => value instanceof Function);
 
     let load = (utModules, config, test) => {
         if (typeof utModules === 'string') {
             utModules = require(utModules);
         }
 
-        if (Array.isArray(utModules)) {
-            utModules = utModules.reduce((prev, utModule) => {
+        if (iterable(utModules)) {
+            utModules = Object.values(utModules).reduce((prev, utModule) => {
                 let moduleConfig;
                 let moduleName;
                 if (utModule instanceof Function) {
@@ -28,10 +29,12 @@ module.exports = ({bus, logFactory, log}) => {
                         utModule = moduleConfig && utModule(moduleConfig);
                     } else {
                         moduleName = '';
-                        utModule = utModule();
+                        moduleConfig = config;
+                        utModule = utModule(moduleConfig);
                     }
                 }
                 let configure = obj => {
+                    let result = obj instanceof Array ? [] : {};
                     Object.keys(obj).forEach(name => {
                         let value = obj[name];
                         if (value instanceof Function) {
@@ -42,27 +45,29 @@ module.exports = ({bus, logFactory, log}) => {
                                     module: moduleName + '.' + (value.name || name)
                                 });
                             }
-                            obj[name] = propConfig && value(propConfig);
+                            value = propConfig && value(propConfig);
                         }
+                        result[name] = value;
                     });
-                    return obj;
+                    return result;
                 };
-                configure([].concat(utModule)).forEach((utService) => {
+                if (utModule instanceof Function) utModule = [utModule]; // returned only one service
+                Object.values(configure(utModule)).forEach((utService) => {
                     if (utService) {
                         utService.ports && (prev.ports = prev.ports.concat(utService.ports));
                         utService.errors && (prev.errors = prev.errors.concat(utService.errors));
                         utService.modules && Object.assign(prev.modules, configure(utService.modules));
                         utService.validations && Object.assign(prev.validations, configure(utService.validations));
+                        Array.isArray(utService) && prev.any.push(...utService.map(create => ({
+                            create,
+                            moduleName
+                        })).filter(item => item));
                     }
                 });
                 return prev;
-            }, {ports: [], modules: {}, validations: {}, errors: []});
+            }, {ports: [], modules: {}, validations: {}, errors: [], any: []});
         }
         config = config || {};
-        var ports = [];
-        if (Array.isArray(utModules.ports)) {
-            ports.push.apply(ports, utModules.ports);
-        }
 
         bus.config = config;
 
@@ -109,7 +114,7 @@ module.exports = ({bus, logFactory, log}) => {
             });
         }
 
-        return servicePorts.create(ports, config, test);
+        return servicePorts.create(utModules.ports, utModules.any, config, test);
     };
 
     let create = (serviceConfig, config, test) => {
