@@ -52,7 +52,7 @@ module.exports = ({bus, logFactory, log}) => {
                     return result;
                 };
                 if (utModule instanceof Function) utModule = [utModule]; // returned only one service
-                Object.values(configure(utModule)).forEach((utService) => {
+                utModule && Object.values(configure(utModule)).forEach((utService) => {
                     if (utService) {
                         utService.ports && (prev.ports = prev.ports.concat(utService.ports));
                         utService.errors && (prev.errors = prev.errors.concat(utService.errors));
