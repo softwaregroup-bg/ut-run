@@ -158,7 +158,7 @@ module.exports = {
             }
             promise = promise
                 .then(() => service.create(serviceConfig, mergedConfig, assert))
-                .then(() => service.start());
+                .then(created => service.start(created));
         } else {
             promise = promise
                 .then(masterBus.start.bind(masterBus))

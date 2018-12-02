@@ -282,6 +282,15 @@ function platform1(...platformApi) { // will receive some platform API for the p
             // access param1, param2 keys in the current configuration root, when there is no module name
         }(...customization)) // pass the customization to the module
 
+        // pass path to a microservice module, can be hot reloaded if run.hotReload=true in the configuration
+        require.resolve('ut-business-module'),
+
+        // if array is passed the first element is the module to be loaded, the rest
+        // elements of the array will be passed to the module function
+        // can be hot reloaded if run.hotReload=true in the configuration
+        [require.resolve('ut-business-module'), ...customization],
+
+
     ];
 };
 
