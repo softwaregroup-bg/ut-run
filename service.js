@@ -1,3 +1,4 @@
+const hrtime = require('browser-process-hrtime');
 const utport = require('ut-port');
 const path = require('path');
 
@@ -36,11 +37,11 @@ module.exports = ({bus, logFactory, log}) => {
         return [].concat(...Object.entries(obj).map(([name, value]) => {
             if (value instanceof Function) {
                 let propConfig = (config || {})[value.name || name];
-                let startTime = process.hrtime();
+                let startTime = hrtime();
                 try {
                     value = propConfig && value(propConfig);
                 } finally {
-                    let endTime = process.hrtime(startTime);
+                    let endTime = hrtime(startTime);
                     propConfig && log && log.debug && log.debug({
                         $meta: {mtid: 'event', opcode: 'servicePartial.load'},
                         module: moduleName + '.' + (value.name || name),
