@@ -35,6 +35,9 @@
     "gitlab": "ut-gitlab"
   },
   "description": "UT run module",
+  "browser": {
+    "chokidar": false
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:softwaregroup-bg/ut-run.git"
