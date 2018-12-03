@@ -13,7 +13,7 @@ module.exports = ({bus, logFactory, log}) => {
 
     let watch = (filename, fn) => {
         let cwd = path.dirname(filename);
-        let fsWatcher = require('chokidar').watch('.', {
+        let fsWatcher = require('chokidar').watch('**/*.js', {
             cwd,
             ignoreInitial: true,
             ignored: ['.git/**', 'node_modules/**']
@@ -55,7 +55,10 @@ module.exports = ({bus, logFactory, log}) => {
     let loadModule = (utModule, config, test) => {
         let clearCache = filename => {
             let dir = path.dirname(filename);
-            Object.keys(require.cache).filter(key => path.dirname(key) === dir).forEach(key => { delete require.cache[key]; });
+            Object.keys(require.cache).filter(key => {
+                const relative = path.relative(dir, key);
+                return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+            }).forEach(key => { delete require.cache[key]; });
         };
 
         function hotReload(filename, ...params) {
