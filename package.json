@@ -2,7 +2,8 @@
   "name": "ut-run",
   "version": "9.8.0-rc-godfather.12",
   "dependencies": {
-    "chokidar": "1.7.0",
+    "browser-process-hrtime": "1.0.0",
+    "chokidar": "2.0.4",
     "loadtest": "3.0.4",
     "minimist": "1.2.0",
     "rc": "1.2.8",
