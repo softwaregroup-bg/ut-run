@@ -22,7 +22,7 @@ module.exports = ({bus, logFactory, log}) => {
         fsWatcher.on('error', error => log && log.error && log.error(error));
         fsWatcher.on('all', (event, file) => {
             log && log.info && log.info({
-                $meta: {mtid: 'event', opcode: 'servicePartial.hotReload'},
+                $meta: {mtid: 'event', opcode: 'serviceLayer.hotReload'},
                 event,
                 file: path.join(cwd, file)
             });
@@ -43,7 +43,7 @@ module.exports = ({bus, logFactory, log}) => {
                 } finally {
                     let endTime = hrtime(startTime);
                     propConfig && log && log.debug && log.debug({
-                        $meta: {mtid: 'event', opcode: 'servicePartial.load'},
+                        $meta: {mtid: 'event', opcode: 'serviceLayer.load'},
                         module: moduleName + '.' + (value.name || name),
                         loadTime: endTime[0] + '.' + (endTime[1] + '').substr(0, 3)
                     });
