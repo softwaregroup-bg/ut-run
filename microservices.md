@@ -36,19 +36,19 @@ We will use the following definitions:
 * `Microservice modular approach` - allow microservices to be created by combining
   functionality of several modules, while keeping maximum isolation between them
 
-* `Microservice module` - this is a grouping of `microservice partials`, as an
+* `Microservice module` - this is a grouping of `microservice layers`, as an
   individual development unit, often focused on full implementation of closely
   related functionality. Each microservice module is usually developed in a
-  separate code repository and all partials are released and versioned together.
+  separate code repository and all layers are released and versioned together.
   Examples are:
   * `loan module` - a module for handling a Loan lifecycle
   * `transfer module` - a module for handling electronic funds transfers
 
-* `Microservice partial` - this is partial functionality of certain microservice,
+* `Microservice layer` - this is partial functionality of certain microservice,
   usually relating to some architectural layers (like database, front-end, etc.)
   or functional aspect(like transaction processing, reporting, etc.).
 
-  Examples partials are:
+  Examples layers are:
   * `gateway` - the part of functionality, relating to the API gateway.
     It includes functions relating to API documentation, validations,
     route handlers, etc. Usually it includess almost no `busines logic`
@@ -64,9 +64,9 @@ We will use the following definitions:
   This is a typical example of online transaction processing (OLTP).
   This is usually where high requirements for scalability, transactions per
   second (TPS), security and resilience are required, so it deserves a
-  separate partial.
+  separate layer.
 
-  NOTE: the primary goal of `microservice partials` is to group different
+  NOTE: the primary goal of `microservice layers` is to group different
   kinds of `microservice handlers`, that usually run in one microservice.
   By grouping them, it is easier to run them together.
 
@@ -78,7 +78,7 @@ We will use the following definitions:
 ## Logical structure
 
 Following a common logical structure, allows combining the `microservice modules`,
-`microservice partials` and `microservie handlers` in a flexible way,
+`microservice layers` and `microservie handlers` in a flexible way,
 so that different microservices may be created, depending on the need.
 When combining these elements an important aspect is being able to
 provide configuration and customization for each element, starting from
@@ -251,7 +251,7 @@ function validation() {
     };
 }
 
-// group handlers as partials, partials as modules and modules as implementation
+// group handlers as layers, layers as modules and modules as implementation
 function platform1(...platformApi) { // will receive some platform API for the platform named 'platform1'
     // extend platform API with some customizations
     let customization = require('./customization')(...platformApi);
@@ -261,15 +261,15 @@ function platform1(...platformApi) { // will receive some platform API for the p
         // return a module named utModule1, will prefix handlers with this name
         (implementationApi) => (function utModule1({param1, param2}) {
             // param1, param2 are values from then current configuration, under utModule1.*
-            // the functions returned by partials will receive configuration
-            // from utModule1 subkeys corresponding to the partial name
+            // the functions returned by layers will receive configuration
+            // from utModule1 subkeys corresponding to the layer name
             return {
-                partial1: ({param1, param2}) =>
-                //  param1, param2 are values from then current configuration, under utModule1.partial1.*
-                    [ // return array of handlers for this partial
+                layer1: ({param1, param2}) =>
+                //  param1, param2 are values from then current configuration, under utModule1.layer1.*
+                    [ // return array of handlers for this layer
                         adapter1, handlers1, error
                     ],
-                partial2: () => // define second partial
+                layer2: () => // define another layer
                     [
                         sql, sqlSeed, sqlStandard, http, validation
                     ]
