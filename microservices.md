@@ -1,8 +1,10 @@
-# Microservices
+# Composable microservices
 
 UT Framework allows modular approach towards microservices development.
 This approach helps for addressing the various aspects of the development
-by providing common approach to the aspects described below
+by providing common approach to the aspects described below.
+We can name this `Composable microservices` as they are composed
+of modular elements
 
 ## Definitions
 
@@ -49,6 +51,9 @@ We will use the following definitions:
   or functional aspect(like transaction processing, reporting, etc.).
 
   Examples layers are:
+  * `browser` - the functionality, that runs in the browser, usually related
+  to providing the GUI
+
   * `gateway` - the part of functionality, relating to the API gateway.
     It includes functions relating to API documentation, validations,
     route handlers, etc. Usually it includess almost no `busines logic`
@@ -92,7 +97,8 @@ the following logical structure is its primary use case:
 
 // values param1, param2 will be taken from the module configuration,
 // under a key named adapter1
-function adapter1({utLog, utBus, utPort, utError, utMethod, config: {param1, param2}}) {
+function adapter1({utLog, utBus, utPort, utError, utMethod,
+    config: {param1, param2}}) {
 
     // optionally create some closures to store private data
     let someMethod = utMethod('module2.entity1.action1');
@@ -179,7 +185,9 @@ function handlers1({utMethod}) {
     // use utMethod to obtain local or remote methods
     const [module2Entity1Action1, invalidAmount] = ['module2.entity1.action1', 'module2.error1'].map(utMethod);
     return {
-        async 'module1.entity1.action1'(msg, {forward}) { // use async function, for improved stack traces with await
+        // use async function, for improved stack traces with await
+        // and for less code, compared to chaining .then() calls
+        async 'module1.entity1.action1'(msg, {forward}) {
             // call method, pass tracing data in $meta.forward
             let result = await module2Entity1Action1(msg, {forward});
 
@@ -209,7 +217,8 @@ function sql() { // use 'sql' as function name, to define SQL server schemas.
 };
 
 // use 'sqlSeed' as function name, to define SQL server seeds.
-// import using imports:['utModule1.sqlSeed'] in a ut-port-sql and put them after *.sql in the list
+// import using imports:['utModule1.sqlSeed'] in a ut-port-sql and put
+// them after *.sql in the list
 function sqlSeed() {
     return {
         schema: [{
@@ -220,7 +229,8 @@ function sqlSeed() {
 };
 
 function sqlStandard({config}) {
-    // check if the utModule.sqlStandard configuration exists to determine if the seed should be executed
+    // check if the utModule.sqlStandard configuration exists to determine if
+    // the seed should be executed
     return config && {
         schema: [{
             path: path.join(__dirname, 'sql', 'standard'),
@@ -240,19 +250,27 @@ function http() {
 };
 
 // use validations as function name, to namespace all validations
-// import using imports:['utModule1.validation'] or imports:[/\.validation$/] in ut-port-httpserver
+// import using imports:['utModule1.validation'] or imports:[/\.validation$/]
+// in ut-port-httpserver
 function validation() {
     return {
         'entity.action1': () => ({
-            description: 'Description of entity.action1', // description to show in the documentation
-            params: joi.object.keys({}), // validations for the method parameters
-            result: joi.object.keys({}) // validations for the method result
+            // description to show in the documentation
+            description: 'Description of entity.action1',
+
+            // validations for the method parameters
+            params: joi.object.keys({}),
+
+            // validations for the method result
+            result: joi.object.keys({})
         })
     };
 }
 
 // group handlers as layers, layers as modules and modules as implementation
-function platform1(...platformApi) { // will receive some platform API for the platform named 'platform1'
+// The implementation function will receive some platform API for the
+// platform named 'platform1'
+function platform1(...platformApi) {
     // extend platform API with some customizations
     let customization = require('./customization')(...platformApi);
 
@@ -264,8 +282,9 @@ function platform1(...platformApi) { // will receive some platform API for the p
             // the functions returned by layers will receive configuration
             // from utModule1 subkeys corresponding to the layer name
             return {
+                //  layer function will receive parameters param1, param2
+                // with values from then current configuration, under utModule1.layer1.*
                 layer1: ({param1, param2}) =>
-                //  param1, param2 are values from then current configuration, under utModule1.layer1.*
                     [ // return array of handlers for this layer
                         adapter1, handlers1, error
                     ],
@@ -279,16 +298,18 @@ function platform1(...platformApi) { // will receive some platform API for the p
         // second microservice module
         (implementationApi) => (function({config: {param1, param2}}) {
             // return anonymous module (function without a name)
-            // access param1, param2 keys in the current configuration root, when there is no module name
+            // access param1, param2 keys in the current configuration root,
+            // when there is no module name
         }(...customization)) // pass the customization to the module
 
-        // pass path to a microservice module, can be hot reloaded if run.hotReload=true in the configuration
-        require.resolve('ut-business-module'),
+        // pass path to a microservice module, so it can be hot reloaded
+        // if run.hotReload=true in the configuration
+        require.resolve('ut-module3'),
 
         // if array is passed the first element is the module to be loaded, the rest
         // elements of the array will be passed to the module function
         // can be hot reloaded if run.hotReload=true in the configuration
-        [require.resolve('ut-business-module'), ...customization],
+        [require.resolve('ut-module4'), ...customization],
 
 
     ];
@@ -299,18 +320,149 @@ module.exports = platform1;
 
 ## Physical structure
 
+To achieve good modularity, the logical structure above can be spit in modules,
+that are physically separate, have their own source repository, versioning, etc.
+
+### Application structure
+
+Most of the time, the application can be simply composed by bundling
+modules (dependencies) together, using the same logical structure, but instead
+the code is physically in some module. The example from the logical structure
+becomes simply:
+
+```js
+module.exports = function platform1(...platformApi) {
+    let customization = require('./customization')(...platformApi);
+
+    return [
+        require('ut-module1')(...customization),
+        require('ut-module2')(...customization),
+        require.resolve('ut-module3'),
+        [require.resolve('ut-module4'), ...customization],
+    ];
+};
+```
+
+It is recommended to follow the same approach, even when some custom functionality
+is needed in the application. This means adding an element in the returned array,
+that resolves to a local file
+
+```js
+    require('./custom1')(...customization),
+```
+
+### module structure
+
+A module can have the following filesystem structure:
+
+```text
+ut-module1
+├── package.json
+├── index.js
+├── errors.js
+├── api
+|   ├── script
+|   |   └── index.js
+|   └── sql
+|       ├── schema
+|       |   └── *.sql
+|       ├── seed
+|       |   └── *.sql
+|       ├── standard
+|       |   └── *.sql
+|       ├── schema.js
+|       ├── seed.js
+|       └── standard.js
+├── doc
+|   └── *.md
+├── test
+|   ├── integration
+|       └── test.module1.*.js
+|   └── sql
+|       ├── schema.js
+|       └── schema
+|           └── *.sql
+├── ui
+|   └── index.js
+└── validations
+    ├── index.js
+    └── testValidations.js
+```
+
+Such module can export microservice layers using the
+following pattern:
+
+Modules can follow the following pattern, to export layers:
+
+```js
+// name the function after the folder name, using camel case
+module.exports = () => function utModule1() {
+    return {
+        adapter: () => [
+            // export errors, as they can be returned by the DB queries
+            require('./errors'),           // returns a function named 'error'
+
+            // export MSSQL schemas
+            require('./api/sql/schema'),   // returns a function named 'sql'
+            require('./api/sql/seed'),     // returns a function named 'sqlSeed'
+            require('./api/sql/standard'), // returns a function named 'sqlStandard'
+
+            // export MSSQL schema for automated tests, if needed
+            require('./test/sql/schema')   // returns a function named 'sqlTest'
+        ],
+        orchestrator: () => [
+            // export errors, if they can be thrown from the orchestrator
+            require('./errors'),           // returns a function named 'error'
+
+            // export orchestration handlers
+            require('./api/script'),       // returns a function named 'module1'
+
+            // export distpatcher to DB
+            require('ut-dispatch-db')(['module1'], ['utModule.module1']),
+        ],
+        gateway: () => [
+            // export route handlers to be used at the gateway
+            require('./http'),             // returns a function named 'http'
+
+            // export method validations to be used at the gateway
+            require('./validations')       // returns a function named 'validation'
+
+            // export method validations to be used at the gateway,
+            // during automated tests
+            require('./validations/test')  // returns a function named 'testValidation'
+        ],
+        browser: () => [
+            // export browser UI
+            require('./ui')                // returns a function named 'ui'
+        ],
+    };
+};
+```
+
 ## Runtime structure
 
 Deployment of microservices often require running of tens or hundreds of them across
 a network. Developers often need to run substantial amount of these services
 in an isolated environment, while they do changes to multiple microservices.
-Trying to have the same runtime architecture - i.e. running big amount of
-separate processes, leads to significant need of computing resources, which
+Trying to have the same runtime architecture while developing - i.e. running big
+number of separate processes, leads to significant need of computing resources, which
 can slow down the development and increase the cost. The framework allows during
-developing, all microservices to be run as a single process, which has great
-impact on reducing resource needs. This is often good enough approach, for
-substantial part of the functionality.
+developing, all microservices to be run as a single process or a much smaller number
+of processes, which has great impact on reducing resource needs. This is often
+good enough approach, for substantial part of the functionality.
+
+The goal of the framework is to isolate the code from the different microservices,
+even when they are running in a single process.
 
 Even when deploying in a smaller organization, it may make sense to combine
-microservices in a single process. The framework allows this to be done easily,
+some microservices in a single process. The framework allows this to be done easily,
 by just provindig through configuration what services to be run.
+
+The same concepts are applicable even to layers such as the browser, where
+the modularity can be achieved in exactly the same way. Currently browsers
+have runtime structure equivalent of the single process described above.
+This also makes a good use of the framework's capabilities to allow
+flexible runtime structure. But if needed, the frawework can also allow
+app to be running in some browser equivalent of multiple processes,
+for example several tabs, web workers, even different browsers on
+different machines, with minimal changes to source code.
