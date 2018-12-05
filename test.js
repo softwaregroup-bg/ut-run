@@ -265,8 +265,11 @@ module.exports = function(params, cache) {
             }, Promise.resolve());
         });
     };
+
+    var tests = tap.test('Starting tests', () => Promise.resolve());
+
     if (Array.isArray(params.services)) {
-        tap.test('Starting services...', {bufferred: false}, (assert) => {
+        tests = tests.then(t => t.test('Starting services...', {bufferred: false, bail: true}, (assert) => {
             return params.services.reduce((promise, service) => {
                 return promise.then(() => {
                     return service()
@@ -278,12 +281,8 @@ module.exports = function(params, cache) {
                             });
                         });
                 });
-            }, Promise.resolve())
-                .catch((e) => {
-                    return stopServices(assert)
-                        .then(() => Promise.reject(e));
-                });
-        });
+            }, Promise.resolve());
+        }));
     }
 
     if (params.type && params.type === 'performance') {
@@ -318,7 +317,7 @@ module.exports = function(params, cache) {
     var serverRun;
     var serverObj;
     // tap.jobs = 1;
-    var tests = tap.test('server start', {bufferred: false, bail: true}, assert => {
+    tests = tests.then(t => t.test('server start', {bufferred: false, bail: true}, assert => {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             serverObj = server;
@@ -326,7 +325,7 @@ module.exports = function(params, cache) {
             var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
         });
-    });
+    }));
 
     function startClient(assert) {
         if (!clientConfig) return Promise.resolve(serverObj);
@@ -411,7 +410,7 @@ module.exports = function(params, cache) {
             });
         };
 
-        x.ports.forEach(port => step('stopped port ' + port.config.id, () => port.stop()));
+        x.ports.forEach(port => step('destroy ' + port.config.id, () => port.destroy()));
         step('stopped worker bus', () => x.bus.destroy());
         step('stopped master bus', () => x.master.destroy());
         return promise;
