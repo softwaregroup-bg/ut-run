@@ -181,7 +181,7 @@ module.exports = {
                     stop: () => {
                         let innerPromise = Promise.resolve();
                         ports
-                            .map((port) => port.stop.bind(port))
+                            .map((port) => port.destroy.bind(port))
                             .concat(workerBus ? workerBus.destroy.bind(workerBus) : [])
                             .concat(masterBus ? masterBus.destroy.bind(masterBus) : [])
                             .forEach((method) => (innerPromise = innerPromise.then(() => method())));
