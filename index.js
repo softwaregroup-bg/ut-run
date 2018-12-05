@@ -16,7 +16,7 @@ function mount(parent, m) {
     }
 }
 
-function getConfig(params = {}, parent = module.parent) {
+function getConfig(params = {}) {
     let config = params.config;
     if (Array.isArray(config)) config = merge({}, ...config);
     if (!config) {
@@ -33,8 +33,8 @@ function getConfig(params = {}, parent = module.parent) {
         config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
         config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
         config.service = config.params.app + '/' + config.params.env;
-        const appPath = (params.resolve && path.dirname(params.resolve('./' + config.params.app))) || path.join(path.dirname(parent.filename), config.params.app);
-        mount(parent, config.params.app);
+        const appPath = path.dirname(params.resolve('./' + config.params.app));
+        mount(params.root, config.params.app);
         // load and merge configurations
         const configFilenames = ['common', config.params.env];
         const configs = configFilenames
@@ -74,11 +74,11 @@ function getConfig(params = {}, parent = module.parent) {
 
 module.exports = {
     getConfig,
-    runParams: function(params = {}, parent = module.parent, test) {
+    runParams: function(params = {}, test) {
         if (process.type === 'browser') {
-            return serverRequire('ut-front/electron')({main: parent.filename});
+            return serverRequire('ut-front/electron')({main: params.root});
         }
-        const config = getConfig(params, parent);
+        const config = getConfig(params);
         if (config.cluster && config.masterBus && config.masterBus.socket) {
             var cluster = serverRequire('cluster');
             if (cluster.isMaster) {
@@ -103,11 +103,11 @@ module.exports = {
                 config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
             }
         }
-        const main = params.main || parent.require('./' + config.params.app);
+        const main = params.main || require(params.resolve('./' + config.params.app));
         return run[params.method || config.params.method](main, config, test);
     },
-    run: function(params, parent, test) {
-        return this.runParams(params, parent, test)
+    run: function(params, test) {
+        return this.runParams(params, test)
             .then((result) => {
                 process.send && process.send('ready');
                 return result;
