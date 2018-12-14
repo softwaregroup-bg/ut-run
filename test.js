@@ -411,8 +411,8 @@ module.exports = function(params, cache) {
         };
 
         x.ports.forEach(port => step('destroy ' + port.config.id, () => port.destroy()));
-        step('stopped worker bus', () => x.bus.destroy());
-        step('stopped master bus', () => x.master.destroy());
+        x.bus && step('stopped worker bus', () => x.bus.destroy());
+        x.master && step('stopped master bus', () => x.master.destroy());
         return promise;
     }
 
