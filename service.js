@@ -17,7 +17,7 @@ module.exports = ({bus, logFactory, log}) => {
         let fsWatcher = require('chokidar').watch('**/*.js', {
             cwd,
             ignoreInitial: true,
-            ignored: ['.git/**', 'node_modules/**']
+            ignored: ['.git/**', 'node_modules/**', 'ui/**']
         });
         fsWatcher.on('error', error => log && log.error && log.error(error));
         fsWatcher.on('all', (event, file) => {
