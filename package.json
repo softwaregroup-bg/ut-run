@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.8.0-rc-godfather.16",
+  "version": "9.8.0-rc-godfather.17",
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
     "chokidar": "2.0.4",
