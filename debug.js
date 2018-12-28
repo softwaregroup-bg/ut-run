@@ -1,8 +1,9 @@
 /* eslint no-process-env:0 */
 
-var merge = require('ut-port/merge');
-var serverRequire = require;// hide some of the requires from lasso
-var path = require('path');
+const merge = require('ut-port/merge');
+const serverRequire = require;// hide some of the requires from lasso
+const path = require('path');
+const {MasterBus, WorkerBus} = require('ut-bus');
 
 function getDataDirectory() {
     switch (process.platform) {
@@ -51,7 +52,6 @@ module.exports = {
             mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree', mergedConfig.implementation);
         }
 
-        var Bus = require('ut-bus');
         var logFactory;
         var log;
 
@@ -111,8 +111,7 @@ module.exports = {
         }
 
         if (mergedConfig.runMaster) {
-            masterBus = Object.assign(new Bus(), {
-                server: true,
+            masterBus = new MasterBus({
                 logLevel: mergedConfig.masterBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 id: 'master',
@@ -121,8 +120,7 @@ module.exports = {
         }
 
         if (mergedConfig.runWorker) {
-            workerBus = Object.assign(new Bus(), {
-                server: false,
+            workerBus = new WorkerBus({
                 logLevel: mergedConfig.workerBus.logLevel,
                 socket: mergedConfig.masterBus.socket,
                 channel: mergedConfig.workerBus.channel,
