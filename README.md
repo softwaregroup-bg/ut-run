@@ -440,8 +440,8 @@ ok 1 - name 3 # time=10379.087ms
 ok 3 - name 2 # time=10380.526ms
 # Subtest: client stop
 ok 1 - stopped port backend
-ok 2 - stopped bus bus
-ok 3 - stopped broker bus
+ok 2 - stopped bus
+ok 3 - stopped broker
 1..3
 ok 4 - client stop # time=0.464ms
 
@@ -463,8 +463,8 @@ ok 2 - name 1 # time=2276.166ms
 # ^ name2 - skipped
 # Subtest: client stop
 ok 1 - stopped port backend
-ok 2 - stopped bus bus
-ok 3 - stopped broker bus
+ok 2 - stopped bus
+ok 3 - stopped broker
 1..3
 ok 3 - client stop # time=0.464ms
 
