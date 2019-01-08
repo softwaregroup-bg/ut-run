@@ -3,7 +3,7 @@
 ## Purpose
 
 The module is used to start ut5 implementations which includes initialising
-logging, starting worker and master busses, starting performance port, creating
+logging, starting bus and broker, starting performance port, creating
 other ports, initializing them, pass config to ports, clustering between cpu-s.
 
 ## Usage
@@ -325,8 +325,8 @@ module.exports = [
 
 ### Additional environment variables
 
-- UT_BUS_MODE - Allow to run masterBus and workerBus separately.
-  Possible values are 'master', 'worker'
+- UT_BUS_MODE - Allow to run broker and bus separately.
+  Possible values are 'broker', 'bus'
 
 ### Working directory
 
@@ -440,8 +440,8 @@ ok 1 - name 3 # time=10379.087ms
 ok 3 - name 2 # time=10380.526ms
 # Subtest: client stop
 ok 1 - stopped port backend
-ok 2 - stopped worker bus
-ok 3 - stopped master bus
+ok 2 - stopped bus bus
+ok 3 - stopped broker bus
 1..3
 ok 4 - client stop # time=0.464ms
 
@@ -463,8 +463,8 @@ ok 2 - name 1 # time=2276.166ms
 # ^ name2 - skipped
 # Subtest: client stop
 ok 1 - stopped port backend
-ok 2 - stopped worker bus
-ok 3 - stopped master bus
+ok 2 - stopped bus bus
+ok 3 - stopped broker bus
 1..3
 ok 3 - client stop # time=0.464ms
 

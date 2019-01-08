@@ -3,7 +3,7 @@
 const merge = require('ut-port/merge');
 const serverRequire = require;// hide some of the requires from lasso
 const path = require('path');
-const {MasterBus, WorkerBus} = require('ut-bus');
+const {Broker, Bus} = require('ut-bus');
 
 function getDataDirectory() {
     switch (process.platform) {
@@ -21,11 +21,11 @@ function getDataDirectory() {
 module.exports = {
     debug: function(serviceConfig, envConfig, assert) {
         var mergedConfig = merge({
-            masterBus: {
+            broker: {
                 logLevel: 'debug',
                 socket: 'bus'
             },
-            workerBus: {
+            bus: {
                 logLevel: 'debug',
                 channel: envConfig.implementation
             },
@@ -40,8 +40,8 @@ module.exports = {
             stdOut: {
                 mode: 'dev'
             },
-            runMaster: true,
-            runWorker: true
+            runBroker: true,
+            runBus: true
         }, envConfig);
 
         if (!process.browser && !mergedConfig.workDir) {
@@ -93,45 +93,45 @@ module.exports = {
             log && log.info && log.info({
                 $meta: {mtid: 'event', opcode: 'run.debug'},
                 config: mergedConfig.config,
-                runMaster: mergedConfig.runMaster,
-                runWorker: mergedConfig.runWorker,
+                runBroker: mergedConfig.runBroker,
+                runBus: mergedConfig.runBus,
                 repl: mergedConfig.repl
             });
         }
-        var masterBus;
-        var workerBus;
+        var broker;
+        var bus;
         var service;
 
-        if (mergedConfig.masterBus.socketPid) {
-            if (mergedConfig.masterBus.socket) {
-                mergedConfig.masterBus.socket = mergedConfig.masterBus.socket + '[' + process.pid + ']';
+        if (mergedConfig.broker.socketPid) {
+            if (mergedConfig.broker.socket) {
+                mergedConfig.broker.socket = mergedConfig.broker.socket + '[' + process.pid + ']';
             } else {
-                mergedConfig.masterBus.socket = process.pid;
+                mergedConfig.broker.socket = process.pid;
             }
         }
 
-        if (mergedConfig.runMaster) {
-            masterBus = new MasterBus({
-                logLevel: mergedConfig.masterBus.logLevel,
-                socket: mergedConfig.masterBus.socket,
-                id: 'master',
+        if (mergedConfig.runBroker) {
+            broker = new Broker({
+                logLevel: mergedConfig.broker.logLevel,
+                socket: mergedConfig.broker.socket,
+                id: 'broker',
                 logFactory: logFactory
             });
         }
 
-        if (mergedConfig.runWorker) {
-            workerBus = new WorkerBus({
-                logLevel: mergedConfig.workerBus.logLevel,
-                socket: mergedConfig.masterBus.socket,
-                channel: mergedConfig.workerBus.channel,
-                hemera: mergedConfig.workerBus.hemera,
-                jsonrpc: mergedConfig.workerBus.jsonrpc,
-                moleculer: mergedConfig.workerBus.moleculer,
-                id: 'worker',
+        if (mergedConfig.runBus) {
+            bus = new Bus({
+                logLevel: mergedConfig.bus.logLevel,
+                socket: mergedConfig.broker.socket,
+                channel: mergedConfig.bus.channel,
+                hemera: mergedConfig.bus.hemera,
+                jsonrpc: mergedConfig.bus.jsonrpc,
+                moleculer: mergedConfig.bus.moleculer,
+                id: 'bus',
                 logFactory: logFactory
             });
             service = require('./service')({
-                bus: workerBus,
+                bus: bus,
                 logFactory,
                 assert,
                 log
@@ -140,26 +140,26 @@ module.exports = {
 
         if (envConfig.repl !== false && envConfig.repl !== 'false') {
             var repl = serverRequire('repl').start({prompt: 'ut>'});
-            repl.context.app = global.app = {masterBus: masterBus, workerBus: workerBus, service};
+            repl.context.app = global.app = {broker, bus, service};
         }
 
         var promise = Promise.resolve();
-        if (masterBus) {
-            promise = promise.then(masterBus.init.bind(masterBus));
+        if (broker) {
+            promise = promise.then(broker.init.bind(broker));
         }
-        if (workerBus) {
-            promise = promise.then(workerBus.init.bind(workerBus));
-            if (masterBus && mergedConfig.masterBus.socket) {
-                promise = promise.then(masterBus.start.bind(masterBus));
+        if (bus) {
+            promise = promise.then(bus.init.bind(bus));
+            if (broker && mergedConfig.broker.socket) {
+                promise = promise.then(broker.start.bind(broker));
             } else {
-                promise = promise.then(workerBus.start.bind(workerBus));
+                promise = promise.then(bus.start.bind(bus));
             }
             promise = promise
                 .then(() => service.create(serviceConfig, mergedConfig, assert))
                 .then(created => service.start(created));
         } else {
             promise = promise
-                .then(masterBus.start.bind(masterBus))
+                .then(broker.start.bind(broker))
                 .then(() => ([])); // no ports
         }
         return promise
@@ -172,24 +172,24 @@ module.exports = {
                         }
                         return prev;
                     }, {}),
-                    master: masterBus,
-                    bus: workerBus,
+                    broker: broker,
+                    bus: bus,
                     log: logFactory,
                     config: mergedConfig,
                     stop: () => {
                         let innerPromise = Promise.resolve();
                         ports
                             .map((port) => port.destroy.bind(port))
-                            .concat(workerBus ? workerBus.destroy.bind(workerBus) : [])
-                            .concat(masterBus ? masterBus.destroy.bind(masterBus) : [])
+                            .concat(bus ? bus.destroy.bind(bus) : [])
+                            .concat(broker ? broker.destroy.bind(broker) : [])
                             .forEach((method) => (innerPromise = innerPromise.then(() => method())));
                         return innerPromise;
                     }
                 };
             })
             .catch((err) => {
-                workerBus && workerBus.destroy();
-                masterBus && masterBus.destroy();
+                bus && bus.destroy();
+                broker && broker.destroy();
                 return Promise.reject(err);
             });
     }
