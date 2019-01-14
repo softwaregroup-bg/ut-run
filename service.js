@@ -2,16 +2,7 @@ const hrtime = require('browser-process-hrtime');
 const utport = require('ut-port');
 const path = require('path');
 
-module.exports = ({bus, logFactory, log}) => {
-    // let ready = () => {
-    //     this.config = this.config || {};
-    //     if (this.bus) {
-    //         return this.bus.register({
-    //             run: this.run.bind(this)
-    //         });
-    //     }
-    // };
-
+module.exports = ({serviceBus, logFactory, log}) => {
     let watch = (filename, fn) => {
         let cwd = path.dirname(filename);
         let fsWatcher = require('chokidar').watch('**/*.js', {
@@ -31,7 +22,7 @@ module.exports = ({bus, logFactory, log}) => {
         });
     };
 
-    let servicePorts = utport.ports({bus: bus.publicApi, logFactory});
+    let servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory});
 
     function configure(obj = {}, config, moduleName) {
         return [].concat(...Object.entries(obj).map(([name, value]) => {
@@ -98,13 +89,13 @@ module.exports = ({bus, logFactory, log}) => {
             return prev;
         }, []);
 
-        bus.config = config || {};
+        serviceBus.config = config || {};
         return servicePorts.create(utModules, config || {}, test);
     };
 
     let create = (serviceConfig, config, test) => {
         if (typeof serviceConfig === 'function') {
-            return (async() => load(await serviceConfig({config, bus: bus.publicApi}), config, test))();
+            return (async() => load(await serviceConfig({config, bus: serviceBus.publicApi}), config, test))();
         } else {
             return load(serviceConfig, config, test);
         }
@@ -112,7 +103,7 @@ module.exports = ({bus, logFactory, log}) => {
 
     let start = ports => servicePorts.start(ports);
 
-    bus.registerLocal({
+    serviceBus.registerLocal({
         service: {
             create,
             start
