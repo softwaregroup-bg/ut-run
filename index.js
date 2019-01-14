@@ -20,15 +20,8 @@ function getConfig(params = {}) {
     let config = params.config;
     if (Array.isArray(config)) config = merge({}, ...config);
     if (!config) {
-        config = {params: {}, runMaster: true, runWorker: true, version: params.version};
+        config = {params: {}, version: params.version};
         var argv = require('minimist')(process.argv.slice(2));
-        var busMode = process.env.UT_BUS_MODE || params.busMode;
-        if (busMode === 'master') {
-            config.runWorker = false;
-            params.main = {};
-        } else if (busMode === 'worker') {
-            config.runMaster = false;
-        }
         config.params.app = process.env.UT_APP || params.app || argv._[0] || 'server';
         config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
         config.params.env = process.env.UT_ENV || params.env || argv._[2] || 'dev';
@@ -79,7 +72,7 @@ module.exports = {
             return serverRequire('ut-front/electron')({main: params.root});
         }
         const config = getConfig(params);
-        if (config.cluster && config.masterBus && config.masterBus.socket) {
+        if (config.cluster && config.broker && config.broker.socket) {
             var cluster = serverRequire('cluster');
             if (cluster.isMaster) {
                 var workerCount = config.cluster.workers || require('os').cpus().length;
@@ -88,16 +81,16 @@ module.exports = {
                 }
                 return Promise.resolve();
             } else {
-                if (config.runMaster) { // ensure that multiple master bus instances don't try to use the same socket / pipe.
-                    if (typeof config.masterBus.socket === 'string') {
-                        config.masterBus.socketPid = true;
-                    } else if (typeof config.masterBus.socket === 'number') {
-                        config.masterBus.socket += cluster.worker.id;
-                    } else if (config.masterBus.socket.port) {
-                        config.masterBus.socket.port += cluster.worker.id;
+                if (config.runBroker) { // ensure that multiple brokers don't try to use the same socket / pipe.
+                    if (typeof config.broker.socket === 'string') {
+                        config.broker.socketPid = true;
+                    } else if (typeof config.broker.socket === 'number') {
+                        config.broker.socket += cluster.worker.id;
+                    } else if (config.broker.socket.port) {
+                        config.broker.socket.port += cluster.worker.id;
                     } else {
-                        var printableConfigValue = serverRequire('util').inspect(config.masterBus.socket);
-                        throw new Error(`Unsupported masterBus.socket configuration: ${printableConfigValue}`);
+                        var printableConfigValue = serverRequire('util').inspect(config.broker.socket);
+                        throw new Error(`Unsupported broker.socket configuration: ${printableConfigValue}`);
                     }
                 }
                 config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
