@@ -245,7 +245,7 @@ module.exports = function(params, cache) {
             }
         } else {
             return {
-                tests: tap.test('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.bus, sequence.bind(null, params), cache.ports))
+                tests: tap.test('*** Reusing cache for ' + params.name, (assert) => params.steps(assert, cache.serviceBus, sequence.bind(null, params), cache.ports))
             };
         }
     }
@@ -293,7 +293,7 @@ module.exports = function(params, cache) {
         };
         var clientsRun = run.run(clientConfig);
         tap.test('Performance test start', (assert) => clientsRun.then((client) => {
-            params.steps(assert, client.bus, performanceTest.bind(null, params), client.ports);
+            params.steps(assert, client.serviceBus, performanceTest.bind(null, params), client.ports);
             return true;
         }));
         return;
@@ -321,7 +321,7 @@ module.exports = function(params, cache) {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             serverObj = server;
-            !clientConfig && cache && (cache.bus = server.bus) && (cache.ports = server.ports);
+            !clientConfig && cache && (cache.serviceBus = server.serviceBus) && (cache.ports = server.ports);
             var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
         });
@@ -338,7 +338,7 @@ module.exports = function(params, cache) {
                 }
                 return run.run(clientConfig, module.parent, assert)
                     .then((client) => {
-                        cache && (cache.bus = client.bus) && (cache.ports = client.ports);
+                        cache && (cache.serviceBus = client.serviceBus) && (cache.ports = client.ports);
                         return Promise.all(client.ports.map(port => port.isConnected))
                             .then(() => client);
                     });
@@ -379,7 +379,7 @@ module.exports = function(params, cache) {
                         client = c;
                         return c;
                     }))
-                        .then(assert => job.steps(assert, client.bus, sequence.bind(null, job), client.ports))
+                        .then(assert => job.steps(assert, client.serviceBus, sequence.bind(null, job), client.ports))
                         .then(assert => assert.test('client stop', a => stop(a, client)))
                         .catch(assert.threw);
                 });
@@ -392,7 +392,7 @@ module.exports = function(params, cache) {
                 client = c;
                 return c;
             }))
-                .then(assert => params.steps(assert, client.bus, sequence.bind(null, params), client.ports))
+                .then(assert => params.steps(assert, client.serviceBus, sequence.bind(null, params), client.ports))
                 .then(assert => assert.test('client stop', a => stop(a, client)))
                 .catch(assert.threw);
         });
@@ -411,7 +411,7 @@ module.exports = function(params, cache) {
         };
 
         x.ports.forEach(port => step('destroy ' + port.config.id, () => port.destroy()));
-        x.bus && step('stopped bus', () => x.bus.destroy());
+        x.serviceBus && step('stopped bus', () => x.serviceBus.destroy());
         x.broker && step('stopped broker', () => x.broker.destroy());
         return promise;
     }
