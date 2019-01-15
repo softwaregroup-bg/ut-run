@@ -65,6 +65,10 @@ module.exports = {
                 channel: envConfig.implementation,
                 socket: mergedConfig.utBus.broker ? mergedConfig.utBus.broker.socket : true
             }, mergedConfig.utBus.serviceBus);
+
+            if (!mergedConfig.utBus.broker && mergedConfig.utBus.serviceBus.socketPid && mergedConfig.utBus.serviceBus.socket) {
+                mergedConfig.utBus.serviceBus.socket = mergedConfig.utBus.serviceBus.socket + '[' + process.pid + ']';
+            }
         }
 
         if (!process.browser && !mergedConfig.workDir) {
