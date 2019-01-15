@@ -267,18 +267,19 @@ module.exports = function(params, cache) {
     };
 
     var tests = tap.test('Starting tests', () => Promise.resolve());
-
-    var brokerConfig = {
-        main: params.broker || [],
-        config: params.brokerConfig,
-        env: 'test',
-        method: 'debug'
-    };
     var brokerRun;
-    tests = tests.then(t => t.test('server start', {bufferred: false, bail: true}, assert => {
-        brokerRun = run.run(brokerConfig, module.parent, assert);
-        return brokerRun;
-    }));
+    if (params.brokerConfig) {
+        var brokerConfig = {
+            main: params.broker || [],
+            config: params.brokerConfig,
+            env: 'test',
+            method: 'debug'
+        };
+        tests = tests.then(t => t.test('broker start', {bufferred: false, bail: true}, assert => {
+            brokerRun = run.run(brokerConfig, module.parent, assert);
+            return brokerRun;
+        }));
+    }
 
     if (Array.isArray(params.services)) {
         tests = tests.then(t => t.test('Starting services...', {bufferred: false, bail: true}, (assert) => {
@@ -442,7 +443,7 @@ module.exports = function(params, cache) {
                 .then(result => stop(assert, result)))
                 // .then(() => setTimeout(log, 2000))
                 .catch(() => Promise.reject(new Error('Server did not start'))))
-            .then(() => test.test('broker stop', {bufferred: false}, assert => brokerRun
+            .then(() => brokerRun && test.test('broker stop', {bufferred: false}, assert => brokerRun
                 .then(result => stop(assert, result)))
                 .catch(() => Promise.reject(new Error('Broker did not start'))));
     };
