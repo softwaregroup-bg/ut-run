@@ -42,7 +42,7 @@ function getConfig(params = {}) {
         if (!configs.length) {
             throw new Error(`${configFilenames.join(' and/or ')} configuration must be provided`);
         }
-        merge(config, ...configs);
+        merge(config, ...configs, params.params);
     } else {
         if (!config.params) {
             config.params = {};

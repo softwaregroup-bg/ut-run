@@ -60,7 +60,7 @@ module.exports = {
         }
         if (mergedConfig.utBus.serviceBus) {
             mergedConfig.utBus.serviceBus = merge({
-                id: 'bus',
+                id: 'serviceBus',
                 logLevel: 'info',
                 channel: envConfig.implementation,
                 socket: mergedConfig.utBus.broker ? mergedConfig.utBus.broker.socket : true
@@ -135,12 +135,11 @@ module.exports = {
         }
         if (serviceBus) {
             promise = promise.then(serviceBus.init.bind(serviceBus));
-            if (broker && mergedConfig.utBus.broker.socket) {
+            if (broker) {
                 promise = promise.then(broker.start.bind(broker));
-            } else {
-                promise = promise.then(serviceBus.start.bind(serviceBus));
             }
             promise = promise
+                .then(serviceBus.start.bind(serviceBus))
                 .then(() => service.create(serviceConfig, mergedConfig, assert))
                 .then(created => service.start(created));
         } else {
