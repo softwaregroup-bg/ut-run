@@ -1,7 +1,8 @@
 // require('crypto');
-// var log = require('why-is-node-running');
+var log = require('why-is-node-running');
 var tap = require('tap');
 var run = require('./index');
+var util = require('util');
 
 function promisify(fn) {
     return function() {
@@ -448,5 +449,19 @@ module.exports = function(params, cache) {
                 .catch(() => Promise.reject(new Error('Broker did not start'))));
     };
 
-    return tests.then(stopAll);
+    var running = function() {
+        setTimeout(() => log({
+            error: function() {
+                tap.comment(util.format(...arguments));
+            }
+        }), 5000);
+    };
+
+    return tests
+        .then(stopAll)
+        .then(running)
+        .catch(e => {
+            running();
+            throw e;
+        });
 };

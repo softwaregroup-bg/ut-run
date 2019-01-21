@@ -9,7 +9,8 @@
     "rc": "1.2.8",
     "ut-log": ">=6.4.0-rc-godfather.7 <=6.4.0-rc-godfather.999",
     "ut-port": ">=6.8.0-rc-godfather.13 <=6.8.0-rc-godfather.999",
-    "ut-bus": ">=6.8.0-rc-godfather.19 <=6.8.0-rc-godfather.999"
+    "ut-bus": ">=6.8.0-rc-godfather.19 <=6.8.0-rc-godfather.999",
+    "why-is-node-running": "2.0.3"
   },
   "devDependencies": {
     "tap": "^12.0.1",
