@@ -366,9 +366,9 @@ module.exports = function(params, cache) {
                 let target = {};
                 serverObj.serviceBus.attachHandlers(target, [jobs]); // test specified test methods from bus
                 jobs = [].concat( // convert them to an array of job definitions
-                    ...Object.values(target.imported)
-                        .map(imported => Object.entries(imported).map(([name, steps]) => ({
-                            name,
+                    ...Object.entries(target.imported)
+                        .map(([jobName, imported]) => Object.entries(imported).map(([name, steps]) => ({
+                            name: jobName + '.' + name,
                             steps
                         }))));
             }
