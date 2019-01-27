@@ -361,7 +361,17 @@ module.exports = function(params, cache) {
 
     if (params.jobs) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
-            let jobs;
+            let jobs = params.jobs;
+            if (typeof jobs === 'string' || jobs instanceof RegExp) {
+                let target = {};
+                serverObj.serviceBus.attachHandlers(target, [jobs]); // test specified test methods from bus
+                jobs = [].concat( // convert them to an array of job definitions
+                    ...Object.values(target.imported)
+                        .map(imported => Object.entries(imported).map(([name, steps]) => ({
+                            name,
+                            steps
+                        }))));
+            }
             if (params.exclude) {
                 let exclude;
                 switch (params.exclude.constructor.name) {
@@ -378,15 +388,14 @@ module.exports = function(params, cache) {
                         break;
                 }
                 if (exclude) {
-                    jobs = params.jobs.filter(job => !exclude.test(job.name));
+                    jobs = jobs.filter(job => !exclude.test(job.name));
                 } else {
                     throw new Error('Invalid \'exclude\' property [', params.exclude, '] Must be one of: RegExp, Array, String');
                 }
-            } else {
-                jobs = params.jobs;
             }
             test.plan(jobs.length);
             jobs.forEach(job => {
+                if (!job) return;
                 test.test(job.name, assert => {
                     var client;
                     return assert.test('client start', a => startClient(a).then(c => {
