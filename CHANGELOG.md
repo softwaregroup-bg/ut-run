@@ -1,3 +1,68 @@
+# [10.0.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.7.1...v10.0.0) (2019-02-02)
+
+
+### Bug Fixes
+
+* add dependency ([5076fe6](https://github.com/softwaregroup-bg/ut-run/commit/5076fe6))
+* allow generic creation of ports, modules, erorrs and validations ([8dbc6da](https://github.com/softwaregroup-bg/ut-run/commit/8dbc6da))
+* automated tests ([8d459c0](https://github.com/softwaregroup-bg/ut-run/commit/8d459c0))
+* bump versions ([3ec6299](https://github.com/softwaregroup-bg/ut-run/commit/3ec6299))
+* check existance before destroy ([0796cab](https://github.com/softwaregroup-bg/ut-run/commit/0796cab))
+* clear cache properly ([b037958](https://github.com/softwaregroup-bg/ut-run/commit/b037958))
+* compatibility ([e71f05a](https://github.com/softwaregroup-bg/ut-run/commit/e71f05a))
+* dependencies ([e990360](https://github.com/softwaregroup-bg/ut-run/commit/e990360))
+* dependencies ([8e31413](https://github.com/softwaregroup-bg/ut-run/commit/8e31413))
+* dependencies ([7734d1b](https://github.com/softwaregroup-bg/ut-run/commit/7734d1b))
+* dependencies ([ff7d2ca](https://github.com/softwaregroup-bg/ut-run/commit/ff7d2ca))
+* dependencies ([adbe656](https://github.com/softwaregroup-bg/ut-run/commit/adbe656))
+* dependency ([e94c3aa](https://github.com/softwaregroup-bg/ut-run/commit/e94c3aa))
+* do not mutate ([f7b5bd9](https://github.com/softwaregroup-bg/ut-run/commit/f7b5bd9))
+* ignore ui for server hot reload ([afe5b46](https://github.com/softwaregroup-bg/ut-run/commit/afe5b46))
+* load errors before modules, which may use them ([2ca617b](https://github.com/softwaregroup-bg/ut-run/commit/2ca617b))
+* pass jsonrpc config ([27afcb5](https://github.com/softwaregroup-bg/ut-run/commit/27afcb5))
+* refactor configuration ([e2f07ae](https://github.com/softwaregroup-bg/ut-run/commit/e2f07ae))
+* run in browser ([f4055b9](https://github.com/softwaregroup-bg/ut-run/commit/f4055b9))
+* skip inactive modules ([e54789a](https://github.com/softwaregroup-bg/ut-run/commit/e54789a))
+* stop using module.parent ([4f1044e](https://github.com/softwaregroup-bg/ut-run/commit/4f1044e))
+* update deps ([4a2a12b](https://github.com/softwaregroup-bg/ut-run/commit/4a2a12b))
+* upgrade ([bdf975b](https://github.com/softwaregroup-bg/ut-run/commit/bdf975b))
+* upgrade dependencies ([f3421fc](https://github.com/softwaregroup-bg/ut-run/commit/f3421fc))
+* upgrade dependencies ([02f1f61](https://github.com/softwaregroup-bg/ut-run/commit/02f1f61))
+* upgrade ut-port ([62f119c](https://github.com/softwaregroup-bg/ut-run/commit/62f119c))
+* upgrade ut-tools ([5bf41a9](https://github.com/softwaregroup-bg/ut-run/commit/5bf41a9))
+* version ([a41925f](https://github.com/softwaregroup-bg/ut-run/commit/a41925f))
+
+
+### Features
+
+* accept array of configurations to be passed ([abc022c](https://github.com/softwaregroup-bg/ut-run/commit/abc022c))
+* allow passing log streams as map ([d427760](https://github.com/softwaregroup-bg/ut-run/commit/d427760))
+* composable microservices ([2e9ad28](https://github.com/softwaregroup-bg/ut-run/commit/2e9ad28))
+* external broker pid ([9b6b5ab](https://github.com/softwaregroup-bg/ut-run/commit/9b6b5ab))
+* fully qualified job name ([3d091da](https://github.com/softwaregroup-bg/ut-run/commit/3d091da))
+* implement hot reload ([2a157ec](https://github.com/softwaregroup-bg/ut-run/commit/2a157ec))
+* independent broker for tests ([#61](https://github.com/softwaregroup-bg/ut-run/issues/61)) ([f82fb39](https://github.com/softwaregroup-bg/ut-run/commit/f82fb39))
+* initialize errors ([3f24625](https://github.com/softwaregroup-bg/ut-run/commit/3f24625))
+* load test jobs from serviceBus ([0ab2880](https://github.com/softwaregroup-bg/ut-run/commit/0ab2880))
+* pass params ([34607df](https://github.com/softwaregroup-bg/ut-run/commit/34607df))
+* pass version and env to logger ([a6e3d6b](https://github.com/softwaregroup-bg/ut-run/commit/a6e3d6b))
+* show handles after tests ([681f68b](https://github.com/softwaregroup-bg/ut-run/commit/681f68b))
+
+
+### BREAKING CHANGES
+
+* Configuration changes:
+runMaster => utBus.broker
+masterBus.{} => utBus.broker.{}
+runWorker => utBus.serviceBus
+workerBus:{} => utBus.serviceBus:{}
+stdOut => utLog.streams.stdOut
+log => utLog
+console => utLog.streams.udp + utPortConsole
+* requires upgrade of ut-port-*
+
+
+
 <a name="9.7.1"></a>
 ## [9.7.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.7.0...v9.7.1) (2018-09-13)
 
