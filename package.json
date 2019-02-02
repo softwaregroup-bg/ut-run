@@ -7,13 +7,13 @@
     "loadtest": "3.0.4",
     "minimist": "1.2.0",
     "rc": "1.2.8",
-    "ut-log": ">=6.4.0-rc-godfather.7 <=6.4.0-rc-godfather.999",
-    "ut-port": ">=6.8.0-rc-godfather.13 <=6.8.0-rc-godfather.999",
-    "ut-bus": ">=6.8.0-rc-godfather.19 <=6.8.0-rc-godfather.999"
+    "ut-log": ">=6.4.0",
+    "ut-port": ">=6.8.0",
+    "ut-bus": ">=7.0.0"
   },
   "devDependencies": {
     "tap": "^12.0.1",
-    "ut-tools": "^6.8.7"
+    "ut-tools": "^6.8.10"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.0.3"
