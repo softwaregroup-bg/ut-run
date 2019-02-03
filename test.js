@@ -433,7 +433,7 @@ module.exports = function(params, cache) {
             });
         };
 
-        x.ports.forEach(port => step('destroy ' + port.config.id, () => port.destroy()));
+        x.ports.forEach(port => step('destroy ' + port.config ? port.config.id : '?', () => port.destroy()));
         x.serviceBus && step('stopped bus', () => x.serviceBus.destroy());
         x.broker && step('stopped broker', () => x.broker.destroy());
         return promise;
