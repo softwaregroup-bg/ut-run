@@ -1,3 +1,12 @@
+## [10.0.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.0.2...v10.0.3) (2019-02-19)
+
+
+### Bug Fixes
+
+* preserve import order ([c844169](https://github.com/softwaregroup-bg/ut-run/commit/c844169))
+
+
+
 ## [10.0.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.0.1...v10.0.2) (2019-02-12)
 
 
