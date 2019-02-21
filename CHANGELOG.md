@@ -1,3 +1,13 @@
+<a name="9.4.1"></a>
+## [9.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.4.0...v9.4.1) (2019-02-21)
+
+
+### Bug Fixes
+
+* limit ut-port to ~6.6.0 ([ebb23ea](https://github.com/softwaregroup-bg/ut-run/commit/ebb23ea))
+
+
+
 <a name="9.4.0"></a>
 # [9.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.3.0...v9.4.0) (2018-04-30)
 
