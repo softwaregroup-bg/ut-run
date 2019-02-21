@@ -1,3 +1,12 @@
+## [10.0.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.0.3...v10.0.4) (2019-02-21)
+
+
+### Bug Fixes
+
+* upgrade ut-port ([239fdc7](https://github.com/softwaregroup-bg/ut-run/commit/239fdc7))
+
+
+
 ## [10.0.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.0.2...v10.0.3) (2019-02-19)
 
 
