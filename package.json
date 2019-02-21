@@ -6,7 +6,7 @@
     "minimist": "1.2.0",
     "rc": "1.2.6",
     "ut-log": "^6.1.0-rc-bahur.1",
-    "ut-port": "^6.5.0"
+    "ut-port": "~6.6.0"
   },
   "peerDependencies": {
     "ut-bus": "^6.2.0-rc-bahur.1"
