@@ -1,3 +1,12 @@
+# [10.1.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.0.4...v10.1.0) (2019-02-26)
+
+
+### Features
+
+* do not skip when step.context===false ([e85fe9e](https://github.com/softwaregroup-bg/ut-run/commit/e85fe9e))
+
+
+
 ## [10.0.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.0.3...v10.0.4) (2019-02-21)
 
 
