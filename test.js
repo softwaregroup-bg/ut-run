@@ -38,6 +38,7 @@ function sequence(options, test, bus, flow, params, parent) {
                 method: step.method ? bus.importMethod(step.method) : (params) => Promise.resolve(params),
                 params: (typeof step.params === 'function') ? promisify(step.params) : () => Promise.resolve(step.params),
                 steps: step.steps,
+                context: step.context,
                 result: step.result,
                 error: step.error
             });
@@ -135,7 +136,7 @@ function sequence(options, test, bus, flow, params, parent) {
                         });
                 };
 
-                return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing}, fn);
+                return test.test(getName(step.methodName ? (step.methodName + ' // ' + step.name) : step.name), {skip: !passing && step.context !== false}, fn);
             });
         });
         return promise.catch(test.threw);
