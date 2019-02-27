@@ -359,6 +359,7 @@ A module can have the following filesystem structure:
 ut-module1
 ├── package.json
 ├── index.js
+├── browser.js
 ├── errors.js
 ├── api
 |   ├── script
@@ -377,7 +378,7 @@ ut-module1
 |   └── *.md
 ├── test
 |   ├── integration
-|       └── test.module1.*.js
+|   |   └── test.module1.*.js
 |   └── sql
 |       ├── schema.js
 |       └── schema
@@ -392,7 +393,10 @@ ut-module1
 Such module can export microservice layers using the
 following pattern:
 
-Modules can follow the following pattern, to export layers:
+Modules can follow the following pattern, to export layers in
+the following files:
+
+* `/index.js` - this file defines the server side layers
 
 ```js
 // name the function after the folder name, using camel case
@@ -430,7 +434,29 @@ module.exports = () => function utModule1() {
             // export method validations to be used at the gateway,
             // during automated tests
             require('./validations/test')  // returns a function named 'testValidation'
-        ],
+        ]
+    };
+};
+```
+
+* `/browser.js` - this file defines the browser layers
+
+* `/package.json` - make sure the `/index.js` and `/browser.js`
+  are put in the following keys in `/package.json`, so that
+  webpack can pick `/browser.js`:
+
+```json
+{
+    "name": "ut-module1",
+    "main": "index.js",
+    "browser": "browser.js",
+}
+```
+
+```js
+// name the function after the folder name, using camel case
+module.exports = () => function utModule1() {
+    return {
         browser: () => [
             // export browser UI
             require('./ui')                // returns a function named 'ui'
