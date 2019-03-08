@@ -1,3 +1,12 @@
+# [10.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.1.1...v10.2.0) (2019-03-08)
+
+
+### Features
+
+* update ut-port. now port namespace can be defined not only as an array but as a string as well ([b6ee7c4](https://github.com/softwaregroup-bg/ut-run/commit/b6ee7c4))
+
+
+
 ## [10.1.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.1.0...v10.1.1) (2019-02-27)
 
 
