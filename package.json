@@ -8,7 +8,7 @@
     "minimist": "1.2.0",
     "rc": "1.2.8",
     "ut-log": "^6.4.0",
-    "ut-port": "^6.9.1",
+    "ut-port": "^6.10.0",
     "ut-bus": "^7.1.1"
   },
   "devDependencies": {
