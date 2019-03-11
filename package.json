@@ -1,12 +1,12 @@
 {
   "name": "ut-run",
-  "version": "9.7.1",
+  "version": "9.7.1-microcred.0",
   "dependencies": {
     "loadtest": "2.3.0",
     "minimist": "1.2.0",
     "rc": "1.2.6",
     "ut-log": "^6.3.0-rc-einstein.2",
-    "ut-port": "^6.7.0-rc-einstein.4",
+    "ut-port": "6.7.0-rc-einstein.4",
     "ut-bus": "^6.6.0-rc-einstein.5"
   },
   "devDependencies": {
