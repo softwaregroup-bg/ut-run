@@ -360,6 +360,18 @@ module.exports = function(params, cache) {
             });
     }
 
+    const testClient = testConfig => assert => assert.test('client tests', async assert => {
+        let client = await startClient(assert);
+        await testConfig.steps(assert, client.serviceBus, sequence.bind(null, testConfig), client.ports);
+        await assert.test('client stop', a => stop(a, client));
+    }).catch(assert.threw);
+
+    const testServer = testConfig => assert => assert.test('server tests', async assert => {
+        await testConfig.steps(assert, serverObj.serviceBus, sequence.bind(null, testConfig), serverObj.ports);
+    }).catch(assert.threw);
+
+    const testAny = clientConfig ? testClient : testServer;
+
     if (params.jobs) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
             let jobs = params.jobs;
@@ -397,47 +409,31 @@ module.exports = function(params, cache) {
             test.plan(jobs.length);
             jobs.forEach(job => {
                 if (!job) return;
-                test.test(job.name, assert => {
-                    var client;
-                    return assert.test('client start', a => startClient(a).then(c => {
-                        client = c;
-                        return c;
-                    }))
-                        .then(assert => job.steps(assert, client.serviceBus, sequence.bind(null, job), client.ports))
-                        .then(assert => assert.test('client stop', a => stop(a, client)))
-                        .catch(assert.threw);
-                });
+                test.test(job.name, testAny(job));
             });
         }));
     } else {
-        tests = tests.then(assert => {
-            var client;
-            return assert.test('client start', a => startClient(a).then(c => {
-                client = c;
-                return c;
-            }))
-                .then(assert => params.steps(assert, client.serviceBus, sequence.bind(null, params), client.ports))
-                .then(assert => assert.test('client stop', a => stop(a, client)))
-                .catch(assert.threw);
-        });
+        tests = tests.then(testAny(params));
     }
 
     function stop(assert, x) {
         var promise = Promise.resolve();
+        var steps = [];
         var step = (name, fn) => {
             promise = promise.then(fn).then(result => {
-                assert.ok(true, name);
+                steps.push(name);
                 return result;
             }, error => {
+                assert.comment(steps.join('\r\n'));
                 assert.fail(name);
                 return error;
             });
         };
 
-        x.ports.forEach(port => step('destroy ' + port.config ? port.config.id : '?', () => port.destroy()));
-        x.serviceBus && step('stopped bus', () => x.serviceBus.destroy());
-        x.broker && step('stopped broker', () => x.broker.destroy());
-        return promise;
+        x.ports.forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
+        x.serviceBus && step('bus', () => x.serviceBus.destroy());
+        x.broker && step('broker', () => x.broker.destroy());
+        return promise.then(() => assert.ok(true, 'destroy[' + steps.join(',') + ']'));
     }
 
     var stopAll = function(test) {
