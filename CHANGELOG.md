@@ -1,3 +1,7 @@
+## [10.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.2.0...v10.2.1) (2019-03-13)
+
+
+
 # [10.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.1.1...v10.2.0) (2019-03-08)
 
 
