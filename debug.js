@@ -100,7 +100,9 @@ module.exports = {
             log = logFactory.createLog((mergedConfig && mergedConfig.run && mergedConfig.run.logLevel) || 'info', {name: 'run', context: 'run'});
             log && log.info && log.info({
                 $meta: {mtid: 'event', opcode: 'run.debug'},
-                config: mergedConfig.config,
+                config: {
+                    path: mergedConfig.config
+                },
                 utBus: mergedConfig.utBus,
                 utLog: mergedConfig.utLog,
                 repl: mergedConfig.repl
