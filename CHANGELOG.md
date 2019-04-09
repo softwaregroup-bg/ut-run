@@ -1,3 +1,12 @@
+## [10.3.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.3.1...v10.3.2) (2019-04-09)
+
+
+### Bug Fixes
+
+* elasticsearch indexing ([f40bb71](https://github.com/softwaregroup-bg/ut-run/commit/f40bb71))
+
+
+
 ## [10.3.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.3.0...v10.3.1) (2019-03-22)
 
 
