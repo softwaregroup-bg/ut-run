@@ -1,3 +1,12 @@
+# [10.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.3.2...v10.4.0) (2019-04-18)
+
+
+### Features
+
+* update dependencies ([5a06c95](https://github.com/softwaregroup-bg/ut-run/commit/5a06c95))
+
+
+
 ## [10.3.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.3.1...v10.3.2) (2019-04-09)
 
 
