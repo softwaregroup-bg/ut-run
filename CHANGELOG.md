@@ -1,3 +1,12 @@
+## [10.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.0...v10.4.1) (2019-04-19)
+
+
+### Bug Fixes
+
+* update dependencies ([051f9e7](https://github.com/softwaregroup-bg/ut-run/commit/051f9e7))
+
+
+
 # [10.4.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.3.2...v10.4.0) (2019-04-18)
 
 
