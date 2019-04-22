@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.8.1-amret.0",
+  "version": "9.8.1-amret.1",
   "dependencies": {
     "loadtest": "3.0.4",
     "minimist": "1.2.0",
