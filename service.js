@@ -45,6 +45,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
     };
 
     let loadModule = (utModule, config, test) => {
+        if (!utModule) return;
         let clearCache = filename => {
             let dir = path.dirname(filename);
             Object.keys(require.cache).filter(key => {
@@ -54,6 +55,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
         };
 
         function hotReload(filename, ...params) {
+            if (!filename) return;
             config && config.run && config.run.hotReload && watch(filename, async() => {
                 clearCache(filename);
                 let utModule = require(filename)(...params);
@@ -68,6 +70,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
         let moduleName;
         if (typeof utModule === 'string') utModule = [utModule];
         if (Array.isArray(utModule)) utModule = hotReload(...utModule);
+        if (!utModule) return;
         if (utModule instanceof Function) {
             if (utModule.name) {
                 moduleConfig = config[utModule.name];
@@ -85,7 +88,8 @@ module.exports = ({serviceBus, logFactory, log}) => {
 
     let load = (utModules, config, test) => {
         utModules = utModules.reduce((prev, utModule) => {
-            prev.push(...loadModule(utModule, config, test));
+            let loaded = loadModule(utModule, config, test);
+            if (loaded) prev.push(...loaded);
             return prev;
         }, []);
 
