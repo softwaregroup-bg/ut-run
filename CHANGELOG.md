@@ -1,3 +1,12 @@
+## [10.4.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.1...v10.4.2) (2019-04-28)
+
+
+### Bug Fixes
+
+* skip falsey modules ([024751f](https://github.com/softwaregroup-bg/ut-run/commit/024751f))
+
+
+
 ## [10.4.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.0...v10.4.1) (2019-04-19)
 
 
