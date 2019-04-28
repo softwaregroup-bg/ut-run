@@ -1,6 +1,6 @@
 // require('crypto');
-var log = require('why-is-node-running');
 var tap = require('tap');
+var log = require('why-is-node-running');
 var run = require('./index');
 var util = require('util');
 
@@ -460,7 +460,7 @@ module.exports = function(params, cache) {
             error: function() {
                 tap.comment(util.format(...arguments));
             }
-        }), 5000);
+        }), 2000);
     };
 
     return tests
