@@ -27,7 +27,8 @@ module.exports = ({serviceBus, logFactory, log}) => {
     function configure(obj = {}, config, moduleName) {
         return [].concat(...Object.entries(obj).map(([name, value]) => {
             if (value instanceof Function) {
-                let propConfig = (config || {})[value.name || name];
+                let serviceName = value.name || name;
+                let propConfig = (config || {})[serviceName];
                 let startTime = hrtime();
                 try {
                     value = propConfig && value(propConfig);
@@ -35,7 +36,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                     let endTime = hrtime(startTime);
                     propConfig && log && log.debug && log.debug({
                         $meta: {mtid: 'event', opcode: 'serviceLayer.load'},
-                        module: moduleName + '.' + (value.name || name),
+                        module: moduleName + '.' + serviceName,
                         loadTime: endTime[0] + '.' + (endTime[1] + '').substr(0, 3)
                     });
                 }
