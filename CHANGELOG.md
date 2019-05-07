@@ -1,3 +1,12 @@
+## [10.4.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.3...v10.4.4) (2019-05-07)
+
+
+### Bug Fixes
+
+* update ut-port ([184036e](https://github.com/softwaregroup-bg/ut-run/commit/184036e))
+
+
+
 ## [10.4.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.2...v10.4.3) (2019-05-06)
 
 
