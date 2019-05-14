@@ -37,6 +37,7 @@ function sequence(options, test, bus, flow, params, parent) {
                 methodName: step.method,
                 method: step.method ? bus.importMethod(step.method) : (params) => Promise.resolve(params),
                 params: (typeof step.params === 'function') ? promisify(step.params) : () => Promise.resolve(step.params),
+                $meta: (typeof step.$meta === 'function') ? promisify(step.$meta) : (step.$meta && (() => Promise.resolve(step.$meta))),
                 steps: step.steps,
                 context: step.context,
                 result: step.result,
@@ -96,7 +97,10 @@ function sequence(options, test, bus, flow, params, parent) {
                                     .then(() => step.steps(context))
                                     .then(steps => sequence(options, assert, bus, steps, undefined, context));
                             }
-                            return step.method(params)
+                            let promise = step.$meta
+                                ? step.$meta(context).then($meta => step.method(params, $meta))
+                                : step.method(params);
+                            return promise
                                 .then(function(result) {
                                     duration && duration(Date.now() - start);
                                     passed && passed((result && result._isOk) ? 1 : 0);
