@@ -1,3 +1,12 @@
+# [10.5.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.4...v10.5.0) (2019-05-14)
+
+
+### Features
+
+* allow passing $meta in tests ([7e9023f](https://github.com/softwaregroup-bg/ut-run/commit/7e9023f))
+
+
+
 ## [10.4.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.3...v10.4.4) (2019-05-07)
 
 
