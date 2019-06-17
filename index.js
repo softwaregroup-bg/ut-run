@@ -65,8 +65,26 @@ function getConfig(params = {}) {
     ].join('_'), config);
 }
 
+function extractConfig(target, path, source) {
+    const result = target;
+    path.split('.').forEach((token, i, tokens) => {
+        if (i !== tokens.length - 1) {
+            if (!target[token]) target[token] = {};
+            target = target[token];
+            source = source[token];
+        } else {
+            target[token] = source[token];
+        }
+    });
+    return result;
+};
+
 module.exports = {
     getConfig,
+    extractConfig: function(params, paths = []) {
+        const config = getConfig(params);
+        return paths.reduce((target, path) => extractConfig(target, path, config), {});
+    },
     runParams: function(params = {}, test) {
         if (process.type === 'browser') {
             return serverRequire('ut-front/electron')({main: params.root});
