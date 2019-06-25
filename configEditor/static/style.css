@@ -10,7 +10,7 @@
     margin: 0 10px;
 }
 
-#output {
-    width: 100%;
-    height: auto;
+#output pre {
+    padding: 20px;
+    border: thin solid #3883fa;
 }
