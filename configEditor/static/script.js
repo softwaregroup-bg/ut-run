@@ -6,12 +6,16 @@
     function diff(x, y) {
         if (x === y) return {};
         if (!isObject(x) || !isObject(y)) return y;
-        return Object.keys(y).reduce((all, key) => {
+        return Object.keys(y).reduce((result, key) => {
             if (x.hasOwnProperty(key)) {
                 var z = diff(x[key], y[key]);
-                if (!isObject(z) || Object.keys(z).length > 0) all[key] = z;
+                // updated values
+                if (!isObject(z) || Object.keys(z).length > 0) result[key] = z;
+            } else {
+                // new values
+                result[key] = y[key];
             }
-            return all;
+            return result;
         }, {});
     };
 
@@ -43,18 +47,18 @@
                 var output = diff(config, editor.get());
                 outputResult.innerText = JSON.stringify(output, null, 4);
             },
-            'environment variables': function() {
+            'runtime arguments': function() {
                 var output = diff(config, editor.get());
                 var flat = flatten(output);
                 outputResult.innerText = Object.keys(flat).map(key => `--${key}=${flat[key]}`).join(' ');
             },
-            'runtime arguments': function() {
+            'environment variables': function() {
                 // TODO pass from outside
                 var impl = 'impl';
                 var env = 'dev';
                 var output = diff(config, editor.get());
                 var flat = flatten(output);
-                outputResult.innerText = Object.keys(flat).map(key => `ut_${impl}_${env}_${key.replace(/\./, '__')}=${flat[key]}`).join('\n');
+                outputResult.innerText = Object.keys(flat).map(key => `ut_${impl}_${env}_${key.replace(/\./g, '__')}=${flat[key]}`).join('\n');
             }
         };
         var buttonsWrapper = document.getElementById('generate');
@@ -73,7 +77,10 @@
         var ajv = new window.JSONEditor.Ajv();
         var validate = ajv.compile(schema);
         var editorOptions = {
-            modes: ['form', 'text'],
+            mode: 'tree',
+            onCreateMenu: function(items) {
+                return items;
+            },
             onValidate: function(json) {
                 var valid = validate(json);
                 buttons.forEach(button => {
@@ -89,7 +96,6 @@
             }
         };
         var editor = new window.JSONEditor(editorContainer, editorOptions, config);
-        editor.expandAll();
     }
     if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', render);
