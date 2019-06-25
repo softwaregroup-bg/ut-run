@@ -1,0 +1,16 @@
+#jsoneditor {
+    width: 100%;
+}
+
+#jsoneditor .editable {
+    /* use some custom editable fields styling*/
+}
+
+#generate button {
+    margin: 0 10px;
+}
+
+#output {
+    width: 100%;
+    height: auto;
+}

@@ -72,6 +72,15 @@ module.exports = {
             return serverRequire('ut-front/electron')({main: params.root});
         }
         const config = getConfig(params);
+        if (params.schema) {
+            var Ajv = serverRequire('ajv');
+            var ajv = new Ajv();
+            var validate = ajv.compile(params.schema);
+            if (!validate(config)) {
+                serverRequire('./configEditor')(config, params.schema);
+                return Promise.resolve();
+            };
+        }
         if (config.cluster && config.broker && config.broker.socket) {
             var cluster = serverRequire('cluster');
             if (cluster.isMaster) {
