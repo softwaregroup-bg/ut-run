@@ -471,3 +471,58 @@ ok 3 - client stop # time=0.464ms
 1..3
 }
 ```
+
+## Config editor
+
+Ut-run supports config validation.
+If a `schema` property is passed as an arguemnt to utRun.run function
+then the resulting config will be validated against it.
+
+Note that if provided, the `schema` must be a valid
+JSON schema definition.
+
+Example:
+
+```js
+// some json schema that will be used for validating the resulting config
+const schema = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "config schema",
+    "required": ["test"],
+    "properties": {
+        "test": {
+            "type": "boolean"
+        }
+    }
+};
+require('ut-run').run({
+    version: require('./package.json').version,
+    root: __dirname,
+    resolve: require.resolve,
+    schema
+})
+```
+
+In case the configuration validation fails
+then the application bootstrapping will get interrupted
+and a dedicated configuration server will be launched:
+
+![alt](doc/configuration_server_prompt.png)
+
+if you open the server as prompted in the console
+you will get access to the interractive configuration editor:
+
+![alt](doc/configuration_editor_invalid.png)
+
+All validation errors will be displayed in the json tree
+as exclamation mark icons right next to the faulty fields.
+And the actual errors will be displayed when hovering over them.
+
+Once all the errors get resolved the 'generate' buttons
+at the top right part of the page will get automatically enabled.
+You can click any of them to generate the diff between
+the original and the modified configuration in the respective format:
+`json`, `runtime arguments` or `environment variables`
+
+![alt](doc/configuration_editor_valid.png)

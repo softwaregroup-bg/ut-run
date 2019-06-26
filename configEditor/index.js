@@ -50,7 +50,7 @@ module.exports = (config, schema) => {
         });
     });
 
-    server.listen(8888, () => {
+    server.listen(() => {
         const {port} = server.address();
         // eslint-disable-next-line no-console
         console.log('\x1b[43m\x1b[30m%s\x1b[0m', ` Invalid config! Open config editor at: http://localhost:${port}/ `);
