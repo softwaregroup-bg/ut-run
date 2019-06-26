@@ -52,6 +52,7 @@ module.exports = (config, schema) => {
 
     server.listen(8888, () => {
         const {port} = server.address();
-        console.log(`Server running at http://127.0.0.1:${port}/`);
+        // eslint-disable-next-line no-console
+        console.log('\x1b[43m\x1b[30m%s\x1b[0m', ` Invalid config! Open config editor at: http://localhost:${port}/ `);
     });
 };
