@@ -1,6 +1,8 @@
 (function() {
     var schema = window.ut.schema;
     var config = window.ut.config;
+    var impl = config.implementation.replace(/[-/\\]/g, '_');
+    var env = config.params.env;
     var isObject = o => o != null && typeof o === 'object';
 
     function diff(x, y) {
@@ -53,9 +55,6 @@
                 outputResult.innerText = Object.keys(flat).map(key => `--${key}=${flat[key]}`).join(' ');
             },
             'environment variables': function() {
-                // TODO pass from outside
-                var impl = 'impl';
-                var env = 'dev';
                 var output = diff(config, editor.get());
                 var flat = flatten(output);
                 outputResult.innerText = Object.keys(flat).map(key => `ut_${impl}_${env}_${key.replace(/\./g, '__')}=${flat[key]}`).join('\n');
