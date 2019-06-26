@@ -2,10 +2,10 @@
   "name": "ut-run",
   "version": "10.5.0",
   "dependencies": {
-    "ajv": "^6.10.0",
+    "ajv": "6.10.0",
     "browser-process-hrtime": "1.0.0",
     "chokidar": "2.0.4",
-    "jsoneditor": "^6.1.0",
+    "jsoneditor": "6.1.0",
     "loadtest": "3.0.4",
     "minimist": "1.2.0",
     "rc": "1.2.8",
