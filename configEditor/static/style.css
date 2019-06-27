@@ -8,22 +8,19 @@ body {
     padding: 1%;
 }
 
-#jsoneditor .editable {
-    /* use some custom editable fields styling*/
-}
-
 #result {
     width: 37%;
     position: fixed;
-    top: 1%;
-    right: 1%;
-}
-
-#result #generate button {
-    margin: 0 10px;
+    top: 0;
+    right: 0;
+    padding: 1%;
 }
 
 #result #output pre {
     padding: 20px;
     border: thin solid #3883fa;
+}
+
+#result button {
+    margin-right: 10px;
 }

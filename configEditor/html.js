@@ -18,7 +18,7 @@ module.exports = (config, schema) => {
         <body>
             <div id="jsoneditor"></div>
             <div id="result">
-                <div id="generate" style="margin: 20px 0;">
+                <div id="generate">
                     <span>generate:</span>
                 </div>
                 <div id="output"><pre></pre></div>

@@ -5,17 +5,17 @@
     var env = config.params.env;
     var isObject = o => o != null && typeof o === 'object';
 
-    function diff(x, y) {
-        if (x === y) return {};
-        if (!isObject(x) || !isObject(y)) return y;
-        return Object.keys(y).reduce((result, key) => {
-            if (x.hasOwnProperty(key)) {
-                var z = diff(x[key], y[key]);
+    function intersect(original, modified) {
+        if (original === modified) return {};
+        if (!isObject(original) || !isObject(modified)) return modified;
+        return Object.keys(modified).reduce((result, key) => {
+            if (original.hasOwnProperty(key)) {
+                var diff = intersect(original[key], modified[key]);
                 // updated values
-                if (!isObject(z) || Object.keys(z).length > 0) result[key] = z;
+                if (!isObject(diff) || Object.keys(diff).length > 0) result[key] = diff;
             } else {
                 // new values
-                result[key] = y[key];
+                result[key] = modified[key];
             }
             return result;
         }, {});
@@ -25,9 +25,7 @@
         var result = {};
 
         function recurse(cur, prop) {
-            if (Object(cur) !== cur) {
-                result[prop] = cur;
-            } else if (Array.isArray(cur) || typeof cur === 'function') {
+            if (Object(cur) !== cur || Array.isArray(cur)) {
                 result[prop] = cur;
             } else {
                 var isEmpty = true;
@@ -35,27 +33,28 @@
                     isEmpty = false;
                     recurse(cur[p], prop ? prop + '.' + p : p);
                 });
-                if (isEmpty && prop) {
-                    result[prop] = {};
-                }
+                if (isEmpty && prop) result[prop] = {};
             }
         }
+
         recurse(data, '');
+
         return result;
     }
+
     function render() {
         var build = {
             json: function() {
-                var output = diff(config, editor.get());
+                var output = intersect(config, editor.get());
                 outputResult.innerText = JSON.stringify(output, null, 4);
             },
             'runtime arguments': function() {
-                var output = diff(config, editor.get());
+                var output = intersect(config, editor.get());
                 var flat = flatten(output);
                 outputResult.innerText = Object.keys(flat).map(key => `--${key}=${flat[key]}`).join(' ');
             },
             'environment variables': function() {
-                var output = diff(config, editor.get());
+                var output = intersect(config, editor.get());
                 var flat = flatten(output);
                 outputResult.innerText = Object.keys(flat).map(key => `ut_${impl}_${env}_${key.replace(/\./g, '__')}=${flat[key]}`).join('\n');
             }
@@ -63,7 +62,7 @@
         var buttonsWrapper = document.getElementById('generate');
         var outputResult = document.getElementById('output').firstChild;
         var buttons = Object.keys(build).map(key => {
-            const button = document.createElement('button');
+            var button = document.createElement('button');
             button.innerText = key;
             button.onclick = build[key];
             buttonsWrapper.appendChild(button);
@@ -77,9 +76,6 @@
         var validate = ajv.compile(schema);
         var editorOptions = {
             mode: 'tree',
-            onCreateMenu: function(items) {
-                return items;
-            },
             onValidate: function(json) {
                 var valid = validate(json);
                 buttons.forEach(button => {
@@ -96,6 +92,7 @@
         };
         var editor = new window.JSONEditor(editorContainer, editorOptions, config);
     }
+
     if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', render);
     } else if (window.attachEvent) {

@@ -489,10 +489,22 @@ const schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "title": "config schema",
-    "required": ["test"],
+    "required": ["swagger"],
     "properties": {
-        "test": {
-            "type": "boolean"
+        "swagger": {
+            "type": "object",
+            "required": ["server"],
+            "properties": {
+                "server": {
+                    "type": "object",
+                    "required": ["port"],
+                    "properties": {
+                        "port": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
         }
     }
 };
