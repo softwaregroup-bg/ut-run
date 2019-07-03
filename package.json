@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "tap": "^12.6.2",
-    "ut-tools": "^6.15.0"
+    "ut-tools": "^6.21.0"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.1.0"

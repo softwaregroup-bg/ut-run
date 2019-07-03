@@ -305,6 +305,7 @@ module.exports = [
 
 - optionally in the configuration one could provide information about automatic
   service discovery like follows:
+
     ```json
         {
             "registry": {
