@@ -1,0 +1,26 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#jsoneditor {
+    width: 60%;
+    padding: 1%;
+}
+
+#result {
+    width: 37%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 1%;
+}
+
+#result #output pre {
+    padding: 20px;
+    border: thin solid #3883fa;
+}
+
+#result button {
+    margin-right: 10px;
+}
