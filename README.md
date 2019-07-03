@@ -524,7 +524,7 @@ and a dedicated configuration server will be launched:
 ![alt](doc/configuration_server_prompt.png)
 
 if you open the server as prompted in the console
-you will get access to the interractive configuration editor:
+you will get access to the interactive configuration editor:
 
 ![alt](doc/configuration_editor_invalid.png)
 
@@ -536,6 +536,6 @@ Once all the errors get resolved the 'generate' buttons
 at the top right part of the page will get automatically enabled.
 You can click any of them to generate the diff between
 the original and the modified configuration in the respective format:
-`json`, `runtime arguments` or `environment variables`
+`json`, `command line arguments` or `environment variables`
 
 ![alt](doc/configuration_editor_valid.png)

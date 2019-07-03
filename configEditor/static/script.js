@@ -48,7 +48,7 @@
                 var output = intersect(config, editor.get());
                 outputResult.innerText = JSON.stringify(output, null, 4);
             },
-            'runtime arguments': function() {
+            'command line arguments': function() {
                 var output = intersect(config, editor.get());
                 var flat = flatten(output);
                 outputResult.innerText = Object.keys(flat).map(key => `--${key}=${flat[key]}`).join(' ');
