@@ -1,3 +1,12 @@
+# [10.6.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.5.0...v10.6.0) (2019-07-03)
+
+
+### Features
+
+* config editor ([696762c](https://github.com/softwaregroup-bg/ut-run/commit/696762c))
+
+
+
 # [10.5.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.4.4...v10.5.0) (2019-05-14)
 
 
