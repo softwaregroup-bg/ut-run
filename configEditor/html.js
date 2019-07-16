@@ -4,8 +4,8 @@ module.exports = (config, schema) => {
         <html>
         <head>
         <title>ut-run config editor</title>
-        <link href="jsoneditor/dist/jsoneditor.css" rel="stylesheet" type="text/css">
-        <script src="jsoneditor/dist/jsoneditor.js"></script>
+        <link href="jsoneditor/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+        <script src="jsoneditor/dist/jsoneditor.min.js"></script>
         <link href="static/style.css" rel="stylesheet" type="text/css">
         <script type="text/javascript">
             window.ut = {

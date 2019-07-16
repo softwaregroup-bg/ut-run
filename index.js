@@ -1,6 +1,6 @@
 /* eslint no-process-env:0, no-console:0, no-process-exit:0 */
 var serverRequire = require;// hide some of the requires from lasso
-var run = require('./debug');
+var methods = require('./methods');
 var rc = require('rc');
 var merge = require('ut-port/merge');
 var path = require('path');
@@ -72,12 +72,13 @@ module.exports = {
             return serverRequire('ut-front/electron')({main: params.root});
         }
         const config = getConfig(params);
-        if (params.schema) {
+        const method = params.method || config.params.method;
+        if (config.run && config.run.schema && method === 'debug') {
             var Ajv = serverRequire('ajv');
             var ajv = new Ajv();
-            var validate = ajv.compile(params.schema);
+            var validate = ajv.compile(config.run.schema);
             if (!validate(config)) {
-                serverRequire('./configEditor')(config, params.schema);
+                serverRequire('./configEditor')(config, config.run.schema);
                 return Promise.resolve();
             };
         }
@@ -106,7 +107,7 @@ module.exports = {
             }
         }
         const main = params.main || require(params.resolve('./' + config.params.app));
-        return run[params.method || config.params.method](main, config, test);
+        return methods[method](main, config, test);
     },
     run: function(params, test) {
         return this.runParams(params, test)
