@@ -3,9 +3,9 @@ const create = require('./create');
 module.exports = async function(serviceConfig, envConfig, assert) {
     const {broker, serviceBus, service, mergedConfig, logFactory} = await create(envConfig);
     try {
-        const ports = (service && mergedConfig) ? await service.create(serviceConfig, mergedConfig, assert) : [];
+        const ports = (service && mergedConfig) ? await service.start(await service.create(serviceConfig, mergedConfig, assert)) : [];
         return {
-            ports: await service.start(ports),
+            ports,
             portsMap: ports.reduce((prev, cur) => {
                 if (cur && cur.config && (typeof cur.config.id === 'string')) {
                     prev[cur.config.id] = cur;
