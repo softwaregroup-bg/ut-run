@@ -171,7 +171,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                 name: port.name,
                 protocol: port.protocol || 'TCP',
                 containerPort: port.containerPort
-            }))
+            }));
             const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
             if (deploymentNames.length) {
                 deploymentNames.forEach(deploymentName => {
