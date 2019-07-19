@@ -167,6 +167,11 @@ module.exports = ({serviceBus, logFactory, log}) => {
         const result = portsAndModules.reduce((prev, portOrModule) => {
             const layer = portOrModule.config.pkg.layer;
             const ports = (portOrModule.config.k8s && portOrModule.config.k8s.ports) || [];
+            const containerPorts = ports.map(port => ({
+                name: port.name,
+                protocol: port.protocol || 'TCP',
+                containerPort: port.containerPort
+            }))
             const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
             if (deploymentNames.length) {
                 deploymentNames.forEach(deploymentName => {
@@ -228,7 +233,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                                         image: 'softwaregroup/impl-' + config.implementation + ':' + config.version,
                                         imagePullPolicy: 'IfNotPresent',
                                         args: [
-                                            'server',
+                                            config.params.app,
                                             '--run.hotReload=0',
                                             deploymentName === 'console'
                                                 ? '--utLog.streams.udp=0'
@@ -245,11 +250,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                                             name: 'http-jsonrpc',
                                             protocol: 'TCP',
                                             containerPort: 8090
-                                        }].concat(ports.map(port => ({
-                                            name: port.name,
-                                            protocol: port.protocol || 'TCP',
-                                            containerPort: port.containerPort
-                                        }))),
+                                        }],
                                         livenessProbe: {
                                             initialDelaySeconds: 60,
                                             httpGet: {
@@ -288,6 +289,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                     };
                     const args = deployment.spec.template.spec.containers[0].args;
                     if (!args.includes('--' + layer)) args.push('--' + layer);
+                    deployment.spec.template.spec.containers[0].ports.push(...containerPorts);
                     prev.deployments[deploymentName] = deployment;
                 });
                 const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP}) => {
@@ -359,7 +361,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                 };
                 if (deploymentNames.length === 1) {
                     [].concat(portOrModule.config.namespace).forEach(ns => ns && addService({
-                        name: ns + '-service',
+                        name: ns.replace(/\//g, '-') + '-service',
                         port: 8090,
                         targetPort: 'http-jsonrpc'
                     }));
