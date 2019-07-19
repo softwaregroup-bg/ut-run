@@ -104,34 +104,34 @@ module.exports = ({serviceBus, logFactory, log}) => {
         };
 
         function hotReload(filenames, ...params) {
-            const [moduleFilename, pkgFilename] = Array.isArray(filenames) ? filenames : [filenames];
+            const {main, pkg} = typeof filenames === 'string' ? {main: filenames} : filenames;
             function requireWithMeta() {
-                const result = require(moduleFilename)(...params);
-                let pkg = pkgFilename && require(pkgFilename);
-                if (pkg) {
-                    pkg = {
-                        name: pkg.name,
-                        version: pkg.version
+                const result = require(main)(...params);
+                let pkgJson = pkg && require(pkg);
+                if (pkgJson) {
+                    pkgJson = {
+                        name: pkgJson.name,
+                        version: pkgJson.version
                     };
                 }
-                return [result, pkg];
+                return [result, pkgJson];
             }
 
             if (!filenames) return [];
-            config && config.run && config.run.hotReload && watch(moduleFilename, async() => {
-                clearCache(moduleFilename);
-                [utModule, pkg] = requireWithMeta();
+            config && config.run && config.run.hotReload && watch(main, async() => {
+                clearCache(main);
+                [utModule, pkgJson] = requireWithMeta();
                 await servicePorts.destroy(utModule.name);
-                return servicePorts.start(await servicePorts.create(invokeModule(utModule, pkg, config), config, test));
+                return servicePorts.start(await servicePorts.create(invokeModule(utModule, pkgJson, config), config, test));
             });
 
             return requireWithMeta();
         };
 
         if (typeof utModule === 'string') utModule = [utModule];
-        let pkg;
-        if (Array.isArray(utModule)) [utModule, pkg] = hotReload(...utModule);
-        return invokeModule(utModule, pkg, config);
+        let pkgJson;
+        if (Array.isArray(utModule)) [utModule, pkgJson] = hotReload(...utModule);
+        return invokeModule(utModule, pkgJson, config);
     };
 
     const init = async(serviceConfig, config, test) => {
