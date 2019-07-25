@@ -50,7 +50,7 @@ node index {app} {method} {env}
 - `{method}` - specifies the way of running, defaults to 'debug'. The following
   methhods are available:
   - `debug` - start the services
-  - `kustomize` - generate k8s configuration
+  - `install` - generate configuration for various installation targets
 - `{env}` - specifies the name of configuration file related to the environment.
   Environments like 'dev', 'prod' and 'test' are commonly used. Defaults to 'dev'.
 

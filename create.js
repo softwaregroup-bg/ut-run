@@ -139,11 +139,11 @@ module.exports = function(envConfig) {
         }
         promise = promise
             .then(serviceBus.start.bind(serviceBus))
-            .then(() => ({broker, serviceBus, service, mergedConfig, logFactory}));
+            .then(() => ({broker, serviceBus, service, mergedConfig, logFactory, log}));
     } else {
         promise = promise
             .then(broker.start.bind(broker))
-            .then(() => ({broker, mergedConfig, logFactory})); // no services
+            .then(() => ({broker, mergedConfig, logFactory, log})); // no services
     }
     return promise;
 };

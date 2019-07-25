@@ -1,4 +1,4 @@
 module.exports = {
-    kustomize: require('./kustomize'),
+    install: require('./install'),
     debug: require('./debug')
 };
