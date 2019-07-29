@@ -16,7 +16,7 @@ const set = (object, property, schema, uiSchema) => {
     }
 };
 
-module.exports = ({portsAndModules, log}) => {
+module.exports = ({portsAndModules, log, schema, uiSchema = {}}) => {
     return portsAndModules.reduce((prev, portOrModule) => {
         set(
             prev,
@@ -29,8 +29,9 @@ module.exports = ({portsAndModules, log}) => {
         schema: {
             $schema: 'http://json-schema.org/draft-07/schema#',
             title: 'Configuration',
-            type: 'object'
+            type: 'object',
+            ...schema
         },
-        uiSchema: {}
+        uiSchema
     });
 };

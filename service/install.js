@@ -32,7 +32,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
         apiVersion: 'v1',
         kind: 'Namespace',
         metadata: {
-            name: config.implementation + '-' + config.params.env
+            name: config.k8s.namespace || (config.implementation + '-' + config.params.env)
         }
     };
     const result = portsAndModules.reduce((prev, portOrModule) => {
@@ -96,12 +96,12 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                         path: '/ut/impl'
                                     }
                                 }].filter(x => x),
-                                imagePullSecrets: [{
+                                imagePullSecrets: config.k8s.username && config.k8s.password && [{
                                     name: 'docker'
                                 }],
                                 containers: [{
                                     name: 'ut',
-                                    image: 'softwaregroup/impl-' + config.implementation + ':' + config.version,
+                                    image: (config.k8s.repository ? config.k8s.repository + '/' : '') + (config.k8s.image || ('ut/impl-' + config.implementation + ':' + config.version)),
                                     imagePullPolicy: 'IfNotPresent',
                                     args: [
                                         config.params.app,
@@ -150,7 +150,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                         },
                                         requests: {
                                             memory: '100M',
-                                            cpu: '0.20'
+                                            cpu: '0.10'
                                         }
                                     }
                                 }]
@@ -265,6 +265,22 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                 type: 'Opaque',
                 stringData: {
                     config: configFile.content
+                }
+            },
+            docker: config.k8s.username && config.k8s.password && {
+                apiVersion: 'v1',
+                kind: 'Secret',
+                metadata: {
+                    namespace: namespace.metadata.name,
+                    name: 'docker'
+                },
+                type: 'kubernetes.io/dockerconfigjson',
+                data: {
+                    '.dockerconfigjson': Buffer.from(JSON.stringify({
+                        auths: {
+                            [config.k8s.repository]: {auth: Buffer.from(`${config.k8s.username}:${config.k8s.password}`).toString('base64')}
+                        }
+                    })).toString('base64')
                 }
             }
         },

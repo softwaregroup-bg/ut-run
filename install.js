@@ -2,6 +2,7 @@ const create = require('./create');
 const {strOptions} = require('yaml/types');
 const yaml = require('yaml');
 const editConfig = require('ut-config').edit;
+const merge = require('ut-config').merge;
 
 module.exports = async function(serviceConfig, envConfig, assert) {
     const {broker, serviceBus, service, mergedConfig, log} = await create(envConfig);
@@ -18,11 +19,43 @@ module.exports = async function(serviceConfig, envConfig, assert) {
             if (!mergedConfig[utModule][layer]) mergedConfig[utModule][layer] = true;
         });
         const ports = await service.create(serviceConfig, mergedConfig, assert);
-        const finishForm = await editConfig({edit: {server: mergedConfig.run.edit.server}});
-        const editForm = await editConfig({edit: {server: mergedConfig.run.edit.server, id: mergedConfig.run.edit.id}});
+        const finishForm = await editConfig({log, edit: {server: mergedConfig.run.edit.server}});
+        const editForm = await editConfig({log, edit: {server: mergedConfig.run.edit.server, id: mergedConfig.run.edit.id}});
         let secret;
 
-        let schema = service.schema();
+        let schema = service.schema({
+            schema: {
+                properties: {
+                    k8s: {
+                        type: 'object',
+                        properties: {
+                            repository: {
+                                type: 'string',
+                                default: mergedConfig.k8s.minikube ? '' : 'nexus-dev.softwaregroup.com:5001'
+                            },
+                            username: {
+                                type: 'string'
+                            },
+                            password: {
+                                type: 'string'
+                            },
+                            image: {
+                                type: 'string',
+                                default: 'ut/impl-' + mergedConfig.implementation + ':' +
+                                    (mergedConfig.k8s.minikube ? 'minikube' : mergedConfig.version)
+                            }
+                        }
+                    }
+                }
+            },
+            uiSchema: {
+                k8s: {
+                    password: {
+                        'ui:widget': 'password'
+                    }
+                }
+            }
+        });
 
         editConfig({
             log,
@@ -31,6 +64,8 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                 ...schema,
                 id: editForm.id,
                 submit: async({payload}) => {
+                    merge(mergedConfig, {k8s: payload.k8s});
+                    delete payload.k8s;
                     secret = yaml.stringify(payload);
                     return {
                         payload: {
@@ -44,13 +79,14 @@ module.exports = async function(serviceConfig, envConfig, assert) {
 
         log && log.warn && log.warn('Edit configuration at ' + editForm.url.href);
 
-        const kustomize = await editConfig({
+        const install = await editConfig({
             log,
             edit: {
+                server: mergedConfig.run.edit.server,
                 handler: async({type}) => {
                     switch (type) {
                         case 'k8s':
-                            let result = service.kustomize({layers: mergedConfig.run.layers, config: mergedConfig, secret});
+                            let result = service.install({layers: mergedConfig.run.layers, config: mergedConfig, secret});
                             let lineWidth = strOptions.fold.lineWidth; // yet another stupid singleton
                             try {
                                 strOptions.fold.lineWidth = 1e6;
@@ -88,6 +124,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
             log,
             edit: {
                 id: finishForm.id,
+                server: mergedConfig.run.edit.server,
                 schema: {
                     $schema: 'http://json-schema.org/draft-07/schema#',
                     type: 'object',
@@ -125,18 +162,21 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                         payload: {
                             state: {
                                 schema: {
-                                    title: 'Null field example',
-                                    description: 'A short form with a null field'
-                                }
+                                    title: 'Configuration completed',
+                                    description: 'You can now close this page',
+                                    type: 'object',
+                                    properties: {}
+                                },
+                                buttons: []
                             }
                         }
                     };
                 }
             },
             formData: {
-                kubectl: 'kubectl apply -f ' + kustomize.href + '?type=k8s',
-                k8s: kustomize.href + '?type=k8s',
-                rc: kustomize.href
+                kubectl: 'kubectl apply -f ' + install.href + '?type=k8s',
+                k8s: install.href + '?type=k8s',
+                rc: install.href
             }
         });
 
