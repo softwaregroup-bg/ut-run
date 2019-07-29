@@ -31,7 +31,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                         properties: {
                             repository: {
                                 type: 'string',
-                                default: mergedConfig.k8s.minikube ? '' : 'nexus-dev.softwaregroup.com:5001'
+                                default: (mergedConfig.k8s && mergedConfig.k8s.minikube) ? '' : 'nexus-dev.softwaregroup.com:5001'
                             },
                             username: {
                                 type: 'string'
@@ -42,7 +42,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                             image: {
                                 type: 'string',
                                 default: 'ut/impl-' + mergedConfig.implementation + ':' +
-                                    (mergedConfig.k8s.minikube ? 'minikube' : mergedConfig.version)
+                                    ((mergedConfig.k8s && mergedConfig.k8s.minikube) ? 'minikube' : mergedConfig.version)
                             }
                         }
                     }

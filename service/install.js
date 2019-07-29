@@ -90,7 +90,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                     secret: {
                                         secretName: prev.secrets.rc.metadata.name
                                     }
-                                }, config.k8s.minikube && {
+                                }, config.k8s && config.k8s.minikube && {
                                     name: 'ut',
                                     hostPath: {
                                         path: '/ut/impl'
@@ -139,7 +139,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                     volumeMounts: [{
                                         name: 'rc',
                                         mountPath: ('/etc/ut_' + config.implementation.replace(/[-/\\]/g, '_') + '_' + config.params.env).toLowerCase()
-                                    }, config.k8s.minikube && {
+                                    }, config.k8s && config.k8s.minikube && {
                                         name: 'ut',
                                         mountPath: '/ut/impl'
                                     }].filter(x => x),
