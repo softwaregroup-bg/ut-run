@@ -6,9 +6,9 @@
     "chokidar": "2.0.4",
     "loadtest": "3.0.4",
     "ut-config": "^7.3.0",
-    "ut-bus": "^7.3.0",
+    "ut-bus": "^7.4.1",
     "ut-log": "^6.5.3",
-    "ut-port": "^6.13.0",
+    "ut-port": "^6.13.2",
     "yaml": "1.6.0"
   },
   "devDependencies": {
