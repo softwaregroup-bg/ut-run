@@ -41,6 +41,8 @@
   },
   "description": "UT run module",
   "browser": {
+    "./install": "./browser/install",
+    "./service/install": false,
     "chokidar": false
   },
   "repository": {
