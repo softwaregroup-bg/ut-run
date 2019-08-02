@@ -1,18 +1,16 @@
 {
   "name": "ut-run",
-  "version": "10.6.1",
+  "version": "10.7.0-k8s.11",
   "dependencies": {
-    "ajv": "6.10.0",
     "browser-process-hrtime": "1.0.0",
     "chokidar": "2.0.4",
-    "jsoneditor": "6.1.0",
     "loadtest": "3.0.4",
-    "minimist": "1.2.0",
-    "rc": "1.2.8",
-    "ut-bus": "^7.3.0",
+    "ut-config": "^7.3.0",
+    "ut-bus": "^7.4.1",
     "ut-log": "^6.5.3",
-    "ut-port": "^6.12.3",
-    "ut-merge": "^1.0.1"
+    "ut-port": "^6.13.2",
+    "ut-merge": "^1.0.1",
+    "yaml": "1.6.0"
   },
   "devDependencies": {
     "tap": "^12.6.2",
@@ -43,6 +41,8 @@
   },
   "description": "UT run module",
   "browser": {
+    "./install": "./browser/install",
+    "./service/install": false,
     "chokidar": false
   },
   "repository": {

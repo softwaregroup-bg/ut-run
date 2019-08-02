@@ -16,6 +16,7 @@ Sample run of implementation is `node index`.
 
 The recommended filesystem structure, when running only one service looks like this:
 
+```text
     implementation
     ├───index.js
     └───server
@@ -24,6 +25,7 @@ The recommended filesystem structure, when running only one service looks like t
         ├──prod.json     - environment configuration file
         ├──test.json     - environment configuration file
         └──dev.json      - environment configuration file
+```
 
 The file `index.js` in the root is used to start the implementation.
 Typical `index.js` file looks like:
@@ -45,8 +47,10 @@ node index {app} {method} {env}
 
 - `{app}` - specifies the name of sub-folder, where to find the app/service to
   start. Defaults to 'server'.
-- `{method}` - specifies the way of running, currently only the 'debug' is
-  supported, while in future other modes can be supported. Defaults to 'debug'.
+- `{method}` - specifies the way of running, defaults to 'debug'. The following
+  methhods are available:
+  - `debug` - start the services
+  - `install` - generate configuration for various installation targets
 - `{env}` - specifies the name of configuration file related to the environment.
   Environments like 'dev', 'prod' and 'test' are commonly used. Defaults to 'dev'.
 
@@ -59,6 +63,7 @@ UT_APP=server UT_METHOD=debug UT_ENV=dev node index
 When multiple services exists in a single implementation, usually the folder
 structure is:
 
+```text
     implementation
     │   index.js
     └───server
@@ -74,6 +79,7 @@ structure is:
             ├──prod.json
             ├──test.json
             └──dev.json
+```
 
 To run specific service in such cases, either set `UT_APP=server/service1` or
 pass as argument `node index server/service1`
@@ -306,28 +312,23 @@ module.exports = [
 - optionally in the configuration one could provide information about automatic
   service discovery like follows:
 
-    ```json
-        {
-            "registry": {
-                "type": "consul",
-                "params": {}
-            }
-        }
-    ```
+  ```json
+      {
+          "registry": {
+              "type": "consul",
+              "params": {}
+          }
+      }
+  ```
 
-    If you set `registry: true` then consul will be used by default trying to
-    connect to the default consul port on `8500`. Currently only consul is
-    supported as a service registry backend. For `params` specification please
-    refer to the available consul initialization properties
-    [here](https://github.com/silas/node-consul#consuloptions).
+  If you set `registry: true` then consul will be used by default trying to
+  connect to the default consul port on `8500`. Currently only consul is
+  supported as a service registry backend. For `params` specification please
+  refer to the available consul initialization properties
+  [here](https://github.com/silas/node-consul#consuloptions).
 
-    In order not to use any automatic service discovery just set
-    `registry: false` or completely omit the `registry` property.
-
-### Additional environment variables
-
-- UT_BUS_MODE - Allow to run broker and bus separately.
-  Possible values are 'broker', 'bus'
+  In order not to use any automatic service discovery just set
+  `registry: false` or completely omit the `registry` property.
 
 ### Working directory
 
@@ -345,21 +346,21 @@ ut-run provides a standard way of structuring automated tests.
 
 ### Properties
 
-- type: the type of the test (integration)
-- name: the name of the test ('Add test', 'test.test')
-- server: the tested server, it will be started before the test starts and
+- `type`: the type of the test (integration)
+- `name`: the name of the test ('Add test', 'test.test')
+- `server`: the tested server, it will be started before the test starts and
   stopped after the test finishes
-- serverConfig: specific server configuration
-- client: the tested client, it will be started before the test starts and
+- `serverConfig`: specific server configuration
+- `client`: the tested client, it will be started before the test starts and
   stopped after the test finishes
-- clientConfig: specific client configuration
-- services: one or set of services to be started before the server and to be
+- `clientConfig`: specific client configuration
+- `services`: one or set of services to be started before the server and to be
   stopped after the test finishes (for example different implementation)
-- jobs: set of tests to be executed (a specified module could be required and
+- `jobs`: set of tests to be executed (a specified module could be required and
   all tests in it will be run)
-- exclude: used with jobs, exludes tests from the run, could be a string,
+- `exclude`: used with jobs, exludes tests from the run, could be a string,
   array or regExp
-- steps: the test steps (login, add user, etc.)
+- `steps`: the test steps (login, add user, etc.)
 
 ### Sample test script with jobs
 

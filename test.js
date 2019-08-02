@@ -423,21 +423,40 @@ module.exports = function(params, cache) {
     function stop(assert, x) {
         var promise = Promise.resolve();
         var steps = [];
+        var current;
         var step = (name, fn) => {
-            promise = promise.then(fn).then(result => {
-                steps.push(name);
-                return result;
-            }, error => {
-                assert.comment(steps.join('\r\n'));
-                assert.fail(name);
-                return error;
-            });
+            promise = promise
+                .then(value => {
+                    current = name;
+                    return value;
+                })
+                .then(fn)
+                .then(result => {
+                    steps.push(name);
+                    return result;
+                }, error => {
+                    assert.comment(steps.join('\r\n'));
+                    assert.fail(name);
+                    return error;
+                });
         };
 
         x.ports.forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
         x.serviceBus && step('bus', () => x.serviceBus.destroy());
         x.broker && step('broker', () => x.broker.destroy());
-        return promise.then(() => assert.ok(true, 'destroy[' + steps.join(',') + ']'));
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new Error('Timed out on ' + current + '.destroy'));
+            }, 10000);
+            promise
+                .then(value => {
+                    clearTimeout(timeout);
+                    assert.ok(true, 'destroy[' + steps.join(',') + ']');
+                    resolve(value);
+                    return value;
+                })
+                .catch(reject);
+        });
     }
 
     var stopAll = function(test) {
@@ -460,6 +479,8 @@ module.exports = function(params, cache) {
     };
 
     var running = function() {
+        tap.setTimeout(5000);
+        tap.on('timeout', () => process.exit(1)); // eslint-disable-line no-process-exit
         setTimeout(() => log({
             error: function() {
                 tap.comment(util.format(...arguments));

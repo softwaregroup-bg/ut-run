@@ -311,6 +311,11 @@ function platform1(...platformApi) {
         // can be hot reloaded if run.hotReload=true in the configuration
         [require.resolve('ut-module4'), ...customization],
 
+        // if array is passed the first element can be array of 2 strings,
+        // the first string is the path to the module and the second is
+        // the path to the module package.json
+        [[require.resolve('ut-module5'),
+          require.resolve('ut-module5/package.json')], ...customization],
 
     ];
 };
@@ -339,6 +344,8 @@ module.exports = function platform1(...platformApi) {
         require('ut-module2')(...customization),
         require.resolve('ut-module3'),
         [require.resolve('ut-module4'), ...customization],
+        [[require.resolve('ut-module5'),
+          require.resolve('ut-module5/package.json')], ...customization],
     ];
 };
 ```
