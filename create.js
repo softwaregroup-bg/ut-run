@@ -1,5 +1,5 @@
 /* eslint no-process-env:0 */
-const merge = require('ut-port/merge');
+const merge = require('ut-merge');
 const serverRequire = require;
 const path = require('path');
 const {Broker, ServiceBus} = require('ut-bus');
