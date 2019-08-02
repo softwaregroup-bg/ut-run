@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "10.6.0",
+  "version": "10.6.1",
   "dependencies": {
     "ajv": "6.10.0",
     "browser-process-hrtime": "1.0.0",
