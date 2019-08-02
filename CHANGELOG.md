@@ -1,3 +1,12 @@
+# [10.7.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.6.1...v10.7.0) (2019-08-02)
+
+
+### Features
+
+* implement install method ([38c8b35](https://github.com/softwaregroup-bg/ut-run/commit/38c8b35))
+
+
+
 ## [10.6.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.6.0...v10.6.1) (2019-08-02)
 
 
