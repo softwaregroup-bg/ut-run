@@ -3,18 +3,18 @@
   "version": "10.7.0",
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
-    "chokidar": "2.0.4",
-    "loadtest": "3.0.4",
-    "ut-config": "^7.3.0",
-    "ut-bus": "^7.4.1",
-    "ut-log": "^6.5.3",
-    "ut-port": "^6.13.2",
-    "ut-merge": "^1.0.1",
+    "chokidar": "3.0.2",
+    "loadtest": "3.0.8",
+    "ut-config": "^7.4.2",
+    "ut-bus": "^7.4.2",
+    "ut-log": "^6.5.5",
+    "ut-port": "^6.14.0",
+    "ut-merge": "^1.0.2",
     "yaml": "1.6.0"
   },
   "devDependencies": {
-    "tap": "^12.6.2",
-    "ut-tools": "^6.21.0"
+    "tap": "^14.6.1",
+    "ut-tools": "^6.23.2"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.1.0"
