@@ -13,7 +13,7 @@
     "yaml": "1.6.0"
   },
   "devDependencies": {
-    "tap": "^14.6.1",
+    "tap": "^13.1.11",
     "ut-tools": "^6.23.2"
   },
   "peerDependencies": {
