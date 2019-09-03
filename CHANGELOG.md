@@ -1,3 +1,14 @@
+## [10.7.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.7.0...v10.7.1) (2019-09-03)
+
+
+### Bug Fixes
+
+* back to tap 12 ([abdbe08](https://github.com/softwaregroup-bg/ut-run/commit/abdbe08))
+* back to tap 13 ([9a33912](https://github.com/softwaregroup-bg/ut-run/commit/9a33912))
+* update deps ([bfeaf66](https://github.com/softwaregroup-bg/ut-run/commit/bfeaf66))
+
+
+
 # [10.7.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.6.1...v10.7.0) (2019-08-02)
 
 
