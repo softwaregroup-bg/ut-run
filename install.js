@@ -43,6 +43,28 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                                 type: 'string',
                                 default: 'ut/impl-' + mergedConfig.implementation + ':' +
                                     ((mergedConfig.k8s && mergedConfig.k8s.minikube) ? 'minikube' : mergedConfig.version)
+                            },
+                            namespace: {
+                                type: 'string',
+                                default: mergedConfig.implementation + '-' + mergedConfig.params.env
+                            },
+                            istio: {
+                                type: 'boolean',
+                                title: 'Enable istio',
+                                default: true
+                            },
+                            node: {
+                                type: 'string',
+                                title: 'Install only on node'
+                            },
+                            architecture: {
+                                type: 'string',
+                                title: 'Install only on architecture'
+                            },
+                            pull: {
+                                type: 'string',
+                                title: 'Image pull policy',
+                                enum: ['Always', 'IfNotPresent', 'Never']
                             }
                         }
                     }
@@ -51,7 +73,29 @@ module.exports = async function(serviceConfig, envConfig, assert) {
             uiSchema: {
                 k8s: {
                     password: {
-                        'ui:widget': 'password'
+                        'ui:widget': 'password',
+                        'ui:emptyValue': ''
+                    },
+                    repository: {
+                        'ui:emptyValue': ''
+                    },
+                    username: {
+                        'ui:emptyValue': ''
+                    },
+                    image: {
+                        'ui:emptyValue': ''
+                    },
+                    namespace: {
+                        'ui:emptyValue': ''
+                    },
+                    node: {
+                        'ui:emptyValue': ''
+                    },
+                    architecture: {
+                        'ui:emptyValue': ''
+                    },
+                    pull: {
+                        'ui:emptyValue': ''
                     }
                 }
             }

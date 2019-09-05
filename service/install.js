@@ -32,7 +32,10 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
         apiVersion: 'v1',
         kind: 'Namespace',
         metadata: {
-            name: config.k8s.namespace || (config.implementation + '-' + config.params.env)
+            name: config.k8s.namespace || (config.implementation + '-' + config.params.env),
+            labels: {
+                'istio-injection': 'enabled'
+            }
         }
     };
     const result = portsAndModules.reduce((prev, portOrModule) => {
@@ -77,6 +80,8 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                     'sidecar.istio.io/inject': 'true'
                                 },
                                 labels: {
+                                    'app': deploymentName,
+                                    'version': config.version,
                                     'app.kubernetes.io/name': deploymentName,
                                     'app.kubernetes.io/version': config.version,
                                     'app.kubernetes.io/instance': config.implementation + '_' + config.version,
@@ -85,6 +90,12 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                 }
                             },
                             spec: {
+                                ...(config.k8s.node || config.k8s.architecture) && {
+                                    nodeSelector: {
+                                        ...config.k8s.node && {'kubernetes.io/hostname': config.k8s.node},
+                                        ...config.k8s.architecture && {'kubernetes.io/arch': config.k8s.architecture}
+                                    }
+                                },
                                 volumes: [{
                                     name: 'rc',
                                     secret: {
@@ -102,7 +113,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                 containers: [{
                                     name: 'ut',
                                     image: (config.k8s.repository ? config.k8s.repository + '/' : '') + (config.k8s.image || ('ut/impl-' + config.implementation + ':' + config.version)),
-                                    imagePullPolicy: 'IfNotPresent',
+                                    imagePullPolicy: config.k8s.pull || undefined,
                                     args: [
                                         config.params.app,
                                         '--run.hotReload=0',
