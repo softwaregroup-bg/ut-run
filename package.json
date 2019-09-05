@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "10.7.1",
+  "version": "10.8.0",
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
     "chokidar": "3.0.2",

@@ -1,3 +1,17 @@
+# [10.8.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.7.1...v10.8.0) (2019-09-05)
+
+
+### Bug Fixes
+
+* update ut-config ([42384e6](https://github.com/softwaregroup-bg/ut-run/commit/42384e6))
+
+
+### Features
+
+* add more k8s install options ([4a0bfc3](https://github.com/softwaregroup-bg/ut-run/commit/4a0bfc3))
+
+
+
 ## [10.7.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.7.0...v10.7.1) (2019-09-03)
 
 
