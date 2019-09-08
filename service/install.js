@@ -77,7 +77,9 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         template: {
                             metadata: {
                                 annotations: {
-                                    'sidecar.istio.io/inject': 'true'
+                                    'sidecar.istio.io/inject': true,
+                                    'prometheus.io/scrape': true,
+                                    'prometheus.io/port': 8090
                                 },
                                 labels: {
                                     'app': deploymentName,
@@ -120,6 +122,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                         deploymentName === 'console'
                                             ? '--utLog.streams.udp=0'
                                             : '--utLog.streams.udp.streamConfig.host=utportconsole-udp-log',
+                                        '--utBus.serviceBus.jsonrpc.metrics=true',
                                         '--utBus.serviceBus.jsonrpc.port=8090',
                                         '--utBus.serviceBus.jsonrpc.domain=0',
                                         '--service=' + deploymentName
