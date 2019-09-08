@@ -1,3 +1,12 @@
+## [10.8.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.8.0...v10.8.1) (2019-09-08)
+
+
+### Bug Fixes
+
+* expose metrics ([7115889](https://github.com/softwaregroup-bg/ut-run/commit/7115889))
+
+
+
 # [10.8.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.7.1...v10.8.0) (2019-09-05)
 
 
