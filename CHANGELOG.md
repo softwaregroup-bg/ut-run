@@ -1,3 +1,12 @@
+## [10.9.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.9.0...v10.9.1) (2019-09-09)
+
+
+### Bug Fixes
+
+* fix annotations ([01a8da2](https://github.com/softwaregroup-bg/ut-run/commit/01a8da2))
+
+
+
 # [10.9.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.8.1...v10.9.0) (2019-09-08)
 
 
