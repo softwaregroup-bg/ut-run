@@ -77,9 +77,10 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         template: {
                             metadata: {
                                 annotations: {
-                                    'sidecar.istio.io/inject': true,
-                                    'prometheus.io/scrape': true,
-                                    'prometheus.io/port': 8090
+                                    'sidecar.istio.io/inject': 'true',
+                                    'prometheus.io/scrape': 'true',
+                                    'prometheus.io/port': '8090',
+                                    'prometheus.io/scheme': 'http'
                                 },
                                 labels: {
                                     'app': deploymentName,
