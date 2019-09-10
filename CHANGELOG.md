@@ -1,3 +1,12 @@
+## [10.9.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.9.1...v10.9.2) (2019-09-10)
+
+
+### Bug Fixes
+
+* update ut-port ([66982e5](https://github.com/softwaregroup-bg/ut-run/commit/66982e5))
+
+
+
 ## [10.9.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.9.0...v10.9.1) (2019-09-09)
 
 
