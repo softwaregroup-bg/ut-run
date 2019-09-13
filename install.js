@@ -2,7 +2,7 @@ const create = require('./create');
 const {strOptions} = require('yaml/types');
 const yaml = require('yaml');
 const editConfig = require('ut-config').edit;
-const merge = require('ut-config').merge;
+const merge = require('ut-function.merge');
 
 module.exports = async function(serviceConfig, envConfig, assert) {
     const {broker, serviceBus, service, mergedConfig, log} = await create(envConfig);
@@ -50,7 +50,12 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                             },
                             istio: {
                                 type: 'boolean',
-                                title: 'Enable istio',
+                                title: 'Enable Istio',
+                                default: true
+                            },
+                            fluentbit: {
+                                type: 'boolean',
+                                title: 'Install Fluent Bit',
                                 default: true
                             },
                             node: {
@@ -110,7 +115,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                 submit: async({payload}) => {
                     merge(mergedConfig, {k8s: payload.k8s});
                     delete payload.k8s;
-                    secret = yaml.stringify(payload);
+                    secret = payload;
                     return {
                         payload: {
                             redirect: finishForm.url.pathname
@@ -140,7 +145,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                                     ...Object.values(result.deployments),
                                     ...Object.values(result.services),
                                     ...Object.values(result.ingresses)
-                                ].map(item => yaml.stringify(item));
+                                ].filter(x => x).map(item => yaml.stringify(item));
                             } finally {
                                 strOptions.fold.lineWidth = lineWidth;
                             }
@@ -153,7 +158,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                             };
                         default:
                             return {
-                                payload: secret,
+                                payload: yaml.stringify(secret),
                                 headers: {
                                     'Content-Type': 'text/plain',
                                     'Content-Disposition': 'inline'
@@ -201,7 +206,6 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                     }
                 },
                 submit: async({payload}) => {
-                    secret = yaml.stringify(payload);
                     return {
                         payload: {
                             state: {

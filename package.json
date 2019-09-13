@@ -9,7 +9,7 @@
     "ut-bus": "^7.5.0",
     "ut-log": "^6.5.5",
     "ut-port": "^6.14.2",
-    "ut-merge": "^1.0.2",
+    "ut-function.merge": "^1.2.0",
     "yaml": "1.6.0"
   },
   "devDependencies": {

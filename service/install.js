@@ -1,5 +1,8 @@
 const crypto = require('crypto');
 const fs = require('fs');
+const yaml = require('yaml');
+const merge = require('ut-function.merge');
+const fluentbit = require('./fluentbit');
 
 const hash = content => crypto
     .createHash('sha256')
@@ -24,6 +27,40 @@ const readConfig = filename => {
 };
 
 module.exports = ({portsAndModules, log, layers, config, secret}) => {
+    if (secret) {
+        secret = yaml.stringify(merge(secret, {
+            run: {
+                hotReload: false
+            },
+            utBus: {
+                serviceBus: {
+                    jsonrpc: {
+                        metrics: true,
+                        port: 8090,
+                        domain: false
+                    }
+                }
+            },
+            utLog: {
+                streams: {
+                    udp: {
+                        streamConfig: {
+                            host: 'utportconsole-udp-log'
+                        }
+                    },
+                    fluentbit: config.k8s.fluentbit && {
+                        level: 'trace',
+                        stream: '../fluentdStream',
+                        streamConfig: {
+                            host: 'fluent-bit',
+                            port: 24224
+                        },
+                        type: 'raw'
+                    }
+                }
+            }
+        }));
+    }
     const configFile = secret ? {
         content: secret,
         hash: hash(secret)
@@ -119,15 +156,9 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                     imagePullPolicy: config.k8s.pull || undefined,
                                     args: [
                                         config.params.app,
-                                        '--run.hotReload=0',
-                                        deploymentName === 'console'
-                                            ? '--utLog.streams.udp=0'
-                                            : '--utLog.streams.udp.streamConfig.host=utportconsole-udp-log',
-                                        '--utBus.serviceBus.jsonrpc.metrics=true',
-                                        '--utBus.serviceBus.jsonrpc.port=8090',
-                                        '--utBus.serviceBus.jsonrpc.domain=0',
-                                        '--service=' + deploymentName
-                                    ],
+                                        '--service=' + deploymentName,
+                                        (deploymentName === 'console') && '--utLog.streams.udp=0'
+                                    ].filter(x => x),
                                     env: [{
                                         name: 'UT_ENV',
                                         value: config.params.env
@@ -299,8 +330,12 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                 }
             }
         },
-        services: {},
-        deployments: {},
+        services: {
+            fluentbit: config.k8s.fluentbit && fluentbit({namespace: namespace.metadata.name, ...config.k8s.fluentbit}).service
+        },
+        deployments: {
+            fluentbit: config.k8s.fluentbit && fluentbit({namespace: namespace.metadata.name, ...config.k8s.fluentbit}).deployment
+        },
         ingresses: {},
         errors: []
     });
