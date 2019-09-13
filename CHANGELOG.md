@@ -1,3 +1,12 @@
+## [10.10.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.1...v10.10.2) (2019-09-13)
+
+
+### Bug Fixes
+
+* improve logging ([bc3bb3a](https://github.com/softwaregroup-bg/ut-run/commit/bc3bb3a))
+
+
+
 ## [10.10.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.0...v10.10.1) (2019-09-13)
 
 
