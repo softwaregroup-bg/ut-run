@@ -75,6 +75,12 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             }
         }
     };
+    const nodeSelector = (config.k8s.node || config.k8s.architecture) && {
+        nodeSelector: {
+            ...config.k8s.node && {'kubernetes.io/hostname': config.k8s.node},
+            ...config.k8s.architecture && {'kubernetes.io/arch': config.k8s.architecture}
+        }
+    };
     const result = portsAndModules.reduce((prev, portOrModule) => {
         const layer = portOrModule.config.pkg.layer;
         const ports = (portOrModule.config.k8s && portOrModule.config.k8s.ports) || [];
@@ -130,12 +136,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                 }
                             },
                             spec: {
-                                ...(config.k8s.node || config.k8s.architecture) && {
-                                    nodeSelector: {
-                                        ...config.k8s.node && {'kubernetes.io/hostname': config.k8s.node},
-                                        ...config.k8s.architecture && {'kubernetes.io/arch': config.k8s.architecture}
-                                    }
-                                },
+                                ...nodeSelector,
                                 volumes: [{
                                     name: 'rc',
                                     secret: {
@@ -331,10 +332,18 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             }
         },
         services: {
-            fluentbit: config.k8s.fluentbit && fluentbit({namespace: namespace.metadata.name, ...config.k8s.fluentbit}).service
+            fluentbit: config.k8s.fluentbit && fluentbit({
+                namespace: namespace.metadata.name,
+                nodeSelector,
+                ...config.k8s.fluentbit
+            }).service
         },
         deployments: {
-            fluentbit: config.k8s.fluentbit && fluentbit({namespace: namespace.metadata.name, ...config.k8s.fluentbit}).deployment
+            fluentbit: config.k8s.fluentbit && fluentbit({
+                namespace: namespace.metadata.name,
+                nodeSelector,
+                ...config.k8s.fluentbit
+            }).deployment
         },
         ingresses: {},
         errors: []

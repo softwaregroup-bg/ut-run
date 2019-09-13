@@ -1,5 +1,8 @@
 module.exports = ({
     namespace,
+    nodeSelector,
+    host = 'elasticsearch',
+    port = '9200',
     version = '1.2.2'
 }) => {
     const labels = {
@@ -7,7 +10,7 @@ module.exports = ({
         'app.kubernetes.io/version': version,
         'app.kubernetes.io/instance': 'fluent-bit_' + version
     };
-    return {
+    return host && port && version && {
         service: {
             apiVersion: 'v1',
             kind: 'Service',
@@ -23,7 +26,7 @@ module.exports = ({
                     protocol: 'TCP',
                     name: 'forward'
                 }],
-                selector: labels
+                selector: {...labels}
             }
         },
         deployment: {
@@ -32,16 +35,16 @@ module.exports = ({
             metadata: {
                 namespace,
                 name: 'fluent-bit',
-                labels
+                labels: {...labels}
             },
             spec: {
                 replicas: 1,
                 selector: {
-                    matchLabels: labels
+                    matchLabels: {...labels}
                 },
                 template: {
                     metadata: {
-                        labels: labels,
+                        labels: {...labels},
                         annotations: {
                             'prometheus.io/scrape': 'true',
                             'prometheus.io/port': '2020',
@@ -49,9 +52,7 @@ module.exports = ({
                         }
                     },
                     spec: {
-                        nodeSelector: {
-                            'kubernetes.io/hostname': 'cisco'
-                        },
+                        ...nodeSelector,
                         terminationGracePeriodSeconds: 10,
                         containers: [{
                             name: 'fluent-bit',
@@ -64,9 +65,9 @@ module.exports = ({
                                 '-o',
                                 'es',
                                 '-p',
-                                'Host=bgs-vlx-dv-03',
+                                'Host=' + host,
                                 '-p',
-                                'Port=39200',
+                                'Port=' + port,
                                 '-p',
                                 'Index=ut',
                                 '-p',

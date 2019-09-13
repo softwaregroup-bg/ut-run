@@ -44,19 +44,14 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                                 default: 'ut/impl-' + mergedConfig.implementation + ':' +
                                     ((mergedConfig.k8s && mergedConfig.k8s.minikube) ? 'minikube' : mergedConfig.version)
                             },
+                            pull: {
+                                type: 'string',
+                                title: 'Image pull policy',
+                                enum: ['Always', 'IfNotPresent', 'Never']
+                            },
                             namespace: {
                                 type: 'string',
                                 default: mergedConfig.implementation + '-' + mergedConfig.params.env
-                            },
-                            istio: {
-                                type: 'boolean',
-                                title: 'Enable Istio',
-                                default: true
-                            },
-                            fluentbit: {
-                                type: 'boolean',
-                                title: 'Install Fluent Bit',
-                                default: true
                             },
                             node: {
                                 type: 'string',
@@ -66,10 +61,24 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                                 type: 'string',
                                 title: 'Install only on architecture'
                             },
-                            pull: {
-                                type: 'string',
-                                title: 'Image pull policy',
-                                enum: ['Always', 'IfNotPresent', 'Never']
+                            istio: {
+                                type: 'boolean',
+                                title: 'Enable Istio',
+                                default: true
+                            },
+                            fluentbit: {
+                                type: 'object',
+                                title: 'Fluent Bit configuration',
+                                properties: {
+                                    host: {
+                                        type: 'string',
+                                        title: 'Elasticsearch host'
+                                    },
+                                    port: {
+                                        type: ['integer', 'null'],
+                                        title: 'Elasticsearch port'
+                                    }
+                                }
                             }
                         }
                     }
