@@ -1,3 +1,12 @@
+# [10.10.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.9.2...v10.10.0) (2019-09-13)
+
+
+### Features
+
+* add fluentbit install support ([b941751](https://github.com/softwaregroup-bg/ut-run/commit/b941751))
+
+
+
 ## [10.9.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.9.1...v10.9.2) (2019-09-10)
 
 
