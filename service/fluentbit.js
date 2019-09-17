@@ -71,7 +71,7 @@ module.exports = ({
                                 '-p',
                                 'Index=ut',
                                 '-p',
-                                'Type=log',
+                                'Type=_doc',
                                 '-p',
                                 'Buffer_Size=64KB',
                                 '-p',
