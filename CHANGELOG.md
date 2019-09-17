@@ -1,3 +1,12 @@
+## [10.10.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.2...v10.10.3) (2019-09-17)
+
+
+### Bug Fixes
+
+* align event logging ([51f445a](https://github.com/softwaregroup-bg/ut-run/commit/51f445a))
+
+
+
 ## [10.10.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.1...v10.10.2) (2019-09-13)
 
 
