@@ -1,3 +1,12 @@
+## [10.10.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.3...v10.10.4) (2019-09-17)
+
+
+### Bug Fixes
+
+* elasticsearch 7 compatibility ([2f85d0d](https://github.com/softwaregroup-bg/ut-run/commit/2f85d0d))
+
+
+
 ## [10.10.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.2...v10.10.3) (2019-09-17)
 
 
