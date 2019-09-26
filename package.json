@@ -7,7 +7,7 @@
     "loadtest": "3.0.8",
     "ut-config": "^7.4.4",
     "ut-bus": "^7.5.1",
-    "ut-log": "^6.5.8",
+    "ut-log": "^6.6.0",
     "ut-port": "^6.14.4",
     "ut-function.merge": "^1.2.0",
     "yaml": "1.6.0"

@@ -90,7 +90,9 @@ module.exports = function(envConfig) {
             service: mergedConfig.service,
             workDir: mergedConfig.workDir,
             version: mergedConfig.version,
+            impl: mergedConfig.implementation,
             env: mergedConfig.params && mergedConfig.params.env,
+            udf: mergedConfig.utLog && mergedConfig.utLog.udf,
             transformData: (mergedConfig.utLog && (mergedConfig.utLog.transformData || {})),
             streams: Object.values(mergedConfig.utLog.streams)
         });
