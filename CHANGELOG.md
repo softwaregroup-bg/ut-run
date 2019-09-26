@@ -1,3 +1,12 @@
+## [10.10.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.4...v10.10.5) (2019-09-26)
+
+
+### Bug Fixes
+
+* pass udf and impl to logger ([a7f0274](https://github.com/softwaregroup-bg/ut-run/commit/a7f0274))
+
+
+
 ## [10.10.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.3...v10.10.4) (2019-09-17)
 
 
