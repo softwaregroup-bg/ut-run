@@ -1,3 +1,12 @@
+## [10.10.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.5...v10.10.6) (2019-09-28)
+
+
+### Bug Fixes
+
+* expose service for port methods ([cee23c3](https://github.com/softwaregroup-bg/ut-run/commit/cee23c3))
+
+
+
 ## [10.10.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.4...v10.10.5) (2019-09-26)
 
 
