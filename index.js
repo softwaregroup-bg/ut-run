@@ -5,11 +5,8 @@ const {load} = require('ut-config');
 
 module.exports = {
     getConfig: load,
-    runParams: async function(params = {}, test) {
-        if (process.type === 'browser') {
-            return serverRequire('ut-front/electron')({main: params.root});
-        }
-        const config = await load(params);
+    runParams: async function(params = {}, test, config) {
+        if (!config) config = await load(params);
         const method = config.params.method;
         if (config.cluster && config.broker && config.broker.socket) {
             var cluster = serverRequire('cluster');
@@ -39,12 +36,33 @@ module.exports = {
         return methods[method](main, config, test);
     },
     run: async function(params, test) {
+        if (process.type === 'browser') {
+            return serverRequire('ut-front/electron')({main: params.root});
+        }
+        let config = {service: 'undefined'};
         try {
-            const result = await this.runParams(params, test);
+            config = await load(params);
+            const result = await this.runParams(params, test, config);
             process.send && process.send('ready');
             return result;
         } catch (err) {
-            console.error(err);
+            console.error(JSON.stringify({
+                error: {...err, stack: err.stack.split('\n')},
+                level: 50,
+                service: config.service,
+                pid: process.pid,
+                hostname: require('os').hostname(),
+                name: 'run',
+                context: 'run',
+                mtd: 'error',
+                $meta: {
+                    method: 'utRun.run',
+                    mtid: 'error'
+                },
+                msg: err.message,
+                time: (new Date()).toISOString(),
+                v: 0
+            }));
             process.exit(1); // this should be removed
         }
     }
