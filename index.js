@@ -56,7 +56,7 @@ module.exports = {
                 context: 'run',
                 mtd: 'error',
                 $meta: {
-                    opcode: 'process.exit',
+                    method: 'process.exit',
                     mtid: 'error'
                 },
                 msg: err.message,
