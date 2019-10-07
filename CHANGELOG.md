@@ -1,3 +1,12 @@
+## [10.10.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.7...v10.10.8) (2019-10-07)
+
+
+### Bug Fixes
+
+* format global errors in json format ([#71](https://github.com/softwaregroup-bg/ut-run/issues/71)) ([911eb39](https://github.com/softwaregroup-bg/ut-run/commit/911eb39))
+
+
+
 ## [10.10.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.6...v10.10.7) (2019-10-02)
 
 
