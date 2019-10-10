@@ -278,7 +278,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                 };
             };
             if (deploymentNames.length === 1) {
-                portOrModule.config.id && addService({
+                portOrModule.config.id && portOrModule.config.type !== 'module' && addService({
                     name: portOrModule.config.id.replace(/\./g, '-') + '-service',
                     port: 8090,
                     targetPort: 'http-jsonrpc'
