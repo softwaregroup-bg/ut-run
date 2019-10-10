@@ -1,3 +1,12 @@
+## [10.10.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.8...v10.10.9) (2019-10-10)
+
+
+### Bug Fixes
+
+* do not create services for modules ([924f8c6](https://github.com/softwaregroup-bg/ut-run/commit/924f8c6))
+
+
+
 ## [10.10.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.7...v10.10.8) (2019-10-07)
 
 
