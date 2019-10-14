@@ -1,3 +1,12 @@
+## [10.10.10](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.9...v10.10.10) (2019-10-14)
+
+
+### Bug Fixes
+
+* pass location ([c3ea5a7](https://github.com/softwaregroup-bg/ut-run/commit/c3ea5a7))
+
+
+
 ## [10.10.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.8...v10.10.9) (2019-10-10)
 
 
