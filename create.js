@@ -91,6 +91,7 @@ module.exports = function(envConfig) {
             workDir: mergedConfig.workDir,
             version: mergedConfig.version,
             impl: mergedConfig.implementation,
+            location: mergedConfig.location,
             env: mergedConfig.params && mergedConfig.params.env,
             udf: mergedConfig.utLog && mergedConfig.utLog.udf,
             transformData: (mergedConfig.utLog && (mergedConfig.utLog.transformData || {})),
