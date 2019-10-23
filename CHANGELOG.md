@@ -1,3 +1,12 @@
+# [10.11.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.11...v10.11.0) (2019-10-23)
+
+
+### Features
+
+* update ut-bus ([9988733](https://github.com/softwaregroup-bg/ut-run/commit/9988733))
+
+
+
 ## [10.10.11](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.10...v10.10.11) (2019-10-14)
 
 
