@@ -1,3 +1,12 @@
+## [10.11.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.11.0...v10.11.1) (2019-10-25)
+
+
+### Bug Fixes
+
+* sort keys in the configuration ([1547d1a](https://github.com/softwaregroup-bg/ut-run/commit/1547d1a))
+
+
+
 # [10.11.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.10.11...v10.11.0) (2019-10-23)
 
 
