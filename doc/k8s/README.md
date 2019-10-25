@@ -54,10 +54,10 @@ Use a browser to edit the configuration:
 
 When ready, press the `submit` button
 
-## Install the implementation in the cluster
+## Install the application in the cluster
 
 Use the next screen to obtain the command for installing the
-implementation in the cluster:
+application in the cluster:
 
 ![copy command](06-copy.png)
 

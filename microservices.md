@@ -25,7 +25,7 @@ We will use the following definitions:
 * `Business process` / `workflow` - part of the business logic, that operates
   on top of the `data integrity logic` and coordinates it. Note that there is
   no strict boundary between the `business process` and the `data integrity logic`,
-  but often the `data integrity logic` does not change between implementations,
+  but often the `data integrity logic` does not change between applications,
   while the `business process` is more varying.
 
 * `Microservice platform` - the platform that is going to run the software.
@@ -267,8 +267,8 @@ function validation() {
     };
 }
 
-// group handlers as layers, layers as modules and modules as implementation
-// The implementation function will receive some platform API for the
+// group handlers as layers, layers as modules and modules as application
+// The application function will receive some platform API for the
 // platform named 'platform1'
 function platform1(...platformApi) {
     // extend platform API with some customizations
