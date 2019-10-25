@@ -56,7 +56,7 @@ We will use the following definitions:
 
   * `gateway` - the part of functionality, relating to the API gateway.
     It includes functions relating to API documentation, validations,
-    route handlers, etc. Usually it includess almost no `busines logic`
+    route handlers, etc. Usually it includes almost no `business logic`
 
   * `adapter` - the part of the functionality, that implements functions related
   directly to communicating with external systems, often handling network protocols.
@@ -78,18 +78,18 @@ We will use the following definitions:
 * `Microservice handlers` - this is a set of low level functions, usually
   grouped by their role, for example: validations, error definitions,
   database schema, etc. These handlers are often named in the form
-  `name1.name2.name3`, to allow for namesapcing between microservice modules.
+  `name1.name2.name3`, to allow for name spacing between microservice modules.
 
 ## Logical structure
 
 Following a common logical structure, allows combining the `microservice modules`,
-`microservice layers` and `microservie handlers` in a flexible way,
+`microservice layers` and `microservice handlers` in a flexible way,
 so that different microservices may be created, depending on the need.
 When combining these elements an important aspect is being able to
 provide configuration and customization for each element, starting from
 a simple enabling/disabling it, to passing more complex configuration.
 Often parts of the configuration are specific to the running environment
-(development, test, production, etc.). While ut-run can be used in defferent ways,
+(development, test, production, etc.). While ut-run can be used in different ways,
 the following logical structure is its primary use case:
 
 ```js
@@ -123,7 +123,7 @@ function adapter1({utLog, utBus, utPort, utError, utMethod,
                 imports: ['utModule1.handlers1'], // add these as additional handlers
                 idleSend: 60000, // generate idleSend event
                 idleReceive: 130000, // generate idleSend event
-                maxReceiveBuffer: 4096 // limit comms receive buffer
+                maxReceiveBuffer: 4096 // limit receive buffer
             };
         }
 
@@ -280,7 +280,7 @@ function platform1(...platformApi) {
         (implementationApi) => (function utModule1({param1, param2}) {
             // param1, param2 are values from then current configuration, under utModule1.*
             // the functions returned by layers will receive configuration
-            // from utModule1 subkeys corresponding to the layer name
+            // from utModule1 sub-keys corresponding to the layer name
             return {
                 //  layer function will receive parameters param1, param2
                 // with values from then current configuration, under utModule1.layer1.*
@@ -311,11 +311,14 @@ function platform1(...platformApi) {
         // can be hot reloaded if run.hotReload=true in the configuration
         [require.resolve('ut-module4'), ...customization],
 
-        // if array is passed the first element can be array of 2 strings,
-        // the first string is the path to the module and the second is
-        // the path to the module package.json
-        [[require.resolve('ut-module5'),
-          require.resolve('ut-module5/package.json')], ...customization],
+        // if array is passed the first element can be an object,
+        // with properties pkg and main, which hold paths to module
+        // and module's package.json. This enables both hot reload
+        // (if configured) and proper installation in Kubernetes
+        [{
+            main: require.resolve('ut-module5'),
+            pkg: require.resolve('ut-module5/package.json')
+         }, ...customization],
 
     ];
 };
@@ -344,8 +347,10 @@ module.exports = function platform1(...platformApi) {
         require('ut-module2')(...customization),
         require.resolve('ut-module3'),
         [require.resolve('ut-module4'), ...customization],
-        [[require.resolve('ut-module5'),
-          require.resolve('ut-module5/package.json')], ...customization],
+        [{
+            main: require.resolve('ut-module5'),
+            pkg: require.resolve('ut-module5/package.json')
+         }, ...customization],
     ];
 };
 ```
@@ -428,7 +433,7 @@ module.exports = () => function utModule1() {
             // export orchestration handlers
             require('./api/script'),       // returns a function named 'module1'
 
-            // export distpatcher to DB
+            // export dispatcher to DB
             require('ut-dispatch-db')(['module1'], ['utModule.module1']),
         ],
         gateway: () => [
@@ -489,13 +494,13 @@ even when they are running in a single process.
 
 Even when deploying in a smaller organization, it may make sense to combine
 some microservices in a single process. The framework allows this to be done easily,
-by just provindig through configuration what services to be run.
+by just providing through configuration what services to be run.
 
 The same concepts are applicable even to layers such as the browser, where
 the modularity can be achieved in exactly the same way. Currently browsers
 have runtime structure equivalent of the single process described above.
 This also makes a good use of the framework's capabilities to allow
-flexible runtime structure. But if needed, the frawework can also allow
+flexible runtime structure. But if needed, the framework can also allow
 app to be running in some browser equivalent of multiple processes,
 for example several tabs, web workers, even different browsers on
 different machines, with minimal changes to source code.
