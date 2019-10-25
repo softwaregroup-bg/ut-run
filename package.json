@@ -5,6 +5,7 @@
     "browser-process-hrtime": "1.0.0",
     "chokidar": "3.0.2",
     "loadtest": "3.0.8",
+    "sort-keys": "2.0.0",
     "ut-config": "^7.4.4",
     "ut-bus": "^7.6.0",
     "ut-log": "^6.6.1",

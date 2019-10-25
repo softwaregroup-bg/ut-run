@@ -3,6 +3,7 @@ const fs = require('fs');
 const yaml = require('yaml');
 const merge = require('ut-function.merge');
 const fluentbit = require('./fluentbit');
+const sortKeys = require('sort-keys');
 
 const hash = content => crypto
     .createHash('sha256')
@@ -28,7 +29,7 @@ const readConfig = filename => {
 
 module.exports = ({portsAndModules, log, layers, config, secret}) => {
     if (secret) {
-        secret = yaml.stringify(merge(secret, {
+        secret = yaml.stringify(sortKeys(merge(secret, {
             run: {
                 hotReload: false
             },
@@ -59,7 +60,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     }
                 }
             }
-        }));
+        })));
     }
     const configFile = secret ? {
         content: secret,
