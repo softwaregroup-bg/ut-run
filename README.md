@@ -51,6 +51,8 @@ Using environment variables is also possible
 UT_APP=server UT_METHOD=debug UT_ENV=dev node index
 ```
 
+### Recommended application structure
+
 The recommended filesystem structure, when running only one server looks like this:
 
 ```text
@@ -123,9 +125,10 @@ only be allowed to access their own section within the configuration.
 
 Usually modules are either reusing some standard functionality
 `require('ut-something')` or some application specific functionality
-`require('../impl/something')`. See [microservices](./microservices.md) for
-detailed description of module structure and configuration.
-See [Standard UnderTree module structure](https://github.com/softwaregroup-bg/ut-standard)
+`require('../impl/something')`.
+See [composable microservices](./microservices.md) for detailed description of
+module structure and configuration.
+See [standard UnderTree module structure](https://github.com/softwaregroup-bg/ut-standard)
 for recommended practical structure for modules.
 
 ### Working directory
