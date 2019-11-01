@@ -1,3 +1,12 @@
+# [10.12.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.11.1...v10.12.0) (2019-11-01)
+
+
+### Features
+
+* expose docs via ingress ([8f7d6dc](https://github.com/softwaregroup-bg/ut-run/commit/8f7d6dc))
+
+
+
 ## [10.11.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.11.0...v10.11.1) (2019-10-25)
 
 
