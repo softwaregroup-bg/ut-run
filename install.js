@@ -3,6 +3,7 @@ const {strOptions} = require('yaml/types');
 const yaml = require('yaml');
 const editConfig = require('ut-config').edit;
 const merge = require('ut-function.merge');
+const childProcess = require('child_process');
 
 module.exports = async function(serviceConfig, envConfig, assert) {
     const {broker, serviceBus, service, mergedConfig, log} = await create(envConfig);
@@ -135,7 +136,13 @@ module.exports = async function(serviceConfig, envConfig, assert) {
             filename: mergedConfig.config
         });
 
-        log && log.warn && log.warn('Edit configuration at ' + editForm.url.href);
+        if (envConfig.startBrowser) {
+            childProcess.exec((process.platform === 'win32' ? 'start' : 'xdg-open') + ' ' + editForm.url.href, err => {
+                if (err && log.error) log.error(err);
+            });
+        } else {
+            log && log.warn && log.warn('Edit configuration at ' + editForm.url.href);
+        }
 
         const install = await editConfig({
             log,

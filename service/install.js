@@ -91,6 +91,73 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             containerPort: port.containerPort
         }));
         const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
+        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP}) => {
+            if (prev.services[name.toLowerCase()]) {
+                const existing = prev.services[name.toLowerCase()].metadata.labels['app.kubernetes.io/name'];
+                const error = new Error(`Duplication of service ${name} in ${existing} and ${portOrModule.config.pkg.layer}`);
+                prev.errors.push(error);
+                log && log.error && log.error(error);
+            } else {
+                prev.services[name.toLowerCase()] = {
+                    apiVersion: 'v1',
+                    kind: 'Service',
+                    metadata: {
+                        namespace: namespace.metadata.name,
+                        name: name.toLowerCase(),
+                        labels: {
+                            'app.kubernetes.io/name': portOrModule.config.pkg.layer,
+                            'app.kubernetes.io/component': portOrModule.config.pkg.name,
+                            'app.kubernetes.io/version': portOrModule.config.pkg.version,
+                            'app.kubernetes.io/instance': config.implementation + '_' + config.version,
+                            'app.kubernetes.io/part-of': config.implementation,
+                            'app.kubernetes.io/managed-by': 'ut-run'
+                        }
+                    },
+                    spec: {
+                        type: 'ClusterIP',
+                        ports: [{
+                            port,
+                            targetPort,
+                            protocol,
+                            name: targetPort
+                        }],
+                        selector: {
+                            'app.kubernetes.io/name': deploymentNames[0],
+                            'app.kubernetes.io/version': config.version,
+                            'app.kubernetes.io/instance': config.implementation + '_' + config.version,
+                            'app.kubernetes.io/part-of': config.implementation,
+                            'app.kubernetes.io/managed-by': 'ut-run'
+                        },
+                        ...clusterIP && {clusterIP}
+                    }
+                };
+            }
+        };
+        const addIngress = ({path, host, name, servicePort, serviceName}) => {
+            prev.ingresses[name] = {
+                apiVersion: 'extensions/v1beta1',
+                kind: 'Ingress',
+                metadata: {
+                    namespace: namespace.metadata.name,
+                    name
+                },
+                spec: {
+                    rules: [{
+                        ...host && {host},
+                        http: {
+                            paths: [{
+                                ...path && {path},
+                                backend: {
+                                    serviceName: serviceName.toLowerCase(),
+                                    servicePort
+                                }
+                            }]
+                        }
+
+                    }]
+                }
+            };
+        };
         if (deploymentNames.length) {
             deploymentNames.forEach(deploymentName => {
                 const deployment = prev.deployments[deploymentName] || {
@@ -206,78 +273,25 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         }
                     }
                 };
+                const docService = deployment.metadata.name + '-doc';
+                if (!prev.services[docService]) {
+                    addService({
+                        name: docService,
+                        port: 8090,
+                        targetPort: 'http-jsonrpc'
+                    });
+                    addIngress({
+                        path: `/${deployment.metadata.name}/docs/`,
+                        name: docService,
+                        servicePort: 'http-jsonrpc',
+                        serviceName: docService
+                    });
+                }
                 const args = deployment.spec.template.spec.containers[0].args;
                 if (!args.includes('--' + layer)) args.push('--' + layer);
                 deployment.spec.template.spec.containers[0].ports.push(...containerPorts);
                 prev.deployments[deploymentName] = deployment;
             });
-            const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP}) => {
-                if (prev.services[name.toLowerCase()]) {
-                    const existing = prev.services[name.toLowerCase()].metadata.labels['app.kubernetes.io/name'];
-                    const error = new Error(`Dublication of service ${name} in ${existing} and ${portOrModule.config.pkg.layer}`);
-                    prev.errors.push(error);
-                    log && log.error && log.error(error);
-                } else {
-                    prev.services[name.toLowerCase()] = {
-                        apiVersion: 'v1',
-                        kind: 'Service',
-                        metadata: {
-                            namespace: namespace.metadata.name,
-                            name: name.toLowerCase(),
-                            labels: {
-                                'app.kubernetes.io/name': portOrModule.config.pkg.layer,
-                                'app.kubernetes.io/component': portOrModule.config.pkg.name,
-                                'app.kubernetes.io/version': portOrModule.config.pkg.version,
-                                'app.kubernetes.io/instance': config.implementation + '_' + config.version,
-                                'app.kubernetes.io/part-of': config.implementation,
-                                'app.kubernetes.io/managed-by': 'ut-run'
-                            }
-                        },
-                        spec: {
-                            type: 'ClusterIP',
-                            ports: [{
-                                port,
-                                targetPort,
-                                protocol,
-                                name: targetPort
-                            }],
-                            selector: {
-                                'app.kubernetes.io/name': deploymentNames[0],
-                                'app.kubernetes.io/version': config.version,
-                                'app.kubernetes.io/instance': config.implementation + '_' + config.version,
-                                'app.kubernetes.io/part-of': config.implementation,
-                                'app.kubernetes.io/managed-by': 'ut-run'
-                            },
-                            ...clusterIP && {clusterIP}
-                        }
-                    };
-                }
-            };
-            const addIngress = ({path, host, name, servicePort, serviceName}) => {
-                prev.ingresses[name] = {
-                    apiVersion: 'extensions/v1beta1',
-                    kind: 'Ingress',
-                    metadata: {
-                        namespace: namespace.metadata.name,
-                        name
-                    },
-                    spec: {
-                        rules: [{
-                            ...host && {host},
-                            http: {
-                                paths: [{
-                                    ...path && {path},
-                                    backend: {
-                                        serviceName: serviceName.toLowerCase(),
-                                        servicePort
-                                    }
-                                }]
-                            }
-
-                        }]
-                    }
-                };
-            };
             if (deploymentNames.length === 1) {
                 portOrModule.config.id && portOrModule.config.type !== 'module' && addService({
                     name: portOrModule.config.id.replace(/\./g, '-') + '-service',

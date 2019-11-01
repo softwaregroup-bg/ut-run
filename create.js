@@ -61,6 +61,7 @@ module.exports = function(envConfig) {
             id: 'serviceBus',
             logLevel: 'info',
             channel: envConfig.implementation,
+            service: mergedConfig.service,
             socket: mergedConfig.utBus.broker ? mergedConfig.utBus.broker.socket : true
         }, mergedConfig.utBus.serviceBus);
 
