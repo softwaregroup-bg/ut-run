@@ -76,6 +76,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             }
         }
     };
+    const ingressConfig = config.k8s.ingress || {};
     const nodeSelector = (config.k8s.node || config.k8s.architecture) && {
         nodeSelector: {
             ...config.k8s.node && {'kubernetes.io/hostname': config.k8s.node},
@@ -91,7 +92,34 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             containerPort: port.containerPort
         }));
         const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
-        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP}) => {
+        const addIngress = ({path, host, name, servicePort, serviceName}) => {
+            const ingress = prev.ingresses[name] || {
+                apiVersion: 'extensions/v1beta1',
+                kind: 'Ingress',
+                metadata: {
+                    namespace: namespace.metadata.name,
+                    name
+                },
+                spec: {
+                    rules: []
+                }
+            };
+            ingress.spec.rules.push({
+                ...host && {host},
+                http: {
+                    paths: [{
+                        ...path && {path},
+                        backend: {
+                            serviceName: serviceName.toLowerCase(),
+                            servicePort
+                        }
+                    }]
+                }
+
+            });
+            prev.ingresses[name] = ingress;
+        };
+        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP, ingress, deploymentName}) => {
             if (prev.services[name.toLowerCase()]) {
                 const existing = prev.services[name.toLowerCase()].metadata.labels['app.kubernetes.io/name'];
                 const error = new Error(`Duplication of service ${name} in ${existing} and ${portOrModule.config.pkg.layer}`);
@@ -122,7 +150,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                             name: targetPort
                         }],
                         selector: {
-                            'app.kubernetes.io/name': deploymentNames[0],
+                            'app.kubernetes.io/name': deploymentName,
                             'app.kubernetes.io/version': config.version,
                             'app.kubernetes.io/instance': config.implementation + '_' + config.version,
                             'app.kubernetes.io/part-of': config.implementation,
@@ -132,31 +160,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     }
                 };
             }
-        };
-        const addIngress = ({path, host, name, servicePort, serviceName}) => {
-            prev.ingresses[name] = {
-                apiVersion: 'extensions/v1beta1',
-                kind: 'Ingress',
-                metadata: {
-                    namespace: namespace.metadata.name,
-                    name
-                },
-                spec: {
-                    rules: [{
-                        ...host && {host},
-                        http: {
-                            paths: [{
-                                ...path && {path},
-                                backend: {
-                                    serviceName: serviceName.toLowerCase(),
-                                    servicePort
-                                }
-                            }]
-                        }
-
-                    }]
-                }
-            };
+            if (ingress) addIngress({...ingress, servicePort: targetPort, serviceName: name.toLowerCase()});
         };
         if (deploymentNames.length) {
             deploymentNames.forEach(deploymentName => {
@@ -277,14 +281,13 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                 if (!prev.services[docService]) {
                     addService({
                         name: docService,
+                        deploymentName: deployment.metadata.name,
                         port: 8090,
-                        targetPort: 'http-jsonrpc'
-                    });
-                    addIngress({
-                        path: `/${deployment.metadata.name}/docs/`,
-                        name: docService,
-                        servicePort: 'http-jsonrpc',
-                        serviceName: docService
+                        targetPort: 'http-jsonrpc',
+                        ingress: ingressConfig.docs && {
+                            name: 'docs',
+                            path: `/docs/${deployment.metadata.name}`
+                        }
                     });
                 }
                 const args = deployment.spec.template.spec.containers[0].args;
@@ -295,16 +298,23 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             if (deploymentNames.length === 1) {
                 portOrModule.config.id && portOrModule.config.type !== 'module' && addService({
                     name: portOrModule.config.id.replace(/\./g, '-') + '-service',
+                    deploymentName: deploymentNames[0],
                     port: 8090,
                     targetPort: 'http-jsonrpc'
                 });
                 [].concat(portOrModule.config.namespace).forEach(ns => ns && addService({
                     name: ns.replace(/\//g, '-') + '-service',
+                    deploymentName: deploymentNames[0],
                     port: 8090,
-                    targetPort: 'http-jsonrpc'
+                    targetPort: 'http-jsonrpc',
+                    ingress: ingressConfig.rpc && {
+                        name: 'rpc',
+                        path: `/rpc/${ns.replace(/\//g, '-')}`
+                    }
                 }));
                 ports.forEach(port => port.service && addService({
                     name: portOrModule.config.id.replace(/\./g, '-') + '-' + port.name,
+                    deploymentName: deploymentNames[0],
                     port: port.containerPort,
                     protocol: port.protocol,
                     targetPort: port.name,

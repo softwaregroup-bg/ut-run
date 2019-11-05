@@ -80,6 +80,20 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                                         title: 'Elasticsearch port'
                                     }
                                 }
+                            },
+                            ingress: {
+                                type: 'object',
+                                title: 'Ingress configuration',
+                                properties: {
+                                    rpc: {
+                                        type: 'boolean',
+                                        title: 'Expose internal microservices API'
+                                    },
+                                    docs: {
+                                        type: 'boolean',
+                                        title: 'Expose internal microservices API docs'
+                                    }
+                                }
                             }
                         }
                     }
