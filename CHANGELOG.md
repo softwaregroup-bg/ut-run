@@ -1,3 +1,12 @@
+# [10.13.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.12.0...v10.13.0) (2019-11-05)
+
+
+### Features
+
+* rpc and docs ingress ([357a4e3](https://github.com/softwaregroup-bg/ut-run/commit/357a4e3))
+
+
+
 # [10.12.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.11.1...v10.12.0) (2019-11-01)
 
 
