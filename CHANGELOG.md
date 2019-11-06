@@ -1,3 +1,12 @@
+## [10.13.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.13.1...v10.13.2) (2019-11-06)
+
+
+### Bug Fixes
+
+* update deps ([d414e5c](https://github.com/softwaregroup-bg/ut-run/commit/d414e5c))
+
+
+
 ## [10.13.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.13.0...v10.13.1) (2019-11-06)
 
 
