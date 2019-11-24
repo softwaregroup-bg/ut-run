@@ -39,6 +39,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
                     propConfig && log && log.debug && log.debug({
                         $meta: {mtid: 'event', method: 'serviceLayer.load'},
                         layer,
+                        ...pkg && {package: pkg.name, version: pkg.version},
                         loadTime: endTime[0] + '.' + (endTime[1] + '').substr(0, 3)
                     });
                 }
