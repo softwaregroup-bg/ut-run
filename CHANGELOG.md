@@ -1,3 +1,17 @@
+# [10.14.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.13.2...v10.14.0) (2019-11-24)
+
+
+### Bug Fixes
+
+* api docs ingress path ([9ebd4ce](https://github.com/softwaregroup-bg/ut-run/commit/9ebd4ce))
+
+
+### Features
+
+* improve serviceLayer.load event logging ([dd2fa51](https://github.com/softwaregroup-bg/ut-run/commit/dd2fa51))
+
+
+
 ## [10.13.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.13.1...v10.13.2) (2019-11-06)
 
 
