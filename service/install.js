@@ -277,18 +277,20 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         }
                     }
                 };
-                const docService = deployment.metadata.name + '-doc';
-                if (!prev.services[docService]) {
-                    addService({
-                        name: docService,
-                        deploymentName: deployment.metadata.name,
-                        port: 8090,
-                        targetPort: 'http-jsonrpc',
-                        ingress: ingressConfig.docs && {
-                            name: 'docs',
-                            path: `/docs/${deployment.metadata.name}`
-                        }
-                    });
+                if (ingressConfig.apiDocs) {
+                    const apiDocsService = deployment.metadata.name + '-api';
+                    if (!prev.services[apiDocsService]) {
+                        addService({
+                            name: apiDocsService,
+                            deploymentName: deployment.metadata.name,
+                            port: 8090,
+                            targetPort: 'http-jsonrpc',
+                            ingress: {
+                                name: 'api',
+                                path: `/api/${deployment.metadata.name}`
+                            }
+                        });
+                    }
                 }
                 const args = deployment.spec.template.spec.containers[0].args;
                 if (!args.includes('--' + layer)) args.push('--' + layer);
