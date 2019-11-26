@@ -1,3 +1,12 @@
+# [10.15.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.14.1...v10.15.0) (2019-11-26)
+
+
+### Features
+
+* single service ingress ([2fa5d0b](https://github.com/softwaregroup-bg/ut-run/commit/2fa5d0b))
+
+
+
 ## [10.14.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.14.0...v10.14.1) (2019-11-26)
 
 
