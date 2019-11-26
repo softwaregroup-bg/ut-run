@@ -1,3 +1,12 @@
+## [10.14.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.14.0...v10.14.1) (2019-11-26)
+
+
+### Bug Fixes
+
+* move api docs to proper service path ([28c8c5b](https://github.com/softwaregroup-bg/ut-run/commit/28c8c5b))
+
+
+
 # [10.14.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.13.2...v10.14.0) (2019-11-24)
 
 
