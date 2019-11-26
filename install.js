@@ -89,7 +89,7 @@ module.exports = async function(serviceConfig, envConfig, assert) {
                                         type: 'boolean',
                                         title: 'Expose internal microservices API'
                                     },
-                                    docs: {
+                                    apiDocs: {
                                         type: 'boolean',
                                         title: 'Expose internal microservices API docs'
                                     }

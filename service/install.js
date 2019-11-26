@@ -160,7 +160,13 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     }
                 };
             }
-            if (ingress) addIngress({...ingress, servicePort: targetPort, serviceName: name.toLowerCase()});
+            if (ingress) {
+                [].concat(ingress).forEach(ingressConfig => ingressConfig && addIngress({
+                    ...ingressConfig,
+                    servicePort: targetPort,
+                    serviceName: name.toLowerCase()
+                }));
+            }
         };
         if (deploymentNames.length) {
             deploymentNames.forEach(deploymentName => {
@@ -277,21 +283,6 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         }
                     }
                 };
-                if (ingressConfig.apiDocs) {
-                    const apiDocsService = deployment.metadata.name + '-api';
-                    if (!prev.services[apiDocsService]) {
-                        addService({
-                            name: apiDocsService,
-                            deploymentName: deployment.metadata.name,
-                            port: 8090,
-                            targetPort: 'http-jsonrpc',
-                            ingress: {
-                                name: 'api',
-                                path: `/api/${deployment.metadata.name}`
-                            }
-                        });
-                    }
-                }
                 const args = deployment.spec.template.spec.containers[0].args;
                 if (!args.includes('--' + layer)) args.push('--' + layer);
                 deployment.spec.template.spec.containers[0].ports.push(...containerPorts);
@@ -309,10 +300,13 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     deploymentName: deploymentNames[0],
                     port: 8090,
                     targetPort: 'http-jsonrpc',
-                    ingress: ingressConfig.rpc && {
+                    ingress: [ingressConfig.rpc && {
                         name: 'rpc',
                         path: `/rpc/${ns.replace(/\//g, '-')}`
-                    }
+                    }, ingressConfig.apiDocs && {
+                        name: 'api',
+                        path: `/api/${ns.replace(/\//g, '-')}`
+                    }]
                 }));
                 ports.forEach(port => port.service && addService({
                     name: portOrModule.config.id.replace(/\./g, '-') + '-' + port.name,
