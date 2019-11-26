@@ -100,23 +100,31 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     namespace: namespace.metadata.name,
                     name
                 },
-                spec: {
-                    rules: []
-                }
+                spec: {}
             };
-            ingress.spec.rules.push({
-                ...host && {host},
-                http: {
-                    paths: [{
-                        ...path && {path},
-                        backend: {
-                            serviceName: serviceName.toLowerCase(),
-                            servicePort
-                        }
-                    }]
-                }
-
-            });
+            if (host || path) {
+                if (!ingress.spec.rules) ingress.spec.rules = [];
+                const ingressRule = prev.ingressRules[name + '@' + (host || '')] || {
+                    ...host && {host},
+                    http: {
+                        paths: []
+                    }
+                };
+                if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
+                ingressRule.http.paths.push({
+                    ...path && {path},
+                    backend: {
+                        serviceName: serviceName.toLowerCase(),
+                        servicePort
+                    }
+                });
+                prev.ingressRules[name + '@' + (host || '')] = ingressRule;
+            } else {
+                ingress.spec.backend = {
+                    serviceName: serviceName.toLowerCase(),
+                    servicePort
+                };
+            }
             prev.ingresses[name] = ingress;
         };
         const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP, ingress, deploymentName}) => {
@@ -302,7 +310,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     targetPort: 'http-jsonrpc',
                     ingress: [ingressConfig.rpc && {
                         name: 'rpc',
-                        path: `/rpc/${ns.replace(/\//g, '-')}`
+                        path: `/rpc/${ns.replace(/\//g, '-')}/`
                     }, ingressConfig.apiDocs && {
                         name: 'api',
                         path: `/api/${ns.replace(/\//g, '-')}`
@@ -316,12 +324,12 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     targetPort: port.name,
                     ...port.service
                 }));
-                ports.forEach(port => port.ingress && addIngress({
+                ports.forEach(port => port.ingress && [].concat(port.ingress).forEach(ingressConfig => ingressConfig && addIngress({
                     name: deploymentNames[0] + '-' + port.name,
                     serviceName: portOrModule.config.id.replace(/\./g, '-') + '-' + port.name,
                     servicePort: port.name,
-                    ...port.ingress
-                }));
+                    ...ingressConfig
+                })));
             }
         };
         return prev;
@@ -372,6 +380,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             }).deployment
         },
         ingresses: {},
+        ingressRules: {},
         errors: []
     });
     return result;
