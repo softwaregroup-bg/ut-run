@@ -1,3 +1,18 @@
+<a name="9.2.1"></a>
+## [9.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.2.0...v9.2.1) (2019-12-03)
+
+
+### Bug Fixes
+
+* **config:** reading config.json file no matter of the environment ([857a669](https://github.com/softwaregroup-bg/ut-run/commit/857a669))
+* change domain name to softwaregroup.com ([1abcbe1](https://github.com/softwaregroup-bg/ut-run/commit/1abcbe1))
+* elasticsearch indexing ([9963e8a](https://github.com/softwaregroup-bg/ut-run/commit/9963e8a))
+* set ut-port dependency to version 6.8.0 ([a6474e4](https://github.com/softwaregroup-bg/ut-run/commit/a6474e4))
+* set ut-port dependency version to 6.5.1 ([1449c94](https://github.com/softwaregroup-bg/ut-run/commit/1449c94))
+* test ([ccde5f6](https://github.com/softwaregroup-bg/ut-run/commit/ccde5f6))
+
+
+
 <a name="9.2.0"></a>
 # [9.2.0](https://github.com/softwaregroup-bg/ut-run/compare/v9.1.1...v9.2.0) (2018-03-02)
 
