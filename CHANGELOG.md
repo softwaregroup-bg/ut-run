@@ -1,3 +1,14 @@
+<a name="9.2.2"></a>
+## [9.2.2](https://github.com/softwaregroup-bg/ut-run/compare/v9.2.1...v9.2.2) (2019-12-04)
+
+
+### Bug Fixes
+
+* remove package-lock.json ([3434dca](https://github.com/softwaregroup-bg/ut-run/commit/3434dca))
+* test build ([d543caf](https://github.com/softwaregroup-bg/ut-run/commit/d543caf))
+
+
+
 <a name="9.2.1"></a>
 ## [9.2.1](https://github.com/softwaregroup-bg/ut-run/compare/v9.2.0...v9.2.1) (2019-12-03)
 
