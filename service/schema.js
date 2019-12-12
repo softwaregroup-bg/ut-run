@@ -21,7 +21,7 @@ module.exports = ({portsAndModules, log, schema, uiSchema = {}}) => {
         set(
             prev,
             portOrModule.config && portOrModule.config.id,
-            portOrModule.schema,
+            portOrModule.configSchema,
             portOrModule.uiSchema
         );
         return prev;
