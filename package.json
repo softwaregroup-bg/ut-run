@@ -9,7 +9,7 @@
     "ut-config": "^7.4.7",
     "ut-bus": "^7.10.1",
     "ut-log": "^6.6.1",
-    "ut-port": "^6.18.0",
+    "ut-port": "^6.19.1",
     "ut-function.merge": "^1.4.0",
     "yaml": "1.6.0"
   },
