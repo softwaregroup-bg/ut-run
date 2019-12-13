@@ -1,3 +1,12 @@
+# [10.16.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.15.0...v10.16.0) (2019-12-13)
+
+
+### Features
+
+* get merged config schema from port.configSchema ([ab24d27](https://github.com/softwaregroup-bg/ut-run/commit/ab24d27))
+
+
+
 # [10.15.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.14.1...v10.15.0) (2019-11-26)
 
 
