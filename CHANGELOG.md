@@ -1,3 +1,12 @@
+## [10.16.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.16.0...v10.16.1) (2019-12-13)
+
+
+### Bug Fixes
+
+* update ut-port ([816a514](https://github.com/softwaregroup-bg/ut-run/commit/816a514))
+
+
+
 # [10.16.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.15.0...v10.16.0) (2019-12-13)
 
 
