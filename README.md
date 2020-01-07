@@ -234,3 +234,28 @@ require('ut-run').run({
     // call stop() once done
 });
 ```
+
+### Documentation
+
+Ut-run provides a bin script for automatic
+port configuration documentation.
+
+In order to generate a configuration
+documentation for a given port you need
+to add `ut-run`and `json-schema-to-markdown` as
+devDependencies and `ut-doc` as `doc` script
+in its `package.json`.
+
+E.g.
+
+```json
+{
+    "scripts": {
+        "doc": "ut-doc"
+    },
+    "devDependencies": {
+        "json-schema-to-markdown": "1.1.1",
+        "ut-run": "10.17.0"
+    }
+}
+```
