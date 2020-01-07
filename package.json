@@ -44,6 +44,7 @@
   "browser": {
     "./install": "./browser/install",
     "./service/install": false,
+    "./unit": false,
     "chokidar": false
   },
   "repository": {
