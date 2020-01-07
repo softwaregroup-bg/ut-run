@@ -18,7 +18,11 @@
     "ut-tools": "^6.29.12"
   },
   "peerDependencies": {
-    "why-is-node-running": "^2.1.0"
+    "why-is-node-running": "^2.1.0",
+    "json-schema-to-markdown": "1.1.1"
+  },
+  "bin": {
+    "ut-doc": "./bin/ut-doc.js"
   },
   "scripts": {
     "lint": "ut-lint .",
@@ -45,6 +49,7 @@
     "./install": "./browser/install",
     "./service/install": false,
     "./unit": false,
+    "./doc": false,
     "chokidar": false
   },
   "repository": {
