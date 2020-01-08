@@ -15,10 +15,14 @@
   },
   "devDependencies": {
     "tap": "^12.7.0",
-    "ut-tools": "^6.29.7"
+    "ut-tools": "^6.29.12"
   },
   "peerDependencies": {
-    "why-is-node-running": "^2.1.0"
+    "why-is-node-running": "^2.1.0",
+    "json-schema-to-markdown": "1.1.1"
+  },
+  "bin": {
+    "ut-doc": "./bin/ut-doc.js"
   },
   "scripts": {
     "lint": "ut-lint .",
@@ -43,7 +47,9 @@
   "description": "UT run module",
   "browser": {
     "./install": "./browser/install",
+    "./doc": "./browser/doc",
     "./service/install": false,
+    "./unit": "./browser/unit",
     "chokidar": false
   },
   "repository": {

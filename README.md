@@ -140,3 +140,122 @@ this directory depends on the operating system:
 - Windows: C:/ProgramData/SoftwareGroup/UnderTree/{implementation-name}
 - Linux: /var/lib/SoftwareGroup/UnderTree/{implementation-name}
 - MacOS: ~/Library/Application Support/SoftwareGroup/UnderTree/{implementation-name}
+
+### Unit tests
+
+There are 2 ways of unit-testing a port:
+
+- specify steps as in integration tests.
+
+```js
+require('ut-run').run({
+    main: require('..'),
+    method: 'unit',
+    config: {
+        SqlPort: {
+            allowQuery: true,
+            connection: {
+                server: 'utPortTestDbServer',
+                database: 'ut-port-sql-test',
+                user: 'utPortTestDbUser',
+                password: 'utPortTestDbPassword'
+            },
+            create: {
+                user: 'utPortTestDbCreateUser',
+                password: 'utPortTestDbCreatePassword'
+            }
+        }
+    },
+    params: {
+        steps: [
+            {
+                method: 'SqlPort.query',
+                name: 'exec',
+                params: {
+                    query: 'SELECT 1 AS test',
+                    process: 'json'
+                },
+                result: (result, assert) => {
+                    assert.true(Array.isArray(result.dataSet));
+                    assert.equals(result.dataSet[0].test, 1);
+                }
+            }
+        ]
+    }
+});
+```
+
+- Write arbitrary unit tests.
+
+If you don't want to use predefined steps
+but to write any type of tests in functional
+or snapshot manner then just omit
+the steps from the ut-run configuration object
+like this:
+
+```js
+require('ut-run').run({
+    main: require('..'),
+    method: 'unit',
+    config: {
+        SqlPort: {
+            allowQuery: true,
+            connection: {
+                server: 'utPortTestDbServer',
+                database: 'ut-port-sql-test',
+                user: 'utPortTestDbUser',
+                password: 'utPortTestDbPassword'
+            },
+            create: {
+                user: 'utPortTestDbCreateUser',
+                password: 'utPortTestDbCreatePassword'
+            }
+        }
+    },
+    params: { // or omit the entire params property
+        // steps: [
+        //     {
+        //         method: 'SqlPort.query',
+        //         name: 'exec',
+        //         params: {
+        //             query: 'SELECT 1 AS test',
+        //             process: 'json'
+        //         },
+        //         result: (result, assert) => {
+        //             assert.true(Array.isArray(result.dataSet));
+        //             assert.equals(result.dataSet[0].test, 1);
+        //         }
+        //     }
+        // ]
+    }
+}).then(async({serviceBus, stop}) => {
+    // write arbitrary tests
+    // call serviceBus.importMethod to invoke port methods
+    // call stop() once done
+});
+```
+
+### Documentation
+
+Ut-run provides a bin script for automatic
+port configuration documentation.
+
+In order to generate a configuration
+documentation for a given port you need
+to add `ut-run`and `json-schema-to-markdown` as
+devDependencies and `ut-doc` as `doc` script
+in its `package.json`.
+
+E.g.
+
+```json
+{
+    "scripts": {
+        "doc": "ut-doc"
+    },
+    "devDependencies": {
+        "json-schema-to-markdown": "1.1.1",
+        "ut-run": "10.17.0"
+    }
+}
+```
