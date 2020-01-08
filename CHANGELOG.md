@@ -1,3 +1,12 @@
+# [10.17.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.16.1...v10.17.0) (2020-01-08)
+
+
+### Features
+
+* new methods doc, unit ([9aabf3a](https://github.com/softwaregroup-bg/ut-run/commit/9aabf3a))
+
+
+
 ## [10.16.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.16.0...v10.16.1) (2019-12-13)
 
 
