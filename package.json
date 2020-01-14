@@ -6,16 +6,16 @@
     "chokidar": "3.0.2",
     "loadtest": "3.0.8",
     "sort-keys": "2.0.0",
-    "ut-config": "^7.4.7",
-    "ut-bus": "^7.10.1",
+    "ut-config": "^7.5.0",
+    "ut-bus": "^7.11.2",
     "ut-log": "^6.6.1",
-    "ut-port": "^6.19.1",
-    "ut-function.merge": "^1.4.0",
+    "ut-port": "^6.20.0",
+    "ut-function.merge": "^1.5.0",
     "yaml": "1.6.0"
   },
   "devDependencies": {
     "tap": "^12.7.0",
-    "ut-tools": "^6.29.12"
+    "ut-tools": "^6.30.2"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.1.0",

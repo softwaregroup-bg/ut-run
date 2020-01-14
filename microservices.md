@@ -120,7 +120,8 @@ function adapter1({utLog, utBus, utPort, utError, utMethod,
         // in the class chain starting with the base class
         get defaults() {
             return {
-                imports: ['utModule1.handlers1'], // add these as additional handlers
+                // add these as additional handlers
+                imports: ['utModule1.handlers1', 'utModule1.handlers2'],
                 idleSend: 60000, // generate idleSend event
                 idleReceive: 130000, // generate idleSend event
                 maxReceiveBuffer: 4096 // limit receive buffer
@@ -181,9 +182,10 @@ function adapter1({utLog, utBus, utPort, utError, utMethod,
 }
 
 // define a set of handlers, to be imported in some adapter using imports: [utModule1.handlers1]
-function handlers1({utMethod}) {
-    // use utMethod to obtain local or remote methods
-    const [module2Entity1Action1, invalidAmount] = ['module2.entity1.action1', 'module2.error1'].map(utMethod);
+function handlers1({import:{
+    module2Entity1Action1, // automatic method import based on name
+    module2Error1 // automatic method import based on name
+}}) {
     return {
         // use async function, for improved stack traces with await
         // and for less code, compared to chaining .then() calls
@@ -192,12 +194,25 @@ function handlers1({utMethod}) {
             let result = await module2Entity1Action1(msg, {forward});
 
             // throw predefined error, pass params
-            if (result.amount <= 0) throw invalidAmount({params: {amount: result.amount}});
+            if (result.amount <= 0) throw module2Error1({params: {amount: result.amount}});
             return msg;
         },
         'module1.entity1.action2'(msg, $meta) {}
     };
 }
+
+// override original or previously imported methods by name,
+// call overriden methods with super
+function handlers2() {
+    return {
+        'module1.entity1.action2'(msg, $meta) {
+            // optional preprocessing
+            let result = super['module1.entity1.action2'](params, $meta); // optional
+            // optional postprocessing
+        }
+    }
+}
+
 
 // define handlers for creating custom errors
 function error({utError}) {
@@ -286,7 +301,7 @@ function platform1(...platformApi) {
                 // with values from then current configuration, under utModule1.layer1.*
                 layer1: ({param1, param2}) =>
                     [ // return array of handlers for this layer
-                        adapter1, handlers1, error
+                        adapter1, handlers1, handlers2, error
                     ],
                 layer2: () => // define another layer
                     [
