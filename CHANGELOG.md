@@ -1,3 +1,12 @@
+## [10.17.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.1...v10.17.2) (2020-01-14)
+
+
+### Bug Fixes
+
+* generate linable markdown ([41d6102](https://github.com/softwaregroup-bg/ut-run/commit/41d6102))
+
+
+
 ## [10.17.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.0...v10.17.1) (2020-01-14)
 
 
