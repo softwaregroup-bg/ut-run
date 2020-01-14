@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('../doc')(require(process.cwd()))
     .catch(e => {
         console.error(e); // eslint-disable-line no-console
