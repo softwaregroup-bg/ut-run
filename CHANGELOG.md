@@ -1,3 +1,7 @@
+## [10.17.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.0...v10.17.1) (2020-01-14)
+
+
+
 # [10.17.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.16.1...v10.17.0) (2020-01-08)
 
 
