@@ -1,3 +1,12 @@
+## [10.17.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.2...v10.17.3) (2020-01-14)
+
+
+### Bug Fixes
+
+* bin interpreter ([bb740d8](https://github.com/softwaregroup-bg/ut-run/commit/bb740d8))
+
+
+
 ## [10.17.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.1...v10.17.2) (2020-01-14)
 
 
