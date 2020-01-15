@@ -1,3 +1,12 @@
+## [10.17.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.5...v10.17.6) (2020-01-15)
+
+
+### Bug Fixes
+
+* support k8s external load balancer ([b447763](https://github.com/softwaregroup-bg/ut-run/commit/b447763))
+
+
+
 ## [10.17.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.4...v10.17.5) (2020-01-15)
 
 
