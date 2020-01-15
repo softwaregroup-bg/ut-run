@@ -1,0 +1,58 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "test",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/test/index.test.js",
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--preserve-symlinks",
+                "--nolazy",
+                "--max_old_space_size=500000"
+            ],
+            "env": {
+                "NODE_PATH": "dev"
+            },
+            "console": "externalTerminal",
+            "sourceMaps": false,
+            "outputCapture": "std",
+            "linux": {
+                "protocol": "inspector"
+            }
+        },  {
+            "name": "test snapshot",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/test/index.test.js",
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--preserve-symlinks",
+                "--nolazy",
+                "--max_old_space_size=500000"
+            ],
+            "env": {
+                "NODE_PATH": "dev",
+                "TAP_SNAPSHOT": "1"
+            },
+            "console": "externalTerminal",
+            "sourceMaps": false,
+            "outputCapture": "std",
+            "linux": {
+                "protocol": "inspector"
+            }
+        }
+    ]
+}
