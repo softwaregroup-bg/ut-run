@@ -2,7 +2,7 @@
 node_modules
 node_modules/**/*
 .idea*
-.vscode
 *.log
+dev
 temp
 package-lock.json
