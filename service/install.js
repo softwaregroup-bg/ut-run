@@ -127,7 +127,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
             }
             prev.ingresses[name] = ingress;
         };
-        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP, ingress, deploymentName}) => {
+        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP, loadBalancerIP, ingress, deploymentName}) => {
             if (prev.services[name.toLowerCase()]) {
                 const existing = prev.services[name.toLowerCase()].metadata.labels['app.kubernetes.io/name'];
                 const error = new Error(`Duplication of service ${name} in ${existing} and ${portOrModule.config.pkg.layer}`);
@@ -150,7 +150,7 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         }
                     },
                     spec: {
-                        type: 'ClusterIP',
+                        type: loadBalancerIP ? 'LoadBalancer' : 'ClusterIP',
                         ports: [{
                             port,
                             targetPort,
@@ -164,7 +164,8 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                             'app.kubernetes.io/part-of': config.implementation,
                             'app.kubernetes.io/managed-by': 'ut-run'
                         },
-                        ...clusterIP && {clusterIP}
+                        ...clusterIP && {clusterIP},
+                        ...loadBalancerIP && {loadBalancerIP}
                     }
                 };
             }
