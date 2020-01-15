@@ -97,6 +97,29 @@ pass as argument `node index server/server1`
 `ut-run` uses `ut-config` to load or edit the application configuration. For more
 information consult the [README](https://github.com/softwaregroup-bg/ut-config) there.
 
+When running an application with `ut-run.run`
+in standard (debug) mode you can take advantage
+of `ut-config` [templating capabilities](https://github.com/softwaregroup-bg/ut-config#templating).
+In other words everything explained
+there (including the encrypt/decrypt methods)
+can be applied when loading configuration.
+
+E.g.
+
+```javascript
+require('ut-run').run({
+    context: {
+        test: params => {/* do something*/} // or some function or something else
+        // ...other context properties
+    }
+    // ...other run properties
+});
+```
+
+Then in all configuration files
+(no matter whether they are rc, json, etc.) you can use
+the specified context as '${test(...something)}'
+
 ### Servers
 
 Server startup file `server/index.js` is recommended to follow this pattern:
