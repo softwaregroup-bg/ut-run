@@ -6,8 +6,13 @@
  */
 'use strict'
 exports[`test/index.test.js TAP getConfig > load configuration 1`] = `
-{ _: [],
-  params: { app: 'server', method: 'debug' },
-  service: 'server',
-  version: undefined }
+Object {
+  "_": Array [],
+  "params": Object {
+    "app": "server",
+    "method": "debug",
+  },
+  "service": "server",
+  "version": undefined,
+}
 `
