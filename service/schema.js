@@ -1,11 +1,34 @@
+const dropReadOnly = param => {
+    if (param && param.properties) {
+        const {properties, ...rest} = param;
+        return {
+            properties: Object.entries(properties).reduce((prev, [key, value]) => {
+                if (!value || !value.readOnly) {
+                    const editable = dropReadOnly(value);
+                    // drop objects without properties
+                    if (!editable || !editable.properties || Object.keys(editable.properties).length) {
+                        prev[key] = editable;
+                    }
+                }
+                return prev;
+            }, {}),
+            ...rest
+        };
+    };
+    return param;
+};
+
 const set = (object, property, schema, uiSchema) => {
     if (property && schema) {
-        property.split('.').reduce((prev, name, index, array) => {
-            const value = (index === array.length - 1) ? schema : {type: 'object', properties: {}};
-            prev.properties = prev.properties || {};
-            prev.properties[name] = prev.properties[name] || value;
-            return prev.properties[name];
-        }, object.schema);
+        const editable = dropReadOnly(schema);
+        if (editable && (!editable.properties || Object.keys(editable.properties).length)) {
+            property.split('.').reduce((prev, name, index, array) => {
+                const value = (index === array.length - 1) ? editable : {type: 'object', properties: {}};
+                prev.properties = prev.properties || {};
+                prev.properties[name] = prev.properties[name] || value;
+                return prev.properties[name];
+            }, object.schema);
+        }
     }
     if (property && uiSchema) {
         property.split('.').reduce((prev, name, index, array) => {
@@ -22,7 +45,7 @@ module.exports = ({portsAndModules, log, schema, uiSchema = {}}) => {
             prev,
             portOrModule.config && portOrModule.config.id,
             portOrModule.configSchema,
-            portOrModule.uiSchema
+            portOrModule.configUiSchema
         );
         return prev;
     }, {
