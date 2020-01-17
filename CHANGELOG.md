@@ -1,3 +1,12 @@
+# [10.18.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.6...v10.18.0) (2020-01-17)
+
+
+### Features
+
+* do not show read only props during install ([a83a88a](https://github.com/softwaregroup-bg/ut-run/commit/a83a88a))
+
+
+
 ## [10.17.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.17.5...v10.17.6) (2020-01-15)
 
 
