@@ -341,6 +341,75 @@ function platform1(...platformApi) {
 module.exports = platform1;
 ```
 
+## Overriding methods
+
+```js
+function utModule1() {
+    return {
+        orchestrator: () => [
+            function service({utMethod}) {
+                return {
+                    async 'service.entity.action'(params, $meta) {
+                        // calls handler defined in the port
+                        await super['service.entity.action'](params, $meta)
+                    }
+                };
+            }
+        ]
+    };
+};
+
+function utModule2() {
+    return {
+        orchestrator: () => [
+            function service({utMethod}) {
+                return {
+                    async 'service.entity.action'(params, $meta) {
+                        // calls module1
+                        await super['service.entity.action'](params, $meta)
+                    }
+                };
+            }
+        ]
+    };
+};
+
+function utModule3() {
+    return {
+        orchestrator: () => [
+            (...params) => class script extends require('ut-port-script')(...params) {
+                get defaults() {
+                    return {
+                        namespace: ['service'],
+                        // order of imports determines earlier modules as super to
+                        // following modules
+                        imports: ['utModule1.service', 'utModule2.service']
+                    };
+                }
+                get handlers() {
+                    return {
+                        'service.entity.action': async function(params, $meta) {
+                            return 'result';
+                            // some ports have predefined handlers, which can
+                            // also be called with super.methodName()
+                            // for example ut-port-sql has all the linked stored
+                            // procedures available
+                        }
+                    };
+                }
+            }
+        ]
+    };
+};
+
+module.exports = (...params) => [
+    utModule1,
+    utModule2,
+    utModule3
+];
+
+```
+
 ## Physical structure
 
 To achieve good modularity, the logical structure above can be spit in modules,

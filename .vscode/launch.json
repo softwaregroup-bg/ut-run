@@ -8,7 +8,7 @@
             "name": "test",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/test/index.test.js",
+            "program": "${workspaceRoot}/test/${input:test}",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
@@ -32,7 +32,7 @@
             "name": "test snapshot",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/test/index.test.js",
+            "program": "${workspaceRoot}/test/${input:test}",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
@@ -54,5 +54,14 @@
                 "protocol": "inspector"
             }
         }
-    ]
+    ],
+    "inputs": [{
+        "id": "test",
+        "type": "pickString",
+        "description": "Pick unit test to run",
+        "options": [
+            "index.test.js",
+            "override.test.js"
+        ]
+    }]
 }
