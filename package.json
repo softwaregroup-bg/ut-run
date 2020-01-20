@@ -16,6 +16,7 @@
   "devDependencies": {
     "sort-keys": "2.0.0",
     "tap": "^14.10.6",
+    "ut-port-script": "^7.0.2",
     "ut-tools": "^6.30.5"
   },
   "peerDependencies": {
