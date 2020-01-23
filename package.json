@@ -9,15 +9,15 @@
     "ut-config": "^7.5.2",
     "ut-bus": "^7.11.3",
     "ut-log": "^6.6.2",
-    "ut-port": "^6.21.1",
-    "ut-function.merge": "^1.5.3",
+    "ut-port": "^6.22.0",
+    "ut-function.merge": "^1.5.4",
     "yaml": "1.6.0"
   },
   "devDependencies": {
     "sort-keys": "2.0.0",
     "tap": "^14.10.6",
     "ut-port-script": "^7.0.2",
-    "ut-tools": "^6.30.5"
+    "ut-tools": "^6.31.2"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.1.0",
