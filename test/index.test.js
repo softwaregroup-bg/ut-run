@@ -1,5 +1,5 @@
 const tap = require('tap');
-const { getConfig } = require('../');
+const { getConfig } = require('..');
 const sortKeys = require('sort-keys');
 const clean = obj => {
     delete obj.params.appname;

@@ -1,14 +1,10 @@
 module.exports = function unit(serviceConfig, envConfig, assert) {
-    const server = [() => {
-        switch (typeof serviceConfig) {
-            case 'function':
-                return {test: [serviceConfig]};
-            case 'object':
-                return Array.isArray(serviceConfig) ? {test: serviceConfig} : serviceConfig;
-            default:
-                return {};
+    const server = () => {
+        if (typeof serviceConfig === 'function') {
+            return [{test: [serviceConfig]}];
         }
-    }];
+        return [].concat(serviceConfig);
+    };
 
     const { steps } = envConfig;
     delete envConfig.steps;

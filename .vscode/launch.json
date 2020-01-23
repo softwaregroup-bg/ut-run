@@ -61,7 +61,8 @@
         "description": "Pick unit test to run",
         "options": [
             "index.test.js",
-            "override.test.js"
+            "override.test.js",
+            "unit.test.js"
         ]
     }]
 }
