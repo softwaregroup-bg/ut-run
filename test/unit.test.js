@@ -7,9 +7,12 @@ tap.test('main function', async(assert) => {
         main: ({utPort}) => class Test extends utPort {},
         config: {}
     });
-    assert.ok(ports.length === 1, 'exactly one port');
-    assert.ok(ports[0].constructor.name === 'Test', 'correct constructor Test');
-    return stop();
+    try {
+        assert.ok(ports.length === 1, 'exactly one port');
+        assert.ok(ports[0].constructor.name === 'Test', 'correct constructor Test');
+    } finally {
+        await stop();
+    }
 });
 
 tap.test('main object', async(assert) => {
@@ -17,39 +20,63 @@ tap.test('main object', async(assert) => {
         method: 'unit',
         main: {
             layer: [
-                ({utPort}) => class Test extends utPort {},
+                ({utPort}) => class Test1 extends utPort {},
                 ({utPort}) => class Test2 extends utPort {}
             ]
         },
         config: {}
     });
-    assert.ok(ports.length === 2, '2 ports');
-    assert.ok(ports[0].constructor.name === 'Test', 'correct constructor Test');
-    assert.ok(ports[1].constructor.name === 'Test2', 'correct constructor Test2');
-    return stop();
+    try {
+        assert.ok(ports.length === 2, '2 ports');
+        assert.ok(ports[0].constructor.name === 'Test1', 'correct constructor Test1');
+        assert.ok(ports[1].constructor.name === 'Test2', 'correct constructor Test2');
+    } finally {
+        await stop();
+    }
 });
 
 tap.test('main array', async(assert) => {
     const {ports, stop} = await utRun.run({
         method: 'unit',
         main: [
-            {
-                layer1: [
-                    ({utPort}) => class Test extends utPort {},
+            () => ({
+                layer1: () => [
+                    ({utPort}) => class Test1 extends utPort {},
                     ({utPort}) => class Test2 extends utPort {}
-                ]
-            },
-            {
-                layer2: [
+                ],
+                layer2: () => [
+                    ({utPort}) => class Test21 extends utPort {},
+                    ({utPort}) => class Test22 extends utPort {}
+                ],
+                layer3: [
                     ({utPort}) => class Test3 extends utPort {}
                 ]
+            }),
+            function utModule() {
+                return {
+                    layer3: () => [
+                        ({utPort}) => class Test4 extends utPort {}
+                    ],
+                    layer4: () => [
+                        ({utPort}) => class Test41 extends utPort {}
+                    ]
+                };
             }
         ],
-        config: {}
+        config: {
+            layer1: true,
+            utModule: {
+                layer3: true
+            }
+        }
     });
-    assert.ok(ports.length === 3, '3 ports');
-    assert.ok(ports[0].constructor.name === 'Test', 'correct constructor Test');
-    assert.ok(ports[1].constructor.name === 'Test2', 'correct constructor Test2');
-    assert.ok(ports[2].constructor.name === 'Test3', 'correct constructor Test3');
-    return stop();
+    try {
+        assert.ok(ports.length === 4, '4 ports');
+        assert.ok(ports[0].constructor.name === 'Test1', 'correct constructor Test1');
+        assert.ok(ports[1].constructor.name === 'Test2', 'correct constructor Test2');
+        assert.ok(ports[2].constructor.name === 'Test3', 'correct constructor Test3');
+        assert.ok(ports[3].constructor.name === 'Test4', 'correct constructor Test4');
+    } finally {
+        await stop();
+    }
 });
