@@ -1,3 +1,12 @@
+## [10.19.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.0...v10.19.1) (2020-01-24)
+
+
+### Bug Fixes
+
+* pass vfs in ut-doc ([93bb0cc](https://github.com/softwaregroup-bg/ut-run/commit/93bb0cc))
+
+
+
 # [10.19.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.18.2...v10.19.0) (2020-01-24)
 
 
