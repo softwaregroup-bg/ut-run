@@ -2,13 +2,7 @@
 const serverRequire = require;
 const methods = require('./methods');
 const {load} = require('ut-config');
-const fs = require('fs');
-const vfs = (require.utCompile && require.utCompile.vfs) || {
-    compile: () => false,
-    readdir: (path, cb) => fs.readdir(path, cb),
-    isFile: fileName => fs.statSync(fileName).isFile(),
-    readFileSync: fileName => fs.readFileSync(fileName)
-};
+const vfs = require('./vfs');
 
 module.exports = {
     getConfig: load,
