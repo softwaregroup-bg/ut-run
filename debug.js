@@ -1,7 +1,7 @@
 const create = require('./create');
 
-module.exports = async function(serviceConfig, envConfig, assert) {
-    const {broker, serviceBus, service, mergedConfig, logFactory} = await create(envConfig);
+module.exports = async function(serviceConfig, envConfig, assert, vfs) {
+    const {broker, serviceBus, service, mergedConfig, logFactory} = await create(envConfig, vfs);
     try {
         const ports = (service && mergedConfig) ? await service.start(await service.create(serviceConfig, mergedConfig, assert)) : [];
         return {

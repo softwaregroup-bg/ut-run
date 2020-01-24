@@ -2,7 +2,7 @@ const hrtime = require('browser-process-hrtime');
 const utport = require('ut-port');
 const path = require('path');
 
-module.exports = ({serviceBus, logFactory, log}) => {
+module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
         const cwd = path.dirname(filename);
         const fsWatcher = require('chokidar').watch('**/*.js', {
@@ -22,7 +22,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
         });
     };
 
-    const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory});
+    const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory, vfs});
 
     function configure(obj = {}, config, moduleName, pkg) {
         return [].concat(...Object.entries(obj).map(([name, value]) => {
@@ -97,7 +97,7 @@ module.exports = ({serviceBus, logFactory, log}) => {
             }
 
             if (!filenames) return [];
-            config && config.run && config.run.hotReload && watch(main, async() => {
+            !require.utCompile && config && config.run && config.run.hotReload && watch(main, async() => {
                 clearCache(main);
                 [utModule, pkgJson] = requireWithMeta();
                 await servicePorts.destroy(utModule.name);

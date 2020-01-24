@@ -2,6 +2,13 @@
 const serverRequire = require;
 const methods = require('./methods');
 const {load} = require('ut-config');
+const fs = require('fs');
+const vfs = (require.utCompile && require.utCompile.vfs) || {
+    compile: () => false,
+    readdir: (path, cb) => fs.readdir(path, cb),
+    isFile: fileName => fs.statSync(fileName).isFile(),
+    readFileSync: fileName => fs.readFileSync(fileName)
+};
 
 module.exports = {
     getConfig: load,
@@ -33,7 +40,7 @@ module.exports = {
             }
         }
         const main = params.main || require(params.resolve('./' + config.params.app));
-        return methods[method](main, config, test);
+        return methods[method](main, config, test, vfs);
     },
     run: async function(params, test) {
         if (process.type === 'browser') {
@@ -44,6 +51,7 @@ module.exports = {
             config = await load(params);
             const result = await this.runParams(params, test, config);
             process.send && process.send('ready');
+            if (require.utCompile && require.utCompile.compiling) await result.stop();
             return result;
         } catch (err) {
             console.error(JSON.stringify({

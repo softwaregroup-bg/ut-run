@@ -17,7 +17,7 @@ function getDataDirectory() {
     }
 }
 
-module.exports = function(envConfig) {
+module.exports = function(envConfig, vfs) {
     var mergedConfig = merge({
         utLog: {
             streams: {
@@ -29,7 +29,7 @@ module.exports = function(envConfig) {
                         mode: 'dev'
                     }
                 },
-                udp: {
+                udp: !require.utCompile && {
                     level: 'trace',
                     stream: '../udpStream',
                     streamConfig: {
@@ -123,7 +123,8 @@ module.exports = function(envConfig) {
         service = require('./service')({
             serviceBus,
             logFactory,
-            log
+            log,
+            vfs
         });
     }
 

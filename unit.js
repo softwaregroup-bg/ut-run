@@ -1,4 +1,4 @@
-module.exports = function unit(serviceConfig, envConfig, assert) {
+module.exports = function unit(serviceConfig, envConfig, assert, vfs) {
     const server = () => {
         if (typeof serviceConfig === 'function') {
             return [{test: [serviceConfig]}];
@@ -28,7 +28,7 @@ module.exports = function unit(serviceConfig, envConfig, assert) {
         ...envConfig
     };
 
-    if (typeof steps === 'undefined') return require('./debug')(server, serverConfig, assert);
+    if (typeof steps === 'undefined') return require('./debug')(server, serverConfig, assert, vfs);
 
     return require('./test')({
         type: 'unit',
