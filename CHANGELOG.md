@@ -1,3 +1,12 @@
+# [10.19.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.18.2...v10.19.0) (2020-01-24)
+
+
+### Features
+
+* add ut-compile support ([0367b1d](https://github.com/softwaregroup-bg/ut-run/commit/0367b1d))
+
+
+
 ## [10.18.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.18.1...v10.18.2) (2020-01-23)
 
 
