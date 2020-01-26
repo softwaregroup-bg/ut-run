@@ -1,3 +1,12 @@
+## [10.19.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.1...v10.19.2) (2020-01-26)
+
+
+### Bug Fixes
+
+* prefix API ingress name ([b934cbb](https://github.com/softwaregroup-bg/ut-run/commit/b934cbb))
+
+
+
 ## [10.19.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.0...v10.19.1) (2020-01-24)
 
 
