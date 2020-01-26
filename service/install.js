@@ -310,10 +310,10 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                     port: 8090,
                     targetPort: 'http-jsonrpc',
                     ingress: [ingressConfig.rpc && {
-                        name: 'rpc',
+                        name: config.implementation + '-rpc',
                         path: `/rpc/${ns.replace(/\//g, '-')}/`
                     }, ingressConfig.apiDocs && {
-                        name: 'api',
+                        name: config.implementation + '-api',
                         path: `/api/${ns.replace(/\//g, '-')}`
                     }]
                 }));
