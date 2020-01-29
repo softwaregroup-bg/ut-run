@@ -80,6 +80,10 @@ We will use the following definitions:
   database schema, etc. These handlers are often named in the form
   `name1.name2.name3`, to allow for name spacing between microservice modules.
 
+### Graphical representation
+
+![ut framework](doc/ut_framework.png)
+
 ## Logical structure
 
 Following a common logical structure, allows combining the `microservice modules`,
