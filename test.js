@@ -255,13 +255,13 @@ module.exports = function(params, cache) {
             };
         }
     }
-    var services = [];
+    var startedServices = [];
     var stopServices = (test) => {
-        if (!services.length) {
+        if (!startedServices.length) {
             return Promise.resolve();
         }
         return test.test('Stopping services...', {bufferred: false}, (assert) => {
-            return services.reduce((promise, service) => {
+            return startedServices.reduce((promise, service) => {
                 return promise.then(() => {
                     return service.app.stop()
                         .then(() => {
@@ -287,14 +287,15 @@ module.exports = function(params, cache) {
         }));
     }
 
-    if (Array.isArray(params.services)) {
+    const services = [].concat(params.services).filter(s => typeof s === 'function');
+    if (services.length) {
         tests = tests.then(t => t.test('Starting services...', {bufferred: false, bail: true}, (assert) => {
-            return params.services.reduce((promise, service) => {
+            return services.reduce((promise, service) => {
                 return promise.then(() => {
                     return service()
                         .then((app) => {
                             assert.ok(true, `${service.name} service started.`);
-                            return services.unshift({
+                            return startedServices.unshift({
                                 app,
                                 name: service.name
                             });
