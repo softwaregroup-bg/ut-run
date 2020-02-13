@@ -6,7 +6,7 @@ const merge = require('ut-function.merge');
 const childProcess = require('child_process');
 
 module.exports = async function(serviceConfig, envConfig, assert, vfs) {
-    const {broker, serviceBus, service, mergedConfig, log} = await create(envConfig, vfs);
+    const {broker, serviceBus, service, mergedConfig, log, logFactory} = await create(envConfig, vfs);
     if (service) {
         if (!mergedConfig.run || !mergedConfig.run.layers) {
             throw new Error('Missing run.layers in the configuration');
@@ -265,4 +265,5 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
     }
     serviceBus && await serviceBus.destroy();
     broker && await broker.destroy();
+    logFactory && await logFactory.destroy();
 };
