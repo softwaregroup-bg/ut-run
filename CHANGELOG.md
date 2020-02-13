@@ -1,3 +1,12 @@
+## [10.19.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.8...v10.19.9) (2020-02-13)
+
+
+### Bug Fixes
+
+* destroy loggers at end of install ([72a188b](https://github.com/softwaregroup-bg/ut-run/commit/72a188bd8e7efb37658801594701aef4f214a6b0))
+
+
+
 ## [10.19.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.7...v10.19.8) (2020-02-13)
 
 
