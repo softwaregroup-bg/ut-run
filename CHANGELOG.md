@@ -1,3 +1,12 @@
+## [10.19.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.7...v10.19.8) (2020-02-13)
+
+
+### Bug Fixes
+
+* improve timeout handling ([c9ec315](https://github.com/softwaregroup-bg/ut-run/commit/c9ec315822ebf5a5f6a22cd0bb0554442b13d687))
+
+
+
 ## [10.19.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.6...v10.19.7) (2020-02-13)
 
 
