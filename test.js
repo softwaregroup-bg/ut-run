@@ -1,6 +1,8 @@
 // require('crypto');
 // var log = require('why-is-node-running');
 var tap = require('tap');
+var log = require('why-is-node-running');
+var util = require('util');
 var run = require('./index');
 var loadtest = require('loadtest');
 
@@ -396,5 +398,23 @@ module.exports = function(params, cache) {
         );
     };
 
-    return tests.then(stopAll);
+    const running = function() {
+        tap.setTimeout(10000);
+        tap.on('timeout', () => {
+            log({
+                error: function() {
+                    tap.comment(util.format(...arguments));
+                }
+            });
+            process.exit(1); // eslint-disable-line no-process-exit
+        });
+    };
+
+    return tests
+        .then(stopAll)
+        .then(running)
+        .catch(e => {
+            running();
+            throw e;
+        });
 };
