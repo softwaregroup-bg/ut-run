@@ -24,7 +24,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
         const editForm = await editConfig({log, edit: {server: mergedConfig.run.edit.server, id: mergedConfig.run.edit.id}});
         let secret;
 
-        let schema = service.schema({
+        const schema = service.schema({
             schema: {
                 properties: {
                     k8s: {
@@ -164,9 +164,9 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                 server: mergedConfig.run.edit.server,
                 handler: async({type}) => {
                     switch (type) {
-                        case 'k8s':
+                        case 'k8s': {
                             let result = service.install({layers: mergedConfig.run.layers, config: mergedConfig, secret});
-                            let lineWidth = strOptions.fold.lineWidth; // yet another stupid singleton
+                            const lineWidth = strOptions.fold.lineWidth; // yet another stupid singleton
                             try {
                                 strOptions.fold.lineWidth = 1e6;
                                 result = [
@@ -186,6 +186,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                                     'Content-Disposition': 'attachment; filename = "k8s.yaml"'
                                 }
                             };
+                        }
                         default:
                             return {
                                 payload: yaml.stringify(secret),

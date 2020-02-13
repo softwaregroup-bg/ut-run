@@ -1,8 +1,8 @@
 // require('crypto');
-var tap = require('tap');
-var log = require('why-is-node-running');
-var run = require('./index');
-var util = require('util');
+const tap = require('tap');
+const log = require('why-is-node-running');
+const run = require('./index');
+const util = require('util');
 
 function promisify(fn) {
     return function() {
@@ -11,6 +11,7 @@ function promisify(fn) {
 }
 
 function sequence(options, test, bus, flow, params, parent) {
+    const previous = [];
     function printSubtest(name, start) {
         if (start) {
             test.comment('-'.repeat(previous.length + 1) + '> subtest start: ' + getName(name));
@@ -20,7 +21,6 @@ function sequence(options, test, bus, flow, params, parent) {
             test.comment('<' + '-'.repeat(previous.length + 1) + ' subtest end: ' + getName(name));
         }
     }
-    var previous = [];
     function getName(name) {
         return previous.concat(name).join(' / ');
     }
@@ -48,22 +48,22 @@ function sequence(options, test, bus, flow, params, parent) {
     }
 
     return (function runSequence(flow, params, parent) {
-        var context = parent || {
+        const context = parent || {
             params: params || {}
         };
 
-        var steps = buildSteps(flow);
-        var passed = options.type && bus.performance &&
+        const steps = buildSteps(flow);
+        const passed = options.type && bus.performance &&
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
-        var duration = options.type && bus.performance &&
+        const duration = options.type && bus.performance &&
             bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
-        var promise = Promise.resolve();
-        var passing = true;
+        let promise = Promise.resolve();
+        let passing = true;
         steps.forEach(function(step, index) {
             promise = promise.then(function() {
-                var start = Date.now();
-                var skip = false;
+                const start = Date.now();
+                let skip = false;
                 function performanceWrite() {
                     bus.performance && bus.performance.write({
                         testName: options.name,
@@ -72,7 +72,7 @@ function sequence(options, test, bus, flow, params, parent) {
                         step: index
                     });
                 }
-                var fn = assert => {
+                const fn = assert => {
                     return step.params(context, {
                         sequence: function() {
                             printSubtest(step.name, true);
@@ -97,7 +97,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                     .then(() => step.steps(context))
                                     .then(steps => sequence(options, assert, bus, steps, undefined, context));
                             }
-                            let promise = step.$meta
+                            const promise = step.$meta
                                 ? step.$meta(context).then($meta => step.method(params, $meta))
                                 : step.method(params);
                             return promise
@@ -148,35 +148,35 @@ function sequence(options, test, bus, flow, params, parent) {
 }
 
 function performanceTest(params, assert, bus, flow) {
-    var loadtest = require('loadtest');
-    var step = flow.shift();
-    var start = Date.now();
+    const loadtest = require('loadtest');
+    const step = flow.shift();
+    const start = Date.now();
     params.context = params.context || {};
 
-    var passed = params.name && bus.performance &&
+    const passed = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'p', 'Passed tests');
-    var duration = params.name && bus.performance &&
+    const duration = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'd', 'Test duration');
-    var totalRequests = params.name && bus.performance &&
+    const totalRequests = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'TotalRequests', 'Total requests');
-    var totalErrors = params.name && bus.performance &&
+    const totalErrors = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'TotalErrors', 'Total errors');
-    var errorMessage = params.name && bus.performance &&
+    const errorMessage = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorMessage', 'Error message');
-    var rps = params.name && bus.performance &&
+    const rps = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'RpS', 'Requests per seconds');
-    var meanLatencyMs = params.name && bus.performance &&
+    const meanLatencyMs = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'MeanLatencyMS', 'Mean latency');
-    var maxLatencyMs = params.name && bus.performance &&
+    const maxLatencyMs = params.name && bus.performance &&
         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'MaxLatencyMs', 'Max latency');
 
-    var errors = [];
+    const errors = [];
     assert.test(step.name || ('testing method ' + step.methodName), {bufferred: false}, (methodAssert) => {
-        var state = true;
-        var httpSettings = {
+        let state = true;
+        const httpSettings = {
             url: step.url || params.url,
             body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params},
-                params.body || {jsonrpc: '2.0', 'id': 1}),
+                params.body || {jsonrpc: '2.0', id: 1}),
             method: step.httpMethod || params.httpMethod || 'POST',
             contentType: step.contentType || params.contentType || 'application/json',
             maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
@@ -187,12 +187,13 @@ function performanceTest(params, assert, bus, flow) {
                 if (error) {
                     state = false;
                 }
+                let result;
                 if (response) {
-                    var cookie = step.storeCookies && response.headers && response.headers['set-cookie'] && (response.headers['set-cookie'][0].split(';'))[0];
+                    const cookie = step.storeCookies && response.headers && response.headers['set-cookie'] && (response.headers['set-cookie'][0].split(';'))[0];
                     if (cookie) {
                         params.cookies = cookie;
                     }
-                    var result = response ? JSON.parse(response.body) : {};
+                    result = response ? JSON.parse(response.body) : {};
                     if (result.error) {
                         state = false;
                         errors.push(result.error.message);
@@ -218,12 +219,12 @@ function performanceTest(params, assert, bus, flow) {
             meanLatencyMs && meanLatencyMs(result.meanLatencyMs);
             maxLatencyMs && maxLatencyMs(result.maxLatencyMs);
 
-            var metrics = {stepName: step.name, method: step.method};
+            const metrics = {stepName: step.name, method: step.method};
 
             if (result.errorCodes) {
-                var keys = Object.keys(result.errorCodes);
+                const keys = Object.keys(result.errorCodes);
                 keys.map(function(key) {
-                    var errorCode = params.name && bus.performance &&
+                    const errorCode = params.name && bus.performance &&
                         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorCode' + key, 'Error code ' + key);
                     errorCode(result.errorCodes[key]);
                 });
@@ -242,7 +243,7 @@ function performanceTest(params, assert, bus, flow) {
 }
 
 module.exports = function(params, cache) {
-    var clientConfig;
+    let clientConfig;
     if (cache && cache.uttest) {
         if (!cache.first) {
             cache.first = true;
@@ -255,8 +256,8 @@ module.exports = function(params, cache) {
             };
         }
     }
-    var services = [];
-    var stopServices = (test) => {
+    const services = [];
+    const stopServices = (test) => {
         if (!services.length) {
             return Promise.resolve();
         }
@@ -272,10 +273,10 @@ module.exports = function(params, cache) {
         });
     };
 
-    var tests = tap.test('Starting tests', () => Promise.resolve());
-    var brokerRun;
+    let tests = tap.test('Starting tests', () => Promise.resolve());
+    let brokerRun;
     if (params.brokerConfig) {
-        var brokerConfig = {
+        const brokerConfig = {
             main: params.broker || [],
             config: params.brokerConfig,
             env: 'test',
@@ -310,7 +311,7 @@ module.exports = function(params, cache) {
             config: params.clientConfig,
             method: 'debug'
         };
-        var clientsRun = run.run(clientConfig);
+        const clientsRun = run.run(clientConfig);
         tap.test('Performance test start', (assert) => clientsRun.then((client) => {
             params.steps(assert, client.serviceBus, performanceTest.bind(null, params), client.ports);
             return true;
@@ -318,7 +319,7 @@ module.exports = function(params, cache) {
         return;
     }
 
-    var serverConfig = {
+    const serverConfig = {
         main: params.server,
         config: params.serverConfig,
         app: params.serverApp || '../../server',
@@ -333,15 +334,15 @@ module.exports = function(params, cache) {
         method: params.clientMethod || 'debug'
     };
 
-    var serverRun;
-    var serverObj;
+    let serverRun;
+    let serverObj;
     // tap.jobs = 1;
     tests = tests.then(t => t.test('server start', {bufferred: false, bail: true}, assert => {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             serverObj = server;
             !clientConfig && cache && (cache.serviceBus = server.serviceBus) && (cache.ports = server.ports);
-            var result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
+            const result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
         });
     }));
@@ -365,7 +366,7 @@ module.exports = function(params, cache) {
     }
 
     const testClient = testConfig => assert => assert.test('client tests', async assert => {
-        let client = await startClient(assert);
+        const client = await startClient(assert);
         await testConfig.steps(assert, client.serviceBus, sequence.bind(null, testConfig), client.ports);
         await assert.test('client stop', a => stop(a, client));
     }).catch(assert.threw);
@@ -380,7 +381,7 @@ module.exports = function(params, cache) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
             let jobs = params.jobs;
             if (typeof jobs === 'string' || jobs instanceof RegExp) {
-                let target = {};
+                const target = {};
                 serverObj.serviceBus.attachHandlers(target, [jobs]); // test specified test methods from bus
                 jobs = [].concat( // convert them to an array of job definitions
                     ...Array.from(target.importedMap.entries())
@@ -421,10 +422,10 @@ module.exports = function(params, cache) {
     }
 
     function stop(assert, x) {
-        var promise = Promise.resolve();
-        var steps = [];
-        var current;
-        var step = (name, fn) => {
+        let promise = Promise.resolve();
+        const steps = [];
+        let current;
+        const step = (name, fn) => {
             promise = promise
                 .then(value => {
                     current = name;
@@ -444,6 +445,7 @@ module.exports = function(params, cache) {
         x.ports.forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
         x.serviceBus && step('bus', () => x.serviceBus.destroy());
         x.broker && step('broker', () => x.broker.destroy());
+        x.log && x.log.destroy && step('main loger', () => x.log.destroy());
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 reject(new Error('Timed out on ' + current + '.destroy'));
@@ -459,10 +461,10 @@ module.exports = function(params, cache) {
         });
     }
 
-    var stopAll = function(test) {
+    const stopAll = function(test) {
         stopServices(test);
         params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
-            var x = Promise.resolve();
+            let x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
                 x = x.then(() => (promise.then((impl) => (impl.stop()))));
             });
@@ -478,7 +480,7 @@ module.exports = function(params, cache) {
                 .catch(() => Promise.reject(new Error('Broker did not start'))));
     };
 
-    var running = function() {
+    const running = function() {
         tap.setTimeout(5000);
         tap.on('timeout', () => process.exit(1)); // eslint-disable-line no-process-exit
         setTimeout(() => log({

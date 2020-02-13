@@ -18,7 +18,7 @@ function getDataDirectory() {
 }
 
 module.exports = function(envConfig, vfs) {
-    var mergedConfig = merge({
+    const mergedConfig = merge({
         utLog: {
             streams: {
                 stdOut: {
@@ -74,17 +74,17 @@ module.exports = function(envConfig, vfs) {
         if (!mergedConfig.implementation) {
             throw new Error('Missing implementation ID in config');
         }
-        var path = serverRequire('path');
+        const path = serverRequire('path');
         mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree', mergedConfig.implementation);
     }
 
-    var logFactory;
-    var log;
+    let logFactory;
+    let log;
 
     if (mergedConfig.log === false || mergedConfig.log === 'false' || !mergedConfig.utLog || mergedConfig.utLog === 'false') {
         logFactory = null;
     } else {
-        var UTLog = require('ut-log');
+        const UTLog = require('ut-log');
         logFactory = new UTLog({
             type: 'bunyan',
             name: 'bunyan_test',
@@ -110,9 +110,9 @@ module.exports = function(envConfig, vfs) {
             repl: mergedConfig.repl
         });
     }
-    var broker;
-    var serviceBus;
-    var service;
+    let broker;
+    let serviceBus;
+    let service;
 
     if (mergedConfig.utBus.broker) {
         broker = new Broker(Object.assign({logFactory}, mergedConfig.utBus.broker));
@@ -129,11 +129,11 @@ module.exports = function(envConfig, vfs) {
     }
 
     if (envConfig.repl !== false && envConfig.repl !== 'false') {
-        var repl = serverRequire('repl').start({prompt: 'ut>'});
+        const repl = serverRequire('repl').start({prompt: 'ut>'});
         repl.context.app = global.app = {broker, serviceBus, service};
     }
 
-    var promise = Promise.resolve();
+    let promise = Promise.resolve();
     if (broker) {
         promise = promise.then(broker.init.bind(broker));
     }

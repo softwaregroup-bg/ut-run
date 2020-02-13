@@ -22,6 +22,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                     .map((port) => port.destroy.bind(port))
                     .concat(serviceBus ? serviceBus.destroy.bind(serviceBus) : [])
                     .concat(broker ? broker.destroy.bind(broker) : [])
+                    .concat(logFactory ? logFactory.destroy.bind(logFactory) : [])
                     .forEach((method) => (innerPromise = innerPromise.then(() => method())));
                 return innerPromise;
             }

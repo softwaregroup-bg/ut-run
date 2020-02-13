@@ -22,7 +22,7 @@ module.exports = ({
             spec: {
                 type: 'ClusterIP',
                 ports: [{
-                    'port': 24224,
+                    port: 24224,
                     protocol: 'TCP',
                     name: 'forward'
                 }],

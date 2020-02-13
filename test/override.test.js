@@ -39,6 +39,7 @@ function utModule3() {
                         imports: ['utModule1.service', 'utModule2.service']
                     };
                 }
+
                 get handlers() {
                     return {
                         'service.entity.action': async function(params, $meta) {

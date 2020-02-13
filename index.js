@@ -10,10 +10,10 @@ module.exports = {
         if (!config) config = await load(params);
         const method = config.params.method;
         if (config.cluster && config.broker && config.broker.socket) {
-            var cluster = serverRequire('cluster');
+            const cluster = serverRequire('cluster');
             if (cluster.isMaster) {
-                var workerCount = config.cluster.workers || require('os').cpus().length;
-                for (var i = 0; i < workerCount; i += 1) {
+                const workerCount = config.cluster.workers || require('os').cpus().length;
+                for (let i = 0; i < workerCount; i += 1) {
                     cluster.fork();
                 }
                 return Promise.resolve();
@@ -26,7 +26,7 @@ module.exports = {
                     } else if (config.broker.socket.port) {
                         config.broker.socket.port += cluster.worker.id;
                     } else {
-                        var printableConfigValue = serverRequire('util').inspect(config.broker.socket);
+                        const printableConfigValue = serverRequire('util').inspect(config.broker.socket);
                         throw new Error(`Unsupported broker.socket configuration: ${printableConfigValue}`);
                     }
                 }

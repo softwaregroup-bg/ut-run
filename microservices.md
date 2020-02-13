@@ -379,9 +379,10 @@ function utModule2() {
 };
 
 function utModule3() {
+    const basePort = require('ut-port-script');
     return {
         orchestrator: () => [
-            (...params) => class script extends require('ut-port-script')(...params) {
+            (...params) => class script extends basePort(...params) {
                 get defaults() {
                     return {
                         namespace: ['service'],

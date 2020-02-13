@@ -11,7 +11,7 @@ const hash = content => crypto
     .digest('hex')
     .substr(0, 10)
     .split('')
-    .map(x => ({'0': 'g', '1': 'h', '3': 'k', a: 'm', 'e': 't'}[x] || x))
+    .map(x => ({0: 'g', 1: 'h', 3: 'k', a: 'm', e: 't'}[x] || x))
     .join('');
 
 const readConfig = filename => {
@@ -213,8 +213,8 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                                     'prometheus.io/scheme': 'http'
                                 },
                                 labels: {
-                                    'app': deploymentName,
-                                    'version': config.version,
+                                    app: deploymentName,
+                                    version: config.version,
                                     'app.kubernetes.io/name': deploymentName,
                                     'app.kubernetes.io/version': config.version,
                                     'app.kubernetes.io/instance': config.implementation + '_' + config.version,
