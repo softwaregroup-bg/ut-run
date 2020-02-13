@@ -1,3 +1,12 @@
+## [10.19.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.6...v10.19.7) (2020-02-13)
+
+
+### Bug Fixes
+
+* allow more time for closing log streams ([6677eb9](https://github.com/softwaregroup-bg/ut-run/commit/6677eb95454ebb8f6d63ad50ab5388b824dfab63))
+
+
+
 ## [10.19.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.5...v10.19.6) (2020-02-13)
 
 
