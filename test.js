@@ -482,12 +482,14 @@ module.exports = function(params, cache) {
 
     const running = function() {
         tap.setTimeout(10000);
-        tap.on('timeout', () => process.exit(1)); // eslint-disable-line no-process-exit
-        setTimeout(() => log({
-            error: function() {
-                tap.comment(util.format(...arguments));
-            }
-        }), 8000);
+        tap.on('timeout', () => {
+            log({
+                error: function() {
+                    tap.comment(util.format(...arguments));
+                }
+            });
+            process.exit(1); // eslint-disable-line no-process-exit
+        });
     };
 
     return tests
