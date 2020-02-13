@@ -1,3 +1,12 @@
+## [10.19.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.4...v10.19.5) (2020-02-13)
+
+
+### Bug Fixes
+
+* close log streams on stop ([61b73fc](https://github.com/softwaregroup-bg/ut-run/commit/61b73fc772337e6877f36b0016cc5a85fba2e5ca))
+
+
+
 ## [10.19.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.3...v10.19.4) (2020-01-30)
 
 
