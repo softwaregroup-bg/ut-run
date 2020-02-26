@@ -24,7 +24,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
         const editForm = await editConfig({log, edit: {server: mergedConfig.run.edit.server, id: mergedConfig.run.edit.id}});
         let secret;
 
-        const schema = service.schema({
+        const {schema, uiSchema, formData} = service.schema({
             schema: {
                 properties: {
                     k8s: {
@@ -134,7 +134,8 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             log,
             edit: {
                 ...mergedConfig.run.edit,
-                ...schema,
+                schema,
+                uiSchema,
                 id: editForm.id,
                 submit: async({payload}) => {
                     merge(mergedConfig, {k8s: payload.k8s});
@@ -147,6 +148,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                     };
                 }
             },
+            formData,
             filename: mergedConfig.config
         });
 
