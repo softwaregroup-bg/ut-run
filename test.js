@@ -49,6 +49,7 @@ function sequence(options, test, bus, flow, params, parent) {
 
     return (function runSequence(flow, params, parent) {
         const context = parent || {
+            ...options.context,
             params: params || {}
         };
 
@@ -99,7 +100,7 @@ function sequence(options, test, bus, flow, params, parent) {
                             }
                             const promise = step.$meta
                                 ? step.$meta(context).then($meta => step.method(params, $meta))
-                                : step.method(params);
+                                : step.method.apply(step, context.$meta ? [params, context.$meta] : [params]);
                             return promise
                                 .then(function(result) {
                                     duration && duration(Date.now() - start);
@@ -387,6 +388,7 @@ module.exports = function(params, cache) {
                     ...Array.from(target.importedMap.entries())
                         .map(([jobName, imported]) => Object.entries(imported).map(([name, steps]) => ({
                             name: jobName + '.' + name,
+                            context: params.context,
                             steps
                         }))));
             }

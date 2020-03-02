@@ -1,37 +1,42 @@
-module.exports = function unit(serviceConfig, envConfig, assert, vfs) {
+const merge = require('ut-function.merge');
+module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vfs) {
     const server = () => {
         if (typeof serviceConfig === 'function') {
             return [{test: [serviceConfig]}];
         }
         return [].concat(serviceConfig);
     };
-
-    const { jobs, steps } = envConfig;
-    delete envConfig.jobs;
-    delete envConfig.steps;
-    delete envConfig.params;
-
-    const serverConfig = {
+    const serverConfig = merge({
         implementation: 'test',
         repl: false,
-        utBus: {
-            serviceBus: {
-                jsonrpc: {
-                    socket: true
+        run: {
+            logLevel: 'warn'
+        },
+        utPort: {
+            logLevel: 'warn'
+        },
+        utRun: {
+            test: {
+                jobs: new RegExp(`^ut${envConfig.implementation}.test`, 'i'),
+                context: {
+                    loginMeta: true
                 }
             }
         },
-        utLog: {
-            streams: {
-                udp: false
+        utBus: {
+            serviceBus: {
+                logLevel: 'warn',
+                canSkipSocket: false,
+                jsonrpc: {
+                    socket: true,
+                    domain: true
+                }
             }
-        },
-        ...envConfig
-    };
+        }
+    }, envConfig);
 
-    if (typeof jobs === 'undefined' && typeof steps === 'undefined') {
-        return require('./debug')(server, serverConfig, assert, vfs);
-    }
+    const {utRun: {test: {jobs, context}}} = serverConfig;
+    const steps = envConfig.steps;
 
     return require('./test')({
         type: 'unit',
@@ -40,11 +45,12 @@ module.exports = function unit(serviceConfig, envConfig, assert, vfs) {
         client: false,
         server,
         serverConfig,
-        jobs: jobs || [{
+        context,
+        jobs: steps ? [{
             name: 'port.test',
             steps: function test(test, bus, run) {
                 return typeof steps === 'function' ? steps(test, bus) : run(test, bus, steps);
             }
-        }]
+        }] : jobs
     });
 };
