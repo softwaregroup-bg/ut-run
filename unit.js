@@ -17,7 +17,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
         },
         utRun: {
             test: {
-                jobs: new RegExp(`^ut${envConfig.implementation}.test`, 'i'),
+                jobs: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.test`, 'i'),
                 context: {
                     loginMeta: true
                 }
@@ -37,6 +37,10 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
 
     const {utRun: {test: {jobs, context}}} = serverConfig;
     const steps = envConfig.steps;
+
+    if (!jobs && !steps) {
+        return require('./debug')(server, serverConfig, assert, vfs);
+    }
 
     return require('./test')({
         type: 'unit',
