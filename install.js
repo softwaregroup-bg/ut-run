@@ -15,9 +15,11 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             throw new Error('Missing run.edit in the configuration');
         }
         Object.keys(mergedConfig.run.layers).forEach(name => { // enable all layers in run.layers
-            const [utModule, layer] = name.split('.', 2);
-            if (!mergedConfig[utModule]) mergedConfig[utModule] = {[layer]: true};
-            if (!mergedConfig[utModule][layer]) mergedConfig[utModule][layer] = true;
+            if (mergedConfig.run.layers[name]) { // may be disabled from extension
+                const [utModule, layer] = name.split('.', 2);
+                if (!mergedConfig[utModule]) mergedConfig[utModule] = {[layer]: true};
+                if (!mergedConfig[utModule][layer]) mergedConfig[utModule][layer] = true;
+            }
         });
         const ports = await service.create(serviceConfig, mergedConfig, assert);
         const finishForm = await editConfig({log, edit: {server: mergedConfig.run.edit.server}});
