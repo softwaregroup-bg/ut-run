@@ -26,6 +26,14 @@ function sequence(options, test, bus, flow, params, parent) {
     }
     function buildSteps(flow) {
         return flow.reduce((steps, step) => {
+            if (typeof step === 'string') {
+                const fn = options.imported && options.imported['steps.' + step.toLowerCase()];
+                if (fn instanceof Function) {
+                    step = {name: step.toLowerCase(), ...fn()};
+                } else {
+                    throw new Error('Step not found in imports: ' + step);
+                }
+            }
             if (Array.isArray(step)) {
                 return steps.concat(buildSteps(step));
             }
@@ -377,7 +385,16 @@ module.exports = function(params, cache) {
     }).catch(assert.threw);
 
     const testAny = clientConfig ? testClient : testServer;
+    let imported;
 
+    if (params.imports) {
+        tests = tests.then(t => {
+            const target = {};
+            serverObj.serviceBus.attachHandlers(target, [params.imports]);
+            imported = target.imported;
+            return t;
+        });
+    }
     if (params.jobs) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
             let jobs = params.jobs;
@@ -386,9 +403,10 @@ module.exports = function(params, cache) {
                 serverObj.serviceBus.attachHandlers(target, [jobs]); // test specified test methods from bus
                 jobs = [].concat( // convert them to an array of job definitions
                     ...Array.from(target.importedMap.entries())
-                        .map(([jobName, imported]) => Object.entries(imported).map(([name, steps]) => ({
+                        .map(([jobName, importedJob]) => Object.entries(importedJob).map(([name, steps]) => ({
                             name: jobName + '.' + name,
                             context: params.context,
+                            imported,
                             steps
                         }))));
             }
@@ -420,7 +438,7 @@ module.exports = function(params, cache) {
             });
         }));
     } else {
-        tests = tests.then(testAny(params));
+        tests = tests.then(testAny({...params, imported}));
     }
 
     function stop(assert, x) {
