@@ -18,6 +18,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
         utRun: {
             test: {
                 jobs: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.test`, 'i'),
+                features: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.features`, 'i'),
                 imports: envConfig.implementation && /\.steps$/,
                 context: {
                     loginMeta: true
@@ -36,7 +37,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
         }
     }, envConfig);
 
-    const {utRun: {test: {jobs, context, imports}}} = serverConfig;
+    const {utRun: {test: {jobs, context, imports, features}}} = serverConfig;
     const steps = envConfig.steps;
 
     if (!jobs && !steps) {
@@ -52,6 +53,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
         serverConfig,
         context,
         imports,
+        features,
         jobs: steps ? [{
             name: 'port.test',
             steps: function test(test, bus, run) {

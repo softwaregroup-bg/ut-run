@@ -3,15 +3,12 @@ const tap = require('tap');
 const log = require('why-is-node-running');
 const run = require('./index');
 const util = require('util');
-
-function promisify(fn) {
-    return function() {
-        return new Promise(resolve => resolve(fn.apply(this, arguments)));
-    };
-}
+const hrtime = require('browser-process-hrtime');
+const cucumber = require('./cucumber');
 
 function sequence(options, test, bus, flow, params, parent) {
     const previous = [];
+    const report = cucumber.getReport(options);
     function printSubtest(name, start) {
         if (start) {
             test.comment('-'.repeat(previous.length + 1) + '> subtest start: ' + getName(name));
@@ -26,30 +23,26 @@ function sequence(options, test, bus, flow, params, parent) {
     }
     function buildSteps(flow) {
         return flow.reduce((steps, step) => {
-            if (typeof step === 'string') {
-                const fn = options.imported && options.imported['steps.' + step.toLowerCase()];
-                if (fn instanceof Function) {
-                    step = {name: step.toLowerCase(), ...fn()};
-                } else {
-                    throw new Error('Step not found in imports: ' + step);
-                }
-            }
+            step = cucumber.convertStep(step, options);
             if (Array.isArray(step)) {
                 return steps.concat(buildSteps(step));
             }
             if (!step.name) {
                 throw new Error('step name is required');
             }
+            const {method: stepMethod, $meta: stepMeta, params: stepParams, ...rest} = step;
             steps.push({
-                name: step.name,
-                methodName: step.method,
-                method: step.method ? bus.importMethod(step.method) : (params) => Promise.resolve(params),
-                params: (typeof step.params === 'function') ? promisify(step.params) : () => Promise.resolve(step.params),
-                $meta: (typeof step.$meta === 'function') ? promisify(step.$meta) : (step.$meta && (() => Promise.resolve(step.$meta))),
-                steps: step.steps,
-                context: step.context,
-                result: step.result,
-                error: step.error
+                methodName: stepMethod,
+                method: stepMethod ? bus.importMethod(stepMethod) : async params => params,
+                async params() {
+                    return (typeof stepParams === 'function') ? stepParams(...arguments) : stepParams;
+                },
+                ...stepMeta && {
+                    async $meta() {
+                        return (typeof stepMeta === 'function') ? stepMeta(...arguments) : stepMeta;
+                    }
+                },
+                ...rest
             });
             return steps;
         }, []);
@@ -72,6 +65,7 @@ function sequence(options, test, bus, flow, params, parent) {
         steps.forEach(function(step, index) {
             promise = promise.then(function() {
                 const start = Date.now();
+                const starthr = hrtime();
                 let skip = false;
                 function performanceWrite() {
                     bus.performance && bus.performance.write({
@@ -142,9 +136,11 @@ function sequence(options, test, bus, flow, params, parent) {
                         })
                         .then(result => {
                             passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
+                            report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'faled'));
                             return result;
                         }, error => {
                             passing = false;
+                            report.push(cucumber.reportStep(step, starthr, 'failed'));
                             throw error;
                         });
                 };
@@ -253,6 +249,8 @@ function performanceTest(params, assert, bus, flow) {
 
 module.exports = function(params, cache) {
     let clientConfig;
+    const cucumberReport = {};
+
     if (cache && cache.uttest) {
         if (!cache.first) {
             cache.first = true;
@@ -395,6 +393,7 @@ module.exports = function(params, cache) {
             return t;
         });
     }
+    tests = tests.then(assert => cucumber.testFeatures(assert, params, serverObj, cucumberReport, imported, testAny));
     if (params.jobs) {
         tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
             let jobs = params.jobs;
@@ -404,6 +403,7 @@ module.exports = function(params, cache) {
                 jobs = [].concat( // convert them to an array of job definitions
                     ...Array.from(target.importedMap.entries())
                         .map(([jobName, importedJob]) => Object.entries(importedJob).map(([name, steps]) => ({
+                            feature: cucumber.addFeature(cucumberReport, jobName, params),
                             name: jobName + '.' + name,
                             context: params.context,
                             imported,
@@ -440,6 +440,8 @@ module.exports = function(params, cache) {
     } else {
         tests = tests.then(testAny({...params, imported}));
     }
+
+    tests = tests.then(cucumber.writeReport(cucumberReport));
 
     function stop(assert, x) {
         let promise = Promise.resolve();
