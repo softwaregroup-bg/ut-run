@@ -1,10 +1,9 @@
 const tap = require('tap');
 const { getConfig } = require('..');
-const sortKeys = require('sort-keys');
 const clean = obj => {
     delete obj.params.appname;
     delete obj.params.env;
-    return sortKeys(obj);
+    return obj;
 };
 
 tap.test('getConfig', assert => {

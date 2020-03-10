@@ -4,8 +4,10 @@
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
     "chokidar": "3.0.2",
+    "escape-string-regexp": "2.0.0",
     "loadtest": "3.0.8",
     "sort-keys": "2.0.0",
+    "stack-utils": "2.0.1",
     "ut-config": "^7.5.2",
     "ut-bus": "^7.12.2",
     "ut-log": "^6.6.5",
@@ -14,7 +16,7 @@
     "yaml": "1.6.0"
   },
   "devDependencies": {
-    "sort-keys": "2.0.0",
+    "@cucumber/gherkin": "11.0.0",
     "tap": "^14.10.6",
     "ut-port-script": "^7.0.2",
     "ut-tools": "^6.33.2"
