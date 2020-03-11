@@ -17,7 +17,7 @@ const matcher = name => {
 
 function writeReport(report) {
     return assert => {
-        Object.values(report).forEach(feature => {
+        report && Object.values(report).forEach(feature => {
             if (!feature.uri) {
                 const lines = [];
                 const setLine = tag => { tag.line = lines.length; };
