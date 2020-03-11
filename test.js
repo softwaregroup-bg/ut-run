@@ -431,11 +431,18 @@ module.exports = function(params, cache) {
                     throw new Error('Invalid \'exclude\' property [', params.exclude, '] Must be one of: RegExp, Array, String');
                 }
             }
-            test.plan(jobs.length);
-            jobs.forEach(job => {
-                if (!job) return;
-                test.test(job.name, testAny(job));
-            });
+            Promise
+                .resolve()
+                .then(() => (serverObj.config.run && serverObj.config.run.test && serverObj.config.run.test.prompt) ? require('./prompt')(jobs) : jobs)
+                .then(selectedJobs => {
+                    test.plan(selectedJobs.length);
+                    selectedJobs.forEach(job => {
+                        if (!job) return;
+                        test.test(job.name, testAny(job));
+                    });
+                    return selectedJobs;
+                })
+                .catch(test.threw);
         }));
     } else {
         tests = tests.then(testAny({...params, imported}));
