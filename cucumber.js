@@ -46,7 +46,7 @@ function writeReport(report) {
             }
         });
         const reportName = assert.fullname.trim().replace(/[^a-zA-Z0-9._-]+/g, '-');
-        if (Object.values(report).length) fs.writeFileSync(`.lint/${reportName}.cucumber.json`, JSON.stringify(Object.values(report)));
+        if (Object.values(report).length) fs.writeFileSync(`.lint/${reportName}.cucumber.json`, JSON.stringify(Object.values(report), false, 2));
         return assert;
     };
 }
