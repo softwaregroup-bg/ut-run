@@ -115,11 +115,11 @@ module.exports = function(envConfig, vfs) {
     let service;
 
     if (mergedConfig.utBus.broker) {
-        broker = new Broker(Object.assign({logFactory}, mergedConfig.utBus.broker));
+        broker = new Broker(Object.assign({logFactory, workDir: path.join(mergedConfig.workDir, 'broker')}, mergedConfig.utBus.broker));
     }
 
     if (mergedConfig.utBus.serviceBus) {
-        serviceBus = new ServiceBus(Object.assign({logFactory}, mergedConfig.utBus.serviceBus));
+        serviceBus = new ServiceBus(Object.assign({logFactory, workDir: path.join(mergedConfig.workDir, 'serviceBus')}, mergedConfig.utBus.serviceBus));
         service = require('./service')({
             serviceBus,
             logFactory,

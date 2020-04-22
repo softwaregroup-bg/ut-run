@@ -31,6 +31,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
                 canSkipSocket: false,
                 jsonrpc: {
                     socket: true,
+                    api: true,
                     domain: 'utrun-unit-' + process.pid
                 }
             }
