@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "10.20.0-validations.8",
+  "version": "10.20.0-validations.9",
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
     "chokidar": "3.0.2",
