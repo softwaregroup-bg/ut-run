@@ -1,3 +1,26 @@
+# [10.20.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.9...v10.20.0) (2020-04-30)
+
+
+### Bug Fixes
+
+* better unit test defaults ([9c502b2](https://github.com/softwaregroup-bg/ut-run/commit/9c502b2f258b801b29368a77791de0ded2f4272f))
+* check report ([6aedd8d](https://github.com/softwaregroup-bg/ut-run/commit/6aedd8d886758e358fde80fe664ff0ffe067aebc))
+* check report ([234cc92](https://github.com/softwaregroup-bg/ut-run/commit/234cc92531c76b78069d612d02972d57ec31af9f))
+* configure jobs only for implementations ([9ad9962](https://github.com/softwaregroup-bg/ut-run/commit/9ad9962fd0a8957284c19619962e23862913a20e))
+* parallel unit testing ([cd203db](https://github.com/softwaregroup-bg/ut-run/commit/cd203db8933c938b53881f6f768f209bd24e27cf))
+* workdir in browser ([f7b80fb](https://github.com/softwaregroup-bg/ut-run/commit/f7b80fbc1413f4cdd212f8595cca206fdb0bd59b))
+
+
+### Features
+
+* cucumber support ([2bf0702](https://github.com/softwaregroup-bg/ut-run/commit/2bf070269dd792f1a222457524810ad931d07b5d))
+* pass workdir to bus ([17de26f](https://github.com/softwaregroup-bg/ut-run/commit/17de26f7dab9f7001f003ee7d0d0664242fd4f76))
+* port metrhod validations ([a952a21](https://github.com/softwaregroup-bg/ut-run/commit/a952a21a7917552843368f86bdc587851621f6a7))
+* share steps by name ([095c391](https://github.com/softwaregroup-bg/ut-run/commit/095c391408260a5bb3b7791e6a4e2c6d4f1a2e77))
+* update ut-bus ([740a155](https://github.com/softwaregroup-bg/ut-run/commit/740a15579c5182a81fa5fbbcf35aee5baa851dd0))
+
+
+
 ## [10.19.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.19.8...v10.19.9) (2020-02-13)
 
 
