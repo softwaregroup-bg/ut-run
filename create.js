@@ -5,6 +5,7 @@ const path = require('path');
 const {Broker, ServiceBus} = require('ut-bus');
 
 function getDataDirectory() {
+    if (process.browser) return '/';
     switch (process.platform) {
         case 'darwin':
             return path.join(process.env.HOME, 'Library/Application Support');
@@ -70,11 +71,10 @@ module.exports = function(envConfig, vfs) {
         }
     }
 
-    if (!process.browser && !mergedConfig.workDir) {
+    if (!mergedConfig.workDir) {
         if (!mergedConfig.implementation) {
             throw new Error('Missing implementation ID in config');
         }
-        const path = serverRequire('path');
         mergedConfig.workDir = path.join((getDataDirectory() || process.cwd()), 'SoftwareGroup', 'UnderTree', mergedConfig.implementation);
     }
 
