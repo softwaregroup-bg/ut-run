@@ -9,7 +9,7 @@
     "sort-keys": "2.0.0",
     "stack-utils": "2.0.1",
     "ut-config": "^7.5.2",
-    "ut-bus": "^7.14.0",
+    "ut-bus": ">=7.16.0-login.1 <=7.16.0-login.999",
     "ut-log": "^6.6.5",
     "ut-port": "^6.26.0",
     "ut-function.merge": "^1.5.4",
