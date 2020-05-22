@@ -1,3 +1,12 @@
+## [10.22.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.22.0...v10.22.1) (2020-05-22)
+
+
+### Bug Fixes
+
+* update chokidar ([106f758](https://github.com/softwaregroup-bg/ut-run/commit/106f758c0f4cbadcf57c0ec50d53752f8e3c4cec))
+
+
+
 # [10.22.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.21.0...v10.22.0) (2020-05-20)
 
 
