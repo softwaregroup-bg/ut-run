@@ -3,7 +3,7 @@
   "version": "10.22.0",
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
-    "chokidar": "3.0.2",
+    "chokidar": "3.4.0",
     "escape-string-regexp": "2.0.0",
     "loadtest": "3.0.8",
     "sort-keys": "2.0.0",

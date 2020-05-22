@@ -11,14 +11,14 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             ignored: ['.git/**', 'node_modules/**', 'ui/**']
         });
         fsWatcher.on('error', error => log && log.error && log.error(error));
-        fsWatcher.on('all', (event, file) => {
+        fsWatcher.on('all', async(event, file) => {
             log && log.info && log.info({
                 $meta: {mtid: 'event', method: 'serviceLayer.hotReload'},
                 event,
                 file: path.join(cwd, file)
             });
             // fsWatcher.close();
-            fn();
+            await fn();
         });
     };
 
