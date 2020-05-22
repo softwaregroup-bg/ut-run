@@ -8,11 +8,11 @@
     "loadtest": "3.0.8",
     "sort-keys": "2.0.0",
     "stack-utils": "2.0.1",
-    "ut-config": "^7.5.2",
-    "ut-bus": "^7.17.0",
+    "ut-config": "^7.5.3",
+    "ut-bus": "^7.18.0",
     "ut-log": "^6.6.5",
-    "ut-port": "^6.26.0",
-    "ut-function.merge": "^1.5.4",
+    "ut-port": "^6.28.0",
+    "ut-function.merge": "^1.5.5",
     "yaml": "1.6.0"
   },
   "devDependencies": {
@@ -21,8 +21,8 @@
     "inquirer": "7.0.1",
     "fuzzy": "0.1.3",
     "tap": "^14.10.6",
-    "ut-port-script": "^7.0.2",
-    "ut-tools": "^6.33.2"
+    "ut-port-script": "^7.1.0",
+    "ut-tools": "^6.33.4"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.1.0",
