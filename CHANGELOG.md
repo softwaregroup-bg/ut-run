@@ -1,3 +1,12 @@
+## [10.22.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.22.1...v10.22.2) (2020-05-22)
+
+
+### Bug Fixes
+
+* log reload errors ([8113c22](https://github.com/softwaregroup-bg/ut-run/commit/8113c22c2856652fab7ca5b768288554752da9f3))
+
+
+
 ## [10.22.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.22.0...v10.22.1) (2020-05-22)
 
 
