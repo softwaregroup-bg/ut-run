@@ -18,7 +18,11 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
                 file: path.join(cwd, file)
             });
             // fsWatcher.close();
-            await fn();
+            try {
+                await fn();
+            } catch (error) {
+                log && log.error && log.error(error);
+            }
         });
     };
 
