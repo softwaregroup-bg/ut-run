@@ -141,10 +141,12 @@ module.exports = ({portsAndModules, log, layers, config, secret}) => {
                         namespace: namespace.metadata.name,
                         name: name.toLowerCase(),
                         labels: {
-                            'app.kubernetes.io/name': portOrModule.config.pkg.layer,
+                            'ut.layer': portOrModule.config.pkg.layer,
+                            app: deploymentName,
+                            'app.kubernetes.io/name': deploymentName,
                             'app.kubernetes.io/component': portOrModule.config.pkg.name,
                             'app.kubernetes.io/version': portOrModule.config.pkg.version,
-                            'app.kubernetes.io/instance': config.implementation + '_' + config.version,
+                            'app.kubernetes.io/instance': deploymentName + '_' + portOrModule.config.pkg.version,
                             'app.kubernetes.io/part-of': config.implementation,
                             'app.kubernetes.io/managed-by': 'ut-run'
                         }
