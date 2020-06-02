@@ -1,3 +1,12 @@
+# [10.24.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.23.0...v10.24.0) (2020-06-02)
+
+
+### Features
+
+* improve Kiali visualization ([0b82f53](https://github.com/softwaregroup-bg/ut-run/commit/0b82f5382a7a2f83b37dc20870666f60dbea343a))
+
+
+
 # [10.23.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.22.2...v10.23.0) (2020-05-22)
 
 
