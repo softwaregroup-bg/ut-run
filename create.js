@@ -3,6 +3,7 @@ const merge = require('ut-function.merge');
 const serverRequire = require;
 const path = require('path');
 const {Broker, ServiceBus} = require('ut-bus');
+const through2 = require('through2');
 
 function getDataDirectory() {
     if (process.browser) return '/';
@@ -80,10 +81,35 @@ module.exports = function(envConfig, vfs) {
 
     let logFactory;
     let log;
+    let serviceBus;
 
     if (mergedConfig.log === false || mergedConfig.log === 'false' || !mergedConfig.utLog || mergedConfig.utLog === 'false') {
         logFactory = null;
     } else {
+        if (mergedConfig.utLog.streams.utNotice) {
+            mergedConfig.utLog.streams.utNotice = {
+                type: 'raw',
+                level: 'error',
+                streamConfig: {
+                    objectMode: true,
+                    method: 'notice.message.log'
+                },
+                stream: ({method, ...config}, options) => {
+                    let notice;
+                    return through2(config, async(message, enc, done) => {
+                        if (!notice) notice = serviceBus && serviceBus.publicApi.importMethod(method);
+                        try {
+                            if (notice && message.jsException && message.jsException.notice) {
+                                await notice(message);
+                            }
+                        } catch (error) {
+                        }
+                        done();
+                    });
+                },
+                ...mergedConfig.utLog.streams.utNotice
+            };
+        }
         const UTLog = require('ut-log');
         logFactory = new UTLog({
             type: 'bunyan',
@@ -111,7 +137,6 @@ module.exports = function(envConfig, vfs) {
         });
     }
     let broker;
-    let serviceBus;
     let service;
 
     if (mergedConfig.utBus.broker) {

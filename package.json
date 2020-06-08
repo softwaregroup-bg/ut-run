@@ -8,6 +8,7 @@
     "loadtest": "3.0.8",
     "sort-keys": "2.0.0",
     "stack-utils": "2.0.1",
+    "through2": "2.0.3",
     "ut-config": "^7.5.3",
     "ut-bus": "^7.18.0",
     "ut-log": "^6.6.5",
