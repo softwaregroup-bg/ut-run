@@ -1,3 +1,12 @@
+# [10.25.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.24.0...v10.25.0) (2020-06-08)
+
+
+### Features
+
+* notice stream ([d968493](https://github.com/softwaregroup-bg/ut-run/commit/d968493f8bc204c01e77c9a745553467a5cdc8d4))
+
+
+
 # [10.24.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.23.0...v10.24.0) (2020-06-02)
 
 
