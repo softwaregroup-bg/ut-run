@@ -1,3 +1,12 @@
+# [10.26.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.25.0...v10.26.0) (2020-06-12)
+
+
+### Features
+
+* update bus ([9a5056a](https://github.com/softwaregroup-bg/ut-run/commit/9a5056a0049096ef13904df3dce12b5d432090f3))
+
+
+
 # [10.25.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.24.0...v10.25.0) (2020-06-08)
 
 
