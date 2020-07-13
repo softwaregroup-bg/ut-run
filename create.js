@@ -1,6 +1,5 @@
 /* eslint no-process-env:0 */
 const merge = require('ut-function.merge');
-const serverRequire = require;
 const path = require('path');
 const {Broker, ServiceBus} = require('ut-bus');
 const through2 = require('through2');
@@ -31,7 +30,7 @@ module.exports = function(envConfig, vfs) {
                         mode: 'dev'
                     }
                 },
-                udp: !require.utCompile && {
+                udp: !process.browser && !require('./serverRequire').utCompile && {
                     level: 'trace',
                     stream: '../udpStream',
                     streamConfig: {
@@ -153,8 +152,8 @@ module.exports = function(envConfig, vfs) {
         });
     }
 
-    if (envConfig.repl !== false && envConfig.repl !== 'false') {
-        const repl = serverRequire('repl').start({prompt: 'ut>'});
+    if (!process.browser && envConfig.repl !== false && envConfig.repl !== 'false') {
+        const repl = require('./serverRequire')('repl').start({prompt: 'ut>'});
         repl.context.app = global.app = {broker, serviceBus, service};
     }
 

@@ -1,5 +1,4 @@
 /* eslint no-console:0, no-process-exit:0 */
-const serverRequire = require;
 const methods = require('./methods');
 const {load} = require('ut-config');
 const vfs = require('./vfs');
@@ -9,8 +8,8 @@ module.exports = {
     runParams: async function(params = {}, test, config) {
         if (!config) config = await load(params);
         const method = config.params.method;
-        if (config.cluster && config.broker && config.broker.socket) {
-            const cluster = serverRequire('cluster');
+        if (config.cluster) {
+            const cluster = require('./serverRequire')('cluster');
             if (cluster.isMaster) {
                 const workerCount = config.cluster.workers || require('os').cpus().length;
                 for (let i = 0; i < workerCount; i += 1) {
@@ -26,26 +25,26 @@ module.exports = {
                     } else if (config.broker.socket.port) {
                         config.broker.socket.port += cluster.worker.id;
                     } else {
-                        const printableConfigValue = serverRequire('util').inspect(config.broker.socket);
+                        const printableConfigValue = require('./serverRequire')('util').inspect(config.broker.socket);
                         throw new Error(`Unsupported broker.socket configuration: ${printableConfigValue}`);
                     }
                 }
                 config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
             }
         }
-        const main = params.main || require(params.resolve('./' + config.params.app));
+        const main = params.main || require('./serverRequire')(params.resolve('./' + config.params.app));
         return methods[method](main, config, test, vfs);
     },
     run: async function(params, test) {
         if (process.type === 'browser') {
-            return serverRequire('ut-front/electron')({main: params.root});
+            return require('./serverRequire')('ut-front/electron')({main: params.root});
         }
         let config = {service: 'undefined'};
         try {
             config = await load(params);
             const result = await this.runParams(params, test, config);
             process.send && process.send('ready');
-            if (require.utCompile && require.utCompile.compiling) await result.stop();
+            if (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling) await result.stop();
             return result;
         } catch (err) {
             console.error(JSON.stringify({

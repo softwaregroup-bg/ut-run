@@ -80,17 +80,18 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         if (!utModule) return;
         const clearCache = filename => {
             const dir = path.dirname(filename);
-            Object.keys(require.cache).filter(key => {
+            const cache = require('./serverRequire').cache;
+            Object.keys(cache).filter(key => {
                 const relative = path.relative(dir, key);
                 return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
-            }).forEach(key => { delete require.cache[key]; });
+            }).forEach(key => { delete cache[key]; });
         };
 
         function hotReload(filenames, ...params) {
             const {main, pkg} = typeof filenames === 'string' ? {main: filenames} : filenames;
             function requireWithMeta() {
-                const result = require(main)(...params);
-                let pkgJson = pkg && require(pkg);
+                const result = require('./serverRequire')(main)(...params);
+                let pkgJson = pkg && require('./serverRequire')(pkg);
                 if (pkgJson) {
                     pkgJson = {
                         name: pkgJson.name,
@@ -101,7 +102,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             }
 
             if (!filenames) return [];
-            !require.utCompile && config && config.run && config.run.hotReload && watch(main, async() => {
+            !process.browser && !require('./serverRequire').utCompile && config && config.run && config.run.hotReload && watch(main, async() => {
                 clearCache(main);
                 [utModule, pkgJson] = requireWithMeta();
                 await servicePorts.destroy(utModule.name);
