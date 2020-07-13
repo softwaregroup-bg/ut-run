@@ -1,3 +1,12 @@
+## [10.26.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.26.2...v10.26.3) (2020-07-13)
+
+
+### Bug Fixes
+
+* webpack warnings ([ec5b69b](https://github.com/softwaregroup-bg/ut-run/commit/ec5b69b8d938ec2efa48005133553ff4b6a900a3))
+
+
+
 ## [10.26.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.26.1...v10.26.2) (2020-07-01)
 
 
