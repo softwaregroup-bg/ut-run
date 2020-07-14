@@ -10,7 +10,7 @@
     "stack-utils": "2.0.1",
     "through2": "2.0.3",
     "ut-config": "^7.5.5",
-    "ut-bus": "^7.23.0",
+    "ut-bus": "^7.24.0",
     "ut-log": "^6.6.8",
     "ut-port": "^6.28.0",
     "ut-function.merge": "^1.5.5",
