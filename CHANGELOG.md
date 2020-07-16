@@ -1,3 +1,12 @@
+# [10.28.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.27.0...v10.28.0) (2020-07-16)
+
+
+### Features
+
+* localhost rpc for unit tests ([981f318](https://github.com/softwaregroup-bg/ut-run/commit/981f31876d695c6894980024cb66e1f9a79518bc))
+
+
+
 # [10.27.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.26.3...v10.27.0) (2020-07-14)
 
 
