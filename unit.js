@@ -30,10 +30,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
                 logLevel: 'warn',
                 canSkipSocket: false,
                 jsonrpc: {
-                    socket: true,
-                    api: true,
-                    openid: true,
-                    domain: 'utrun-unit-' + process.pid
+                    host: 'localhost'
                 }
             }
         }
