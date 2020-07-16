@@ -1,3 +1,12 @@
+## [10.28.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.28.1...v10.28.2) (2020-07-16)
+
+
+### Bug Fixes
+
+* update ut-bus ([dd97fcf](https://github.com/softwaregroup-bg/ut-run/commit/dd97fcfa18e92e9ba9d31c82fd26b125705868e6))
+
+
+
 ## [10.28.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.28.0...v10.28.1) (2020-07-16)
 
 
