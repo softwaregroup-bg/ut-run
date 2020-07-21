@@ -1,3 +1,12 @@
+# [10.29.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.28.3...v10.29.0) (2020-07-21)
+
+
+### Features
+
+* update ut-bus and ut-port ([b7dbd2e](https://github.com/softwaregroup-bg/ut-run/commit/b7dbd2e976eae15a69dad40c862d31e8fe3639fb))
+
+
+
 ## [10.28.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.28.2...v10.28.3) (2020-07-19)
 
 
