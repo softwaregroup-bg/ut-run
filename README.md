@@ -282,3 +282,7 @@ E.g.
     }
 }
 ```
+
+### Examples
+
+Look in the [doc/examples](./doc/examples) folder for more examples.
