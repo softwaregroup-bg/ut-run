@@ -9,6 +9,17 @@ Content-Type: application/json
     "params": [{}, {}]
 }
 
+### top level functions: run node toplevel.js --utBus.serviceBus.jsonrpc.port=8090
+POST http://localhost:8090/rpc/ports/dns/request
+Content-Type: application/json
+
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "dns.lookup",
+    "params": ["npmjs.com", {}]
+}
+
 ### api: run node api.js --utBus.serviceBus.jsonrpc.port=8090
 POST http://localhost:8090/rpc/subject/object/predicate
 Content-Type: application/json
