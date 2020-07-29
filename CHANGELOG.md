@@ -1,3 +1,7 @@
+## [10.29.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.1...v10.29.2) (2020-07-29)
+
+
+
 ## [10.29.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.0...v10.29.1) (2020-07-28)
 
 
