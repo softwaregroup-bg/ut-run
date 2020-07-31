@@ -10,9 +10,9 @@
     "stack-utils": "2.0.1",
     "through2": "2.0.3",
     "ut-config": "^7.5.5",
-    "ut-bus": "^7.28.1",
+    "ut-bus": "^7.28.2",
     "ut-log": "^6.6.8",
-    "ut-port": "^6.30.0",
+    "ut-port": "^6.31.0",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.6.0"
   },
