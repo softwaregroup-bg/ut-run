@@ -406,7 +406,6 @@ module.exports = function(params, cache) {
                             feature: cucumber.addFeature(cucumberReport, jobName, params),
                             name: jobName + '.' + name,
                             context: params.context,
-                            imported,
                             steps
                         }))));
             }
@@ -438,7 +437,7 @@ module.exports = function(params, cache) {
                     test.plan(selectedJobs.length);
                     selectedJobs.forEach(job => {
                         if (!job) return;
-                        test.test(job.name, testAny(job));
+                        test.test(job.name, testAny({imported, ...job}));
                     });
                     return selectedJobs;
                 })
