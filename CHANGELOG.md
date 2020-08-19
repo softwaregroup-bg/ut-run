@@ -1,3 +1,12 @@
+## [10.29.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.4...v10.29.5) (2020-08-19)
+
+
+### Bug Fixes
+
+* add imported steps to all jobs ([2b01e96](https://github.com/softwaregroup-bg/ut-run/commit/2b01e96a08180a8e28fd7acd7349de24bafd52a7))
+
+
+
 ## [10.29.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.3...v10.29.4) (2020-07-31)
 
 
