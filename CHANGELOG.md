@@ -1,3 +1,12 @@
+# [10.30.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.6...v10.30.0) (2020-09-11)
+
+
+### Features
+
+* kustomize ([81cef47](https://github.com/softwaregroup-bg/ut-run/commit/81cef47d568eff3254b2709f67ea204d358f425d))
+
+
+
 ## [10.29.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.5...v10.29.6) (2020-08-25)
 
 
