@@ -15,7 +15,7 @@ module.exports = ({
             apiVersion: 'v1',
             kind: 'Service',
             metadata: {
-                namespace,
+                ...namespace && {namespace},
                 name: 'fluent-bit',
                 labels
             },
@@ -33,7 +33,7 @@ module.exports = ({
             apiVersion: 'apps/v1',
             kind: 'Deployment',
             metadata: {
-                namespace,
+                ...namespace && {namespace},
                 name: 'fluent-bit',
                 labels: {...labels}
             },

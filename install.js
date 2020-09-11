@@ -4,6 +4,7 @@ const yaml = require('yaml');
 const editConfig = require('ut-config').edit;
 const merge = require('ut-function.merge');
 const childProcess = require('child_process');
+const sortKeys = require('sort-keys');
 
 module.exports = async function(serviceConfig, envConfig, assert, vfs) {
     const {broker, serviceBus, service, mergedConfig, log, logFactory} = await create(envConfig, vfs);
@@ -175,7 +176,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                                     ...Object.values(result.deployments),
                                     ...Object.values(result.services),
                                     ...Object.values(result.ingresses)
-                                ].filter(x => x).map(item => yaml.stringify(item));
+                                ].filter(x => x).map(item => yaml.stringify(sortKeys(item, {deep: true})));
                             } finally {
                                 strOptions.fold.lineWidth = lineWidth;
                             }
