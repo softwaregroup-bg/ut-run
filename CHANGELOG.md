@@ -1,3 +1,12 @@
+## [10.30.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.0...v10.30.1) (2020-09-14)
+
+
+### Bug Fixes
+
+* kustomize output folder ([eab5858](https://github.com/softwaregroup-bg/ut-run/commit/eab5858777a926851c91955210b0d5570e151572))
+
+
+
 # [10.30.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.29.6...v10.30.0) (2020-09-11)
 
 
