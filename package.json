@@ -57,6 +57,7 @@
   "description": "UT run module",
   "browser": {
     "./install": "./browser/install",
+    "./kustomize": "./browser/kustomize",
     "./doc": "./browser/doc",
     "./service/install": false,
     "./unit": "./browser/unit",
