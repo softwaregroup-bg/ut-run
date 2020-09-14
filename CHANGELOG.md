@@ -1,3 +1,12 @@
+## [10.30.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.1...v10.30.2) (2020-09-14)
+
+
+### Bug Fixes
+
+* do not break webpack ([abd4885](https://github.com/softwaregroup-bg/ut-run/commit/abd4885be6a33f4fd16a120c6a4dbf3f701bc457))
+
+
+
 ## [10.30.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.0...v10.30.1) (2020-09-14)
 
 
