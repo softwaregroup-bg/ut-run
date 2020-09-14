@@ -34,7 +34,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             ]
                 .filter(x => x[0] && x[1])
                 .forEach(([name, item]) => {
-                    fs.writeFileSync('impl-application/ut/' + name, (typeof item === 'string') ? item : yaml.stringify(sortKeys(item, {deep: true})));
+                    fs.writeFileSync('system/kustomize/' + name, (typeof item === 'string') ? item : yaml.stringify(sortKeys(item, {deep: true})));
                 });
         } finally {
             strOptions.fold.lineWidth = lineWidth;
