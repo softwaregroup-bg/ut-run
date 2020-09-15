@@ -181,8 +181,10 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     ...path && {path},
                     pathType: 'Prefix',
                     backend: {
-                        serviceName: serviceName.toLowerCase(),
-                        servicePort
+                        service: {
+                            name: serviceName.toLowerCase(),
+                            port: servicePort
+                        }
                     }
                 });
                 prev.ingressRules[name + '@' + (host || '')] = ingressRule;
