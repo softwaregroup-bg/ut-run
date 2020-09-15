@@ -177,13 +177,12 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 const ingressRule = prev.ingressRules[name + '@' + (host || '')] || {
                     ...host && {host},
                     http: {
-                        paths: [{path: '/', pathType: 'Prefix'}]
+                        paths: []
                     }
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
                 ingressRule.http.paths.push({
-                    ...path && {path},
-                    pathType: 'Prefix',
+                    ...path && {path, pathType: 'Prefix'},
                     backend: {
                         service: {
                             name: serviceName.toLowerCase(),
