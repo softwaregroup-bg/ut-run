@@ -1,3 +1,12 @@
+## [10.30.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.5...v10.30.6) (2020-09-15)
+
+
+### Bug Fixes
+
+* remove version from selectors ([ea11d64](https://github.com/softwaregroup-bg/ut-run/commit/ea11d641f73f17b57bd18c4e0ee25642342597af))
+
+
+
 ## [10.30.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.4...v10.30.5) (2020-09-15)
 
 
