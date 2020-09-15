@@ -187,7 +187,9 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     backend: {
                         service: {
                             name: serviceName.toLowerCase(),
-                            port: servicePort
+                            port: {
+                                name: servicePort
+                            }
                         }
                     }
                 });
