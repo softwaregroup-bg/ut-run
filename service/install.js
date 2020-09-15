@@ -30,6 +30,10 @@ const readConfig = filename => {
 
 module.exports = ({portsAndModules, log, layers, config, secret, kustomization}) => {
     const k8s = config.k8s || {};
+    const docker =
+        (k8s.username && k8s.password && `${k8s.username}:${k8s.password}`) ||
+        // eslint-disable-next-line no-process-env
+        (process.env.DOCKER_USR && process.env.DOCKER_PSW && `${process.env.DOCKER_USR}:${process.env.DOCKER_PSW}`);
     const image = (k8s.repository ? k8s.repository + '/' : '') + (k8s.image || ('ut/impl-' + config.implementation + ':' + config.version));
     const mountPath = ('/etc/ut_' + config.implementation.replace(/[-/\\]/g, '_') + '_' + config.params.env).toLowerCase();
     const commonLabels = {
@@ -230,8 +234,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         }],
                         selector: {
                             'app.kubernetes.io/name': deploymentName,
-                            'app.kubernetes.io/version': config.version,
-                            'app.kubernetes.io/instance': config.implementation + '_' + config.version,
                             ...!kustomization && commonLabels
                         },
                         ...clusterIP && {clusterIP},
@@ -296,7 +298,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                         path: '/ut/impl'
                                     }
                                 }].filter(x => x),
-                                ...k8s.username && k8s.password && {imagePullSecrets: [{name: 'docker'}]},
+                                ...docker && {imagePullSecrets: [{name: 'docker'}]},
                                 containers: [{
                                     image: kustomization ? 'impl' : image,
                                     args: [
@@ -384,7 +386,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     config: configFile.content
                 }
             },
-            ...k8s.username && k8s.password && {
+            ...docker && {
                 'secrets/docker.yaml': {
                     apiVersion: 'v1',
                     kind: 'Secret',
@@ -396,7 +398,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     data: {
                         '.dockerconfigjson': Buffer.from(JSON.stringify({
                             auths: {
-                                [k8s.repository]: {auth: Buffer.from(`${k8s.username}:${k8s.password}`).toString('base64')}
+                                [k8s.repository]: {auth: Buffer.from(docker).toString('base64')}
                             }
                         })).toString('base64')
                     }
