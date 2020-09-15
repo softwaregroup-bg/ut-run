@@ -1,3 +1,12 @@
+## [10.30.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.4...v10.30.5) (2020-09-15)
+
+
+### Bug Fixes
+
+* ingress v1 ([bfcde68](https://github.com/softwaregroup-bg/ut-run/commit/bfcde68cc7c9601e66797982fe570588a87adcad))
+
+
+
 ## [10.30.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.3...v10.30.4) (2020-09-15)
 
 
