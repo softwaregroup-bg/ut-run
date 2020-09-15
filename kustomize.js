@@ -22,6 +22,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
         const secret = {};
         const resources = service.install({layers: mergedConfig.run.layers, config: mergedConfig, secret, kustomization: true});
         const lineWidth = strOptions.fold.lineWidth; // yet another stupid singleton
+        fs.removeSync('system/kustomize');
         try {
             strOptions.fold.lineWidth = 1e6;
             [
