@@ -1,3 +1,12 @@
+## [10.30.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.3...v10.30.4) (2020-09-15)
+
+
+### Bug Fixes
+
+* remove old kustomization ([4b01f85](https://github.com/softwaregroup-bg/ut-run/commit/4b01f85ace5c6c39e94266a0dfd970176a09fd23))
+
+
+
 ## [10.30.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.2...v10.30.3) (2020-09-15)
 
 
