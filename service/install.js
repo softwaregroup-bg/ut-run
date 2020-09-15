@@ -160,7 +160,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         const addIngress = ({path, host, name, servicePort, serviceName}) => {
             const ingressKey = `ingresses/${name}.yaml`;
             const ingress = prev.ingresses[ingressKey] || {
-                apiVersion: 'extensions/v1beta1',
+                apiVersion: 'networking.k8s.io/v1',
                 kind: 'Ingress',
                 metadata: {
                     ...!kustomization && {namespace: namespace.metadata.name},
@@ -179,6 +179,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
                 ingressRule.http.paths.push({
                     ...path && {path},
+                    pathType: 'Prefix',
                     backend: {
                         serviceName: serviceName.toLowerCase(),
                         servicePort
@@ -327,10 +328,13 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     port: 8090,
                     targetPort: 'http-jsonrpc',
                     ingress: [ingressConfig.rpc && {
-                        name: config.implementation + '-rpc',
+                        name: 'ut-rpc',
                         path: `/rpc/${ns.replace(/\//g, '-')}/`
+                    }, ingressConfig.assets && {
+                        name: 'ut-asset',
+                        path: `/a/${ns.replace(/\//g, '-')}/`
                     }, ingressConfig.apiDocs && {
-                        name: config.implementation + '-api',
+                        name: 'ut-api-docs',
                         path: `/api/${ns.replace(/\//g, '-')}`
                     }]
                 }));
