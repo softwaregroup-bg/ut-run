@@ -1,3 +1,12 @@
+## [10.30.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.2...v10.30.3) (2020-09-15)
+
+
+### Bug Fixes
+
+* ingress ([bfe7ac5](https://github.com/softwaregroup-bg/ut-run/commit/bfe7ac554ccd3551460174ccf178a626e22508c4))
+
+
+
 ## [10.30.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.1...v10.30.2) (2020-09-14)
 
 
