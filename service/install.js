@@ -177,7 +177,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 const ingressRule = prev.ingressRules[name + '@' + (host || '')] || {
                     ...host && {host},
                     http: {
-                        paths: []
+                        paths: [{path: '/', pathType: 'Prefix'}]
                     }
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
