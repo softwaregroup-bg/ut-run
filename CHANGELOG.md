@@ -1,3 +1,12 @@
+## [10.30.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.7...v10.30.8) (2020-09-15)
+
+
+### Bug Fixes
+
+* ingress v1 required props ([cf4edb8](https://github.com/softwaregroup-bg/ut-run/commit/cf4edb89edeb4ecb55a07450ce366fb8cb339aa0))
+
+
+
 ## [10.30.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.6...v10.30.7) (2020-09-15)
 
 
