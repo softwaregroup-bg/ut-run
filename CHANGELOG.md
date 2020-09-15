@@ -1,3 +1,12 @@
+## [10.30.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.8...v10.30.9) (2020-09-15)
+
+
+### Bug Fixes
+
+* ingress path generation ([72f8114](https://github.com/softwaregroup-bg/ut-run/commit/72f811426bd4d08feb90c8c4604b383621e80544))
+
+
+
 ## [10.30.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.7...v10.30.8) (2020-09-15)
 
 
