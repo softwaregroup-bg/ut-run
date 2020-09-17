@@ -1,3 +1,12 @@
+## [10.31.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.1...v10.31.2) (2020-09-17)
+
+
+### Bug Fixes
+
+* do not mutate selectors ([acefb81](https://github.com/softwaregroup-bg/ut-run/commit/acefb81aa712798cc29c7866500bc8efc0994956))
+
+
+
 ## [10.31.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.0...v10.31.1) (2020-09-17)
 
 
