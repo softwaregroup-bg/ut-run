@@ -44,7 +44,10 @@ module.exports = {
             config = await load(params);
             const result = await this.runParams(params, test, config);
             process.send && process.send('ready');
-            if (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling) await result.stop();
+            if (
+                (config.run && config.run.stop) ||
+                (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling)
+            ) await result.stop();
             return result;
         } catch (err) {
             console.error(JSON.stringify({
