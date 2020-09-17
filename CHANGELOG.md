@@ -1,3 +1,12 @@
+## [10.31.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.0...v10.31.1) (2020-09-17)
+
+
+### Bug Fixes
+
+* db create job args ([6ad3420](https://github.com/softwaregroup-bg/ut-run/commit/6ad342010f4e178f24253675a844e45c1b3d3286))
+
+
+
 # [10.31.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.9...v10.31.0) (2020-09-17)
 
 
