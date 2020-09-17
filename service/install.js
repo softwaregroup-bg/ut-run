@@ -277,7 +277,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         name: deploymentName,
                         labels: {
                             'app.kubernetes.io/name': deploymentName,
-                            ...!kustomization && deploymentLabels,
+                            ...deploymentLabels,
                             ...!kustomization && commonLabels
                         }
                     },
@@ -286,7 +286,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         selector: {
                             matchLabels: {
                                 'app.kubernetes.io/name': deploymentName,
-                                ...!kustomization && deploymentLabels,
                                 ...!kustomization && commonLabels
                             }
                         },
@@ -298,7 +297,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                 labels: {
                                     app: deploymentName,
                                     'app.kubernetes.io/name': deploymentName,
-                                    ...!kustomization && deploymentLabels,
+                                    ...deploymentLabels,
                                     ...!kustomization && commonLabels
                                 }
                             },
@@ -309,7 +308,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                 initContainers: [{
                                     name: 'db-create-wait',
                                     image: 'd3fk/kubectl:v1.18',
-                                    args: ['wait', '--for=condition=complete', 'job/db-create']
+                                    args: ['wait', '--for=condition=complete', '--timeout=300s', 'job/db-create']
                                 }],
                                 containers: [{
                                     image: kustomization ? 'impl' : image,
@@ -393,7 +392,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     name: 'db-create'
                 },
                 spec: {
-                    backoffLimit: 1,
+                    backoffLimit: 0,
                     template: {
                         spec: {
                             ...podDefaults,
@@ -512,7 +511,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         });
         Object.assign(result.kustomizations['deployments/kustomization.yaml'], {
-            commonLabels: deploymentLabels,
             commonAnnotations
         });
         result.kustomizations['secrets/kustomization.yaml'].secretGenerator = [{
