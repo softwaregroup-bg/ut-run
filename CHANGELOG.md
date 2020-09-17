@@ -1,3 +1,13 @@
+# [10.31.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.9...v10.31.0) (2020-09-17)
+
+
+### Features
+
+* enable run.stop ([1bc4cc3](https://github.com/softwaregroup-bg/ut-run/commit/1bc4cc3955ffb88239c142b3430eac3c0105b71e))
+* k8s service account and job ([2554e6f](https://github.com/softwaregroup-bg/ut-run/commit/2554e6f2429651c13153e13b92e31893a596b3f6))
+
+
+
 ## [10.30.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.30.8...v10.30.9) (2020-09-15)
 
 
