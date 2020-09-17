@@ -51,13 +51,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         'prometheus.io/port': '8090',
         'prometheus.io/scheme': 'http'
     };
-    const containerDefaults = {
-        name: 'ut',
-        ...k8s.pull && {imagePullPolicy: k8s.pull},
-        env: [{
-            name: 'UT_ENV',
-            value: config.params.env
-        }],
+    const probe = {
         ports: [{
             name: 'http-jsonrpc',
             protocol: 'TCP',
@@ -76,7 +70,15 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 path: '/healthz',
                 port: 'http-jsonrpc'
             }
-        },
+        }
+    };
+    const containerDefaults = {
+        name: 'ut',
+        ...k8s.pull && {imagePullPolicy: k8s.pull},
+        env: [{
+            name: 'UT_ENV',
+            value: config.params.env
+        }],
         volumeMounts: [{
             name: 'config',
             mountPath
@@ -318,7 +320,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                         kustomization && '--config=' + mountPath + '/rc',
                                         (deploymentName === 'console') && '--utLog.streams.udp=0'
                                     ].filter(x => x),
-                                    ...containerDefaults
+                                    ...containerDefaults,
+                                    ...probe
                                 }]
                             }
                         }
