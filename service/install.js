@@ -145,6 +145,21 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         }
     };
+    const secretName = kustomization ? 'config' : 'config-' + configFile.hash;
+    const podDefaults = {
+        ...docker && {imagePullSecrets: [{name: 'docker'}]},
+        volumes: [{
+            name: 'config',
+            secret: {
+                secretName
+            }
+        }, k8s && k8s.minikube && {
+            name: 'ut',
+            hostPath: {
+                path: '/ut/impl'
+            }
+        }].filter(Boolean)
+    };
     const ingressConfig = k8s.ingress || {};
     const nodeSelector = (k8s.node || k8s.architecture) && {
         nodeSelector: {
@@ -182,7 +197,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
                 ingressRule.http.paths.push({
-                    ...path && {path, pathType: 'Prefix'},
+                    path: path || '/',
+                    pathType: 'Prefix',
                     backend: {
                         service: {
                             name: serviceName.toLowerCase(),
@@ -267,7 +283,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     },
                     spec: {
                         replicas: 1,
-                        serviceAccountName: 'ut',
                         selector: {
                             matchLabels: {
                                 'app.kubernetes.io/name': deploymentName,
@@ -289,18 +304,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             },
                             spec: {
                                 ...nodeSelector,
-                                volumes: [{
-                                    name: 'config',
-                                    secret: {
-                                        secretName: kustomization ? 'config' : prev.secrets['secrets/config.yaml'].metadata.name
-                                    }
-                                }, k8s && k8s.minikube && {
-                                    name: 'ut',
-                                    hostPath: {
-                                        path: '/ut/impl'
-                                    }
-                                }].filter(x => x),
-                                ...docker && {imagePullSecrets: [{name: 'docker'}]},
+                                serviceAccountName: 'ut',
+                                ...podDefaults,
                                 initContainers: [{
                                     name: 'db-create-wait',
                                     image: 'd3fk/kubectl:v1.18',
@@ -391,14 +396,12 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     backoffLimit: 1,
                     template: {
                         spec: {
+                            ...podDefaults,
                             containers: [{
                                 name: 'ut',
                                 image: 'impl',
-                                args: ['server', '--config=server/db.json', '--config=/etc/ut_dfa_base_uat/rc'],
-                                env: [{
-                                    name: 'UT_ENV',
-                                    value: 'uat'
-                                }]
+                                args: ['server', '--overlay=db', '--config=/etc/ut_dfa_base_uat/rc'],
+                                ...containerDefaults
                             }],
                             restartPolicy: 'Never'
                         }
@@ -449,7 +452,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 kind: 'Secret',
                 metadata: {
                     ...!kustomization && {namespace: namespace.metadata.name},
-                    name: 'config-' + configFile.hash
+                    name: secretName
                 },
                 type: 'Opaque',
                 stringData: {
