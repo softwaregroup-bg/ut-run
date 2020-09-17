@@ -267,6 +267,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     },
                     spec: {
                         replicas: 1,
+                        serviceAccountName: 'ut',
                         selector: {
                             matchLabels: {
                                 'app.kubernetes.io/name': deploymentName,
@@ -300,6 +301,11 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                     }
                                 }].filter(x => x),
                                 ...docker && {imagePullSecrets: [{name: 'docker'}]},
+                                initContainers: [{
+                                    name: 'db-create-wait',
+                                    image: 'd3fk/kubectl:v1.18',
+                                    args: ['wait', '--for=condition=complete', 'job/db-create']
+                                }],
                                 containers: [{
                                     image: kustomization ? 'impl' : image,
                                     args: [
@@ -374,6 +380,69 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         namespaces: {
             [`namespaces/${namespace.metadata.name}.yaml`]: namespace
         },
+        jobs: {
+            'jobs/db-create.yaml': {
+                apiVersion: 'batch/v1',
+                kind: 'Job',
+                metadata: {
+                    name: 'db-create'
+                },
+                spec: {
+                    backoffLimit: 1,
+                    template: {
+                        spec: {
+                            containers: [{
+                                name: 'ut',
+                                image: 'impl',
+                                args: ['server', '--config=server/db.json', '--config=/etc/ut_dfa_base_uat/rc'],
+                                env: [{
+                                    name: 'UT_ENV',
+                                    value: 'uat'
+                                }]
+                            }],
+                            restartPolicy: 'Never'
+                        }
+                    }
+                }
+            }
+        },
+        rbac: {
+            'rbac/ut.yaml': {
+                apiVersion: 'v1',
+                kind: 'ServiceAccount',
+                metadata: {
+                    name: 'ut'
+                }
+            },
+            'rbac/view-jobs.yaml': {
+                apiVersion: 'rbac.authorization.k8s.io/v1',
+                kind: 'Role',
+                metadata: {
+                    name: 'view-jobs'
+                },
+                rules: [{
+                    verbs: ['get', 'list', 'watch'],
+                    apiGroups: ['batch'],
+                    resources: ['cronjobs', 'cronjobs/status', 'jobs', 'jobs/status']
+                }]
+            },
+            'rbac/ut-binding.yaml': {
+                apiVersion: 'rbac.authorization.k8s.io/v1',
+                kind: 'RoleBinding',
+                metadata: {
+                    name: 'ut-binding'
+                },
+                subjects: [{
+                    kind: 'ServiceAccount',
+                    name: 'ut'
+                }],
+                roleRef: {
+                    apiGroup: 'rbac.authorization.k8s.io',
+                    kind: 'Role',
+                    name: 'view-jobs'
+                }
+            }
+        },
         secrets: {
             'secrets/config.yaml': kustomization ? configFile.content : {
                 apiVersion: 'v1',
@@ -429,7 +498,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         errors: []
     });
     if (kustomization) {
-        ['namespaces', 'deployments', 'secrets', 'services', 'ingresses'].forEach(name => {
+        ['namespaces', 'deployments', 'secrets', 'services', 'ingresses', 'rbac', 'jobs'].forEach(name => {
             if (Object.keys(result[name]).length) {
                 result.kustomizations[`${name}/kustomization.yaml`] = {
                     apiVersion: 'kustomize.config.k8s.io/v1beta1',

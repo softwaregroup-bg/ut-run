@@ -29,6 +29,8 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                 ...Object.entries(resources.kustomizations),
                 ...Object.entries(resources.namespaces),
                 ...Object.entries(resources.secrets),
+                ...Object.entries(resources.rbac),
+                ...Object.entries(resources.jobs),
                 ...Object.entries(resources.deployments),
                 ...Object.entries(resources.services),
                 ...Object.entries(resources.ingresses)

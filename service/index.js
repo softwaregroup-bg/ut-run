@@ -102,7 +102,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             }
 
             if (!filenames) return [];
-            !process.browser && !require('./serverRequire').utCompile && config && config.run && config.run.hotReload && watch(main, async() => {
+            !process.browser && !require('./serverRequire').utCompile && config && config.run && !config.run.stop && config.run.hotReload && watch(main, async() => {
                 clearCache(main);
                 [utModule, pkgJson] = requireWithMeta();
                 await servicePorts.destroy(utModule.name);
