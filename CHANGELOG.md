@@ -1,3 +1,12 @@
+## [10.31.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.2...v10.31.3) (2020-09-17)
+
+
+### Bug Fixes
+
+* remove probes from job ([e533f46](https://github.com/softwaregroup-bg/ut-run/commit/e533f4611ad4fbd6b2e25c62bd8f1faba6c0b7e6))
+
+
+
 ## [10.31.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.1...v10.31.2) (2020-09-17)
 
 
