@@ -402,7 +402,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             containers: [{
                                 name: 'ut',
                                 image: 'impl',
-                                args: ['server', '--overlay=db', '--run.stop', '--config=/etc/ut_dfa_base_uat/rc'],
+                                args: ['server', '--overlay=db', '--run.stop', `--config=${mountPath}/rc`],
                                 ...containerDefaults
                             }],
                             restartPolicy: 'Never'
