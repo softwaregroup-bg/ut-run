@@ -1,3 +1,12 @@
+## [10.31.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.3...v10.31.4) (2020-09-18)
+
+
+### Bug Fixes
+
+* deps ([dba68fa](https://github.com/softwaregroup-bg/ut-run/commit/dba68fa279866630ba2c9ad058b88cb12c234c78))
+
+
+
 ## [10.31.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.2...v10.31.3) (2020-09-17)
 
 
