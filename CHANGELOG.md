@@ -1,3 +1,12 @@
+## [10.31.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.5...v10.31.6) (2020-09-18)
+
+
+### Bug Fixes
+
+* remove hardcoded config path ([50506c8](https://github.com/softwaregroup-bg/ut-run/commit/50506c8e0f392654d342c2c2c2c15e36077cea64))
+
+
+
 ## [10.31.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.4...v10.31.5) (2020-09-18)
 
 
