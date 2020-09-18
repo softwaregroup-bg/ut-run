@@ -1,3 +1,12 @@
+## [10.31.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.4...v10.31.5) (2020-09-18)
+
+
+### Bug Fixes
+
+* pass run.stop to db-create ([5dbc83c](https://github.com/softwaregroup-bg/ut-run/commit/5dbc83c5edb1814b1019a99a6e348a534ccc4f0d))
+
+
+
 ## [10.31.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.3...v10.31.4) (2020-09-18)
 
 
