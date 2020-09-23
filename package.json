@@ -12,7 +12,7 @@
     "through2": "2.0.3",
     "ut-config": "^7.6.0",
     "ut-bus": "^7.30.0",
-    "ut-log": "^6.6.9",
+    "ut-log": "^6.6.10",
     "ut-port": "^6.31.0",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.6.0"
