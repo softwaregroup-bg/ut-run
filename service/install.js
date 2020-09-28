@@ -170,6 +170,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     const result = portsAndModules.reduce((prev, portOrModule) => {
         const layer = portOrModule.config.pkg.layer;
         const ports = (portOrModule.config.k8s && portOrModule.config.k8s.ports) || [];
+        const ingresses = (portOrModule.config.k8s && portOrModule.config.k8s.ingresses) || [];
         const containerPorts = ports.map(port => ({
             name: port.name,
             protocol: port.protocol || 'TCP',
@@ -381,6 +382,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     servicePort: port.name,
                     ...ingressConfig
                 })));
+                ingresses.forEach(ingress => addIngress({...ingress, ...ingressConfig}));
             }
         };
         return prev;
