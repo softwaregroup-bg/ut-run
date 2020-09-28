@@ -176,10 +176,10 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             containerPort: port.containerPort
         }));
         const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
-        const addIngress = ({path, host, name, servicePort, serviceName}) => {
+        const addIngress = ({path, host, name, servicePort, serviceName, pathType = 'Prefix', apiVersion = 'networking.k8s.io/v1'}) => {
             const ingressKey = `ingresses/${name}.yaml`;
             const ingress = prev.ingresses[ingressKey] || {
-                apiVersion: 'networking.k8s.io/v1',
+                apiVersion,
                 kind: 'Ingress',
                 metadata: {
                     ...!kustomization && {namespace: namespace.metadata.name},
@@ -196,18 +196,31 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     }
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
-                ingressRule.http.paths.push({
-                    path: path || '/',
-                    pathType: 'Prefix',
-                    backend: {
-                        service: {
-                            name: serviceName.toLowerCase(),
-                            port: {
-                                name: servicePort
+                switch (apiVersion) {
+                    case 'extensions/v1beta1':
+                        ingressRule.http.paths.push({
+                            path: path || '/',
+                            pathType,
+                            backend: {
+                                serviceName: serviceName.toLowerCase(),
+                                servicePort
                             }
-                        }
-                    }
-                });
+                        });
+                        break;
+                    default:
+                        ingressRule.http.paths.push({
+                            path: path || '/',
+                            pathType,
+                            backend: {
+                                service: {
+                                    name: serviceName.toLowerCase(),
+                                    port: {
+                                        name: servicePort
+                                    }
+                                }
+                            }
+                        });
+                }
                 prev.ingressRules[name + '@' + (host || '')] = ingressRule;
             } else {
                 ingress.spec.backend = {
