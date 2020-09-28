@@ -1,3 +1,19 @@
+# [10.32.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.7...v10.32.0) (2020-09-28)
+
+
+### Bug Fixes
+
+* do not autogenerate docker secret ([d94bf0b](https://github.com/softwaregroup-bg/ut-run/commit/d94bf0b59e0ecc2f0ece18367eb7a765fce19665))
+* optimize probes ([9b24042](https://github.com/softwaregroup-bg/ut-run/commit/9b240420ff0b0e7ea8f5f16858b9af997039e2ea))
+
+
+### Features
+
+* configurable ingress api version ([acec8e3](https://github.com/softwaregroup-bg/ut-run/commit/acec8e3351cc3afd5488711649a30982b20fe6db))
+* handle confing.k8s.ingress ([ea43bed](https://github.com/softwaregroup-bg/ut-run/commit/ea43bed3ad7bb930423c88c29e7488b7ac155951))
+
+
+
 ## [10.31.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.6...v10.31.7) (2020-09-23)
 
 
