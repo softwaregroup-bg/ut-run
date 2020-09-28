@@ -58,14 +58,15 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             containerPort: 8090
         }],
         livenessProbe: {
-            initialDelaySeconds: 60,
+            periodSeconds: 10,
             httpGet: {
                 path: '/healthz',
                 port: 'http-jsonrpc'
             }
         },
-        readinessProbe: {
-            initialDelaySeconds: 60,
+        startupProbe: {
+            periodSeconds: 10,
+            failureThreshold: 12,
             httpGet: {
                 path: '/healthz',
                 port: 'http-jsonrpc'
