@@ -30,10 +30,7 @@ const readConfig = filename => {
 
 module.exports = ({portsAndModules, log, layers, config, secret, kustomization}) => {
     const k8s = config.k8s || {};
-    const docker =
-        (k8s.username && k8s.password && `${k8s.username}:${k8s.password}`) ||
-        // eslint-disable-next-line no-process-env
-        (process.env.DOCKER_USR && process.env.DOCKER_PSW && `${process.env.DOCKER_USR}:${process.env.DOCKER_PSW}`);
+    const docker = (k8s.username && k8s.password && `${k8s.username}:${k8s.password}`);
     const image = (k8s.repository ? k8s.repository + '/' : '') + (k8s.image || ('ut/impl-' + config.implementation + ':' + config.version));
     const mountPath = ('/etc/ut_' + config.implementation.replace(/[-/\\]/g, '_') + '_' + config.params.env).toLowerCase();
     const commonLabels = {
@@ -150,7 +147,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     };
     const secretName = kustomization ? 'config' : 'config-' + configFile.hash;
     const podDefaults = {
-        ...docker && {imagePullSecrets: [{name: 'docker'}]},
+        ...(docker || k8s.pullSecrets !== false) && {imagePullSecrets: [{name: 'docker'}]},
         volumes: [{
             name: 'config',
             secret: {
@@ -506,10 +503,11 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     if (kustomization) {
         ['namespaces', 'deployments', 'secrets', 'services', 'ingresses', 'rbac', 'jobs'].forEach(name => {
             if (Object.keys(result[name]).length) {
+                const resources = Object.entries(result[name]).map(([key, value]) => (typeof value !== 'string') && path.basename(key)).filter(Boolean);
                 result.kustomizations[`${name}/kustomization.yaml`] = {
                     apiVersion: 'kustomize.config.k8s.io/v1beta1',
                     kind: 'Kustomization',
-                    resources: Object.entries(result[name]).map(([key, value]) => (typeof value !== 'string') && path.basename(key)).filter(Boolean)
+                    ...resources.length && {resources}
                 };
                 result.kustomizations['kustomization.yaml'].bases.push(name);
             }
