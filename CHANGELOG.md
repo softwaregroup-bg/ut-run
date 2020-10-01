@@ -1,3 +1,12 @@
+## [10.32.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.32.0...v10.32.1) (2020-10-01)
+
+
+### Bug Fixes
+
+* workaround for k8s issue 89995 ([95f8f01](https://github.com/softwaregroup-bg/ut-run/commit/95f8f01f5bde0e63da83b23e28911e35e89aee00))
+
+
+
 # [10.32.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.31.7...v10.32.0) (2020-09-28)
 
 
