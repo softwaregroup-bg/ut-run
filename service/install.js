@@ -33,22 +33,44 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     const docker = (k8s.username && k8s.password && `${k8s.username}:${k8s.password}`);
     const image = (k8s.repository ? k8s.repository + '/' : '') + (k8s.image || ('ut/impl-' + config.implementation + ':' + config.version));
     const mountPath = ('/etc/ut_' + config.implementation.replace(/[-/\\]/g, '_') + '_' + config.params.env).toLowerCase();
-    const commonLabels = {
+    const commonLabels = merge({
         'app.kubernetes.io/part-of': config.implementation,
         'app.kubernetes.io/managed-by': 'ut-run'
-    };
+    }, k8s.labels);
     const deploymentLabels = {
         version: config.version,
         'app.kubernetes.io/version': config.version,
         'app.kubernetes.io/instance': config.implementation + '_' + config.version
     };
-    const commonAnnotations = {
+    const commonAnnotations = merge({
         'sidecar.istio.io/inject': 'true',
         'prometheus.io/scrape': 'true',
         'prometheus.io/port': '8090',
         'prometheus.io/scheme': 'http'
-    };
-    const probe = {
+    }, k8s.annotations);
+    const containerDefaults = merge({
+        name: 'ut',
+        env: [{
+            name: 'UT_ENV',
+            value: config.params.env
+        }],
+        volumeMounts: [{
+            name: 'config',
+            mountPath
+        }, k8s && k8s.minikube && {
+            name: 'ut',
+            mountPath: '/ut/impl'
+        }].filter(x => x),
+        resources: {
+            limits: {
+                memory: '250M',
+                cpu: '0.20'
+            },
+            requests: {
+                memory: '100M',
+                cpu: '0.10'
+            }
+        },
         ports: [{
             name: 'http-jsonrpc',
             protocol: 'TCP',
@@ -79,32 +101,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 port: 'http-jsonrpc'
             }
         }
-    };
-    const containerDefaults = {
-        name: 'ut',
-        ...k8s.pull && {imagePullPolicy: k8s.pull},
-        env: [{
-            name: 'UT_ENV',
-            value: config.params.env
-        }],
-        volumeMounts: [{
-            name: 'config',
-            mountPath
-        }, k8s && k8s.minikube && {
-            name: 'ut',
-            mountPath: '/ut/impl'
-        }].filter(x => x),
-        resources: {
-            limits: {
-                memory: '250M',
-                cpu: '0.20'
-            },
-            requests: {
-                memory: '100M',
-                cpu: '0.10'
-            }
-        }
-    };
+    }, k8s.container);
+    const jobContainerDefaults = (({
+        ports,
+        livenessProbe,
+        readinessProbe,
+        startupProbe,
+        ...rest
+    }) => rest)(containerDefaults);
     if (secret) {
         secret = yaml.stringify(sortKeys(merge(secret, {
             run: {
@@ -156,7 +160,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         }
     };
     const secretName = kustomization ? 'config' : 'config-' + configFile.hash;
-    const podDefaults = {
+    const podDefaults = merge({
         ...(docker || k8s.pullSecrets !== false) && {imagePullSecrets: [{name: 'docker'}]},
         volumes: [{
             name: 'config',
@@ -169,7 +173,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 path: '/ut/impl'
             }
         }].filter(Boolean)
-    };
+    }, k8s.pod);
     const ingressConfig = k8s.ingress || {};
     const nodeSelector = (k8s.node || k8s.architecture) && {
         nodeSelector: {
@@ -209,9 +213,9 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
                 switch (apiVersion) {
                     case 'extensions/v1beta1':
+                    case 'networking.k8s.io/v1beta1':
                         ingressRule.http.paths.push({
                             path: path || '/',
-                            pathType,
                             backend: {
                                 serviceName: serviceName.toLowerCase(),
                                 servicePort
@@ -342,8 +346,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                         kustomization && '--config=' + mountPath + '/rc',
                                         (deploymentName === 'console') && '--utLog.streams.udp=0'
                                     ].filter(x => x),
-                                    ...containerDefaults,
-                                    ...probe
+                                    ...containerDefaults
                                 }]
                             }
                         }
@@ -426,7 +429,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                 name: 'ut',
                                 image: 'impl',
                                 args: ['server', '--overlay=db', '--run.stop', `--config=${mountPath}/rc`],
-                                ...containerDefaults
+                                ...jobContainerDefaults
                             }],
                             restartPolicy: 'Never'
                         }
