@@ -1,3 +1,12 @@
+## [10.33.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.0...v10.33.1) (2020-10-01)
+
+
+### Bug Fixes
+
+* ingress config ([60022b4](https://github.com/softwaregroup-bg/ut-run/commit/60022b40a85a9278efb18c06ab3abb54af953770))
+
+
+
 # [10.33.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.32.1...v10.33.0) (2020-10-01)
 
 
