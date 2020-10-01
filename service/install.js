@@ -56,6 +56,16 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         }],
         livenessProbe: {
             periodSeconds: 10,
+            timeoutSeconds: 5,
+            failureThreshold: 6,
+            httpGet: {
+                path: '/healthz',
+                port: 'http-jsonrpc'
+            }
+        },
+        readinessProbe: {
+            periodSeconds: 10,
+            timeoutSeconds: 5,
             httpGet: {
                 path: '/healthz',
                 port: 'http-jsonrpc'
