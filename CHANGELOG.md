@@ -1,3 +1,12 @@
+# [10.33.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.32.1...v10.33.0) (2020-10-01)
+
+
+### Features
+
+* allow configuration of generated resources ([75f584a](https://github.com/softwaregroup-bg/ut-run/commit/75f584a559ba7c15c7d94cc3428d16a4cd7457a7))
+
+
+
 ## [10.32.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.32.0...v10.32.1) (2020-10-01)
 
 
