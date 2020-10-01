@@ -287,8 +287,9 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 };
             }
             if (ingress) {
-                [].concat(ingress).forEach(ingressConfig => ingressConfig && addIngress({
+                [].concat(ingress).forEach(config => config && addIngress({
                     ...ingressConfig,
+                    ...config,
                     servicePort: targetPort,
                     serviceName: name.toLowerCase()
                 }));
@@ -389,13 +390,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     targetPort: port.name,
                     ...port.service
                 }));
-                ports.forEach(port => port.ingress && [].concat(port.ingress).forEach(ingressConfig => ingressConfig && addIngress({
+                ports.forEach(port => port.ingress && [].concat(port.ingress).forEach(config => config && addIngress({
+                    ...ingressConfig,
                     name: deploymentNames[0] + '-' + port.name,
                     serviceName: portOrModule.config.id.replace(/\./g, '-') + '-' + port.name,
                     servicePort: port.name,
-                    ...ingressConfig
+                    ...config
                 })));
-                ingresses.forEach(ingress => addIngress({...ingress, ...ingressConfig}));
+                ingresses.forEach(ingress => addIngress({...ingressConfig, ...ingress}));
             }
         };
         return prev;
