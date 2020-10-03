@@ -1,3 +1,12 @@
+## [10.33.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.1...v10.33.2) (2020-10-03)
+
+
+### Bug Fixes
+
+* update ut-log ([137442e](https://github.com/softwaregroup-bg/ut-run/commit/137442ebc510ce1755b5397b7fa4aa0d7783b080))
+
+
+
 ## [10.33.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.0...v10.33.1) (2020-10-01)
 
 
