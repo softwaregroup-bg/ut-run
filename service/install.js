@@ -108,7 +108,13 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         readinessProbe,
         startupProbe,
         ...rest
-    }) => rest)(containerDefaults);
+    }) => merge({}, rest, {
+        resources: {
+            requests: {
+                cpu: '0.01'
+            }
+        }
+    }, k8s.job))(containerDefaults);
     if (secret) {
         secret = yaml.stringify(sortKeys(merge(secret, {
             run: {
