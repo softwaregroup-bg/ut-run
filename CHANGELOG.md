@@ -1,3 +1,12 @@
+## [10.33.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.2...v10.33.3) (2020-10-03)
+
+
+### Bug Fixes
+
+* job resources defaults ([14e104b](https://github.com/softwaregroup-bg/ut-run/commit/14e104b63a61be3569a85974197747272632cba0))
+
+
+
 ## [10.33.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.1...v10.33.2) (2020-10-03)
 
 
