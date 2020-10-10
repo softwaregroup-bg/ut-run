@@ -1,6 +1,6 @@
 // require('crypto');
 const tap = require('tap');
-const log = require('why-is-node-running');
+const log = process.env.WHY_IS_NODE_RUNNING && require('why-is-node-running'); // eslint-disable-line no-process-env
 const run = require('./index');
 const util = require('util');
 const hrtime = require('browser-process-hrtime');
@@ -511,7 +511,7 @@ module.exports = function(params, cache) {
     const running = function() {
         tap.setTimeout(10000);
         tap.on('timeout', () => {
-            log({
+            log && log({
                 error: function() {
                     tap.comment(util.format(...arguments));
                 }
