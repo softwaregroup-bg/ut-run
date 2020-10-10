@@ -1,3 +1,12 @@
+## [10.33.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.3...v10.33.4) (2020-10-10)
+
+
+### Bug Fixes
+
+* why-is-node-running off by default ([cf8b13c](https://github.com/softwaregroup-bg/ut-run/commit/cf8b13c1e2ff8f6092e85b24ba8cfa0a7ef3226d))
+
+
+
 ## [10.33.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.2...v10.33.3) (2020-10-03)
 
 
