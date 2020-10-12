@@ -403,9 +403,9 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     servicePort: port.name,
                     ...config
                 })));
-                ingresses.forEach(ingress => addIngress({...ingressConfig, ...ingress}));
             }
         };
+        if (![undefined, null, false].includes(layers[layer])) ingresses.forEach(ingress => addIngress({...ingressConfig, ...ingress}));
         return prev;
     }, {
         namespace,
