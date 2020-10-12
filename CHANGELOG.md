@@ -1,3 +1,12 @@
+## [10.33.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.4...v10.33.5) (2020-10-12)
+
+
+### Bug Fixes
+
+* ingress with no deployment ([a807127](https://github.com/softwaregroup-bg/ut-run/commit/a80712748667972ed076035d4e456d0ef36c8468))
+
+
+
 ## [10.33.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.3...v10.33.4) (2020-10-10)
 
 
