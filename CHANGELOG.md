@@ -1,3 +1,12 @@
+# [10.34.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.5...v10.34.0) (2020-10-15)
+
+
+### Features
+
+* update ut-port ([121a3df](https://github.com/softwaregroup-bg/ut-run/commit/121a3dfd6dc6b555dc5d5052262f0424febb039e))
+
+
+
 ## [10.33.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.4...v10.33.5) (2020-10-12)
 
 
