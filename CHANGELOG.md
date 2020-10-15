@@ -1,3 +1,12 @@
+## [10.34.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.34.0...v10.34.1) (2020-10-15)
+
+
+### Bug Fixes
+
+* ut-port typo ([ac441a9](https://github.com/softwaregroup-bg/ut-run/commit/ac441a9f706bc5151130de9b15367750799114a5))
+
+
+
 # [10.34.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.5...v10.34.0) (2020-10-15)
 
 
