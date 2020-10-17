@@ -2,28 +2,30 @@ const tap = require('tap');
 const utRun = require('..');
 
 function utModule1() {
+    const handlerFactory = ut => ({
+        async 'subject.object.predicate'(params, $meta) {
+            return ['module1', ...await super['subject.object.predicate'](params, $meta)];
+        }
+    });
     return {
         orchestrator: () => [
-            function service({utMethod}) {
-                return {
-                    async 'service.entity.action'(params, $meta) {
-                        return ['module1', ...await super['service.entity.action'](params, $meta)];
-                    }
-                };
+            function subject() {
+                return [handlerFactory];
             }
         ]
     };
 };
 
 function utModule2() {
+    const handlerFactory = ut => ({
+        async 'subject.object.predicate'(params, $meta) {
+            return ['module2', ...await super['subject.object.predicate'](params, $meta)];
+        }
+    });
     return {
         orchestrator: () => [
-            function service({utMethod}) {
-                return {
-                    async 'service.entity.action'(params, $meta) {
-                        return ['module2', ...await super['service.entity.action'](params, $meta)];
-                    }
-                };
+            function subject() {
+                return [handlerFactory];
             }
         ]
     };
@@ -35,14 +37,14 @@ function utModule3() {
             (...params) => class script extends require('ut-port-script')(...params) {
                 get defaults() {
                     return {
-                        namespace: ['service'],
-                        imports: ['utModule1.service', 'utModule2.service']
+                        namespace: ['subject'],
+                        imports: ['utModule1.subject', 'utModule2.subject']
                     };
                 }
 
                 get handlers() {
                     return {
-                        'service.entity.action': async function(params, $meta) {
+                        async 'subject.object.predicate'(params, $meta) {
                             return ['root'];
                         }
                     };
@@ -72,8 +74,8 @@ tap.test('Method override', async t => {
             script: true
         }
     });
-    t.test('service.entity.action', async t => {
-        t.matchSnapshot(await app.serviceBus.importMethod('service.entity.action')(['test']));
+    t.test('subject.object.predicate', async t => {
+        t.matchSnapshot(await app.serviceBus.importMethod('subject.object.predicate')(['test']));
     });
     t.test('stop', () => app.stop());
 });

@@ -5,7 +5,7 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/override.test.js TAP Method override service.entity.action > must match snapshot 1`] = `
+exports[`test/override.test.js TAP Method override subject.object.predicate > must match snapshot 1`] = `
 Array [
   "module2",
   "module1",
