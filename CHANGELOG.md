@@ -1,3 +1,12 @@
+# [10.35.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.34.1...v10.35.0) (2020-10-17)
+
+
+### Features
+
+* composable handlers ([8220f50](https://github.com/softwaregroup-bg/ut-run/commit/8220f50a33ff5ca786049dfb5c506379faa3b34f))
+
+
+
 ## [10.34.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.34.0...v10.34.1) (2020-10-15)
 
 
