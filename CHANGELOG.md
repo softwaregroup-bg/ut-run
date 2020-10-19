@@ -1,3 +1,12 @@
+## [10.36.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.36.0...v10.36.1) (2020-10-19)
+
+
+### Bug Fixes
+
+* decrease startup probe period ([79d856a](https://github.com/softwaregroup-bg/ut-run/commit/79d856ad9b0de4d3abb257fda5bb758d1cb2d35c))
+
+
+
 # [10.36.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.35.0...v10.36.0) (2020-10-19)
 
 
