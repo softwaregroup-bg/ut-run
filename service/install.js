@@ -94,8 +94,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         },
         startupProbe: {
-            periodSeconds: 10,
-            failureThreshold: 12,
+            periodSeconds: 2,
+            failureThreshold: 60,
             httpGet: {
                 path: '/healthz',
                 port: 'http-jsonrpc'
