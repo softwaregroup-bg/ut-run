@@ -1,3 +1,12 @@
+# [10.36.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.35.0...v10.36.0) (2020-10-19)
+
+
+### Features
+
+* graceful exit ([cf7a529](https://github.com/softwaregroup-bg/ut-run/commit/cf7a529d93e89853454234dbeb06244bfade6c7d))
+
+
+
 # [10.35.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.34.1...v10.35.0) (2020-10-17)
 
 
