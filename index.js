@@ -55,7 +55,7 @@ module.exports = {
             }
             return result;
         } catch (err) {
-            console.error(JSON.stringify({
+            err && err.message !== 'silent' && console.error(JSON.stringify({
                 error: {...err, stack: err.stack.split('\n')},
                 level: 50,
                 service: config.service,

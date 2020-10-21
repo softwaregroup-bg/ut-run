@@ -132,13 +132,29 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         return prev;
     }, []);
 
-    const create = async(serviceConfig, config, test) => servicePorts.create(
-        await load(serviceConfig, config, test),
-        config || {},
-        test
-    );
+    const create = async(serviceConfig, config, test) => {
+        try {
+            return await servicePorts.create(
+                await load(serviceConfig, config, test),
+                config || {},
+                test
+            );
+        } catch (error) {
+            if (!error.type) error.type = 'serviceLayer.create';
+            log.error && log.error(error);
+            throw new Error('silent');
+        }
+    };
 
-    const start = ports => servicePorts.start(ports);
+    const start = async ports => {
+        try {
+            return await servicePorts.start(ports);
+        } catch (error) {
+            if (!error.type) error.type = 'serviceLayer.start';
+            log.error && log.error(error);
+            throw new Error('silent');
+        }
+    };
 
     const method = fn => ({filter, ...rest} = {}) => {
         const portsAndModules = servicePorts.fetch(filter);
