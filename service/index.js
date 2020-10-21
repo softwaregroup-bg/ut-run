@@ -1,6 +1,8 @@
 const hrtime = require('browser-process-hrtime');
 const utport = require('ut-port');
 const path = require('path');
+const {version} = require('../package.json');
+const gte = require('semver/functions/gte');
 
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
@@ -26,7 +28,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         });
     };
 
-    const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory, vfs});
+    const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory, vfs, version: wanted => gte(version, wanted)});
 
     function configure(obj = {}, config, moduleName, pkg) {
         return [].concat(...Object.entries(obj).map(([name, value]) => {

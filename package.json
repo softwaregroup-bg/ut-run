@@ -12,8 +12,8 @@
     "through2": "2.0.3",
     "ut-config": "^7.6.0",
     "ut-bus": "^7.31.0",
-    "ut-log": "^6.6.11",
-    "ut-port": "^6.32.3",
+    "ut-log": "^6.6.12",
+    "ut-port": "^6.33.0",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.6.0"
   },
