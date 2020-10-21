@@ -1,3 +1,13 @@
+# [10.37.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.36.1...v10.37.0) (2020-10-21)
+
+
+### Features
+
+* improve error logging during startup ([75db43e](https://github.com/softwaregroup-bg/ut-run/commit/75db43e38d5057fe807a0cad2bf398ce4821b715))
+* pass version checker ([a8625eb](https://github.com/softwaregroup-bg/ut-run/commit/a8625eb732fbed4cbfbd6c055919cd30ae298864))
+
+
+
 ## [10.36.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.36.0...v10.36.1) (2020-10-19)
 
 
