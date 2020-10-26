@@ -3,6 +3,7 @@ const utport = require('ut-port');
 const path = require('path');
 const {version} = require('../package.json');
 const gte = require('semver/functions/gte');
+const joi = require('joi');
 
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
@@ -28,7 +29,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         });
     };
 
-    const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory, vfs, version: wanted => gte(version, wanted)});
+    const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory, vfs, joi, version: wanted => gte(version, wanted)});
 
     function configure(obj = {}, config, moduleName, pkg) {
         return [].concat(...Object.entries(obj).map(([name, value]) => {
