@@ -1,3 +1,12 @@
+# [10.38.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.37.1...v10.38.0) (2020-10-26)
+
+
+### Features
+
+* pass joi to modules ([2109333](https://github.com/softwaregroup-bg/ut-run/commit/210933327242c0ef5c5ae993c456bd14e3f4b31c))
+
+
+
 ## [10.37.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.37.0...v10.37.1) (2020-10-23)
 
 
