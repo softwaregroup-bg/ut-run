@@ -3,6 +3,7 @@ const merge = require('ut-function.merge');
 const path = require('path');
 const {Broker, ServiceBus} = require('ut-bus');
 const through2 = require('through2');
+const joi = require('joi');
 
 function getDataDirectory() {
     if (process.browser) return '/';
@@ -139,11 +140,11 @@ module.exports = function(envConfig, vfs) {
     let service;
 
     if (mergedConfig.utBus.broker) {
-        broker = new Broker(Object.assign({logFactory, workDir: path.join(mergedConfig.workDir, 'broker')}, mergedConfig.utBus.broker));
+        broker = new Broker(Object.assign({joi, logFactory, workDir: path.join(mergedConfig.workDir, 'broker')}, mergedConfig.utBus.broker));
     }
 
     if (mergedConfig.utBus.serviceBus) {
-        serviceBus = new ServiceBus(Object.assign({logFactory, workDir: path.join(mergedConfig.workDir, 'serviceBus')}, mergedConfig.utBus.serviceBus));
+        serviceBus = new ServiceBus(Object.assign({joi, logFactory, workDir: path.join(mergedConfig.workDir, 'serviceBus')}, mergedConfig.utBus.serviceBus));
         service = require('./service')({
             serviceBus,
             logFactory,
