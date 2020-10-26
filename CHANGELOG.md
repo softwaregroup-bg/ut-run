@@ -1,3 +1,12 @@
+## [10.38.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.0...v10.38.1) (2020-10-26)
+
+
+### Bug Fixes
+
+* pass joi to ut-bus ([8342cb6](https://github.com/softwaregroup-bg/ut-run/commit/8342cb6a836ae79a74b2bb6b76975659658e84c2))
+
+
+
 # [10.38.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.37.1...v10.38.0) (2020-10-26)
 
 
