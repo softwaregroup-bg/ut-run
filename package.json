@@ -12,10 +12,10 @@
     "sort-keys": "4.1.0",
     "stack-utils": "2.0.2",
     "through2": "2.0.3",
-    "ut-config": "^7.6.0",
-    "ut-bus": "^7.32.1",
+    "ut-config": "^7.6.1",
+    "ut-bus": "^7.32.2",
     "ut-log": "^6.7.0",
-    "ut-port": "^6.34.0",
+    "ut-port": "^6.34.1",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.10.0"
   },
