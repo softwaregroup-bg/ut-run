@@ -1,3 +1,17 @@
+# [10.39.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.5...v10.39.0) (2020-11-02)
+
+
+### Bug Fixes
+
+* disable istion in db-create job ([8cb5a3e](https://github.com/softwaregroup-bg/ut-run/commit/8cb5a3e9ccb86b65074338d53f02a0312a58f900))
+
+
+### Features
+
+* fluentbit config ([2091ad0](https://github.com/softwaregroup-bg/ut-run/commit/2091ad0ea44586cbcdfc33611c3daf75736d61d0))
+
+
+
 ## [10.38.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.4...v10.38.5) (2020-10-28)
 
 
