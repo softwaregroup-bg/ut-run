@@ -140,7 +140,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             level: 'trace',
                             stream: '../fluentdStream',
                             streamConfig: {
-                                host: 'fluent-bit.logging.svc.cluster.local',
+                                host: (k8s.fluentbit.elasticsearch || k8s.fluentbit.loki) ? 'fluent-bit' : 'fluent-bit.logging.svc.cluster.local',
                                 port: 24224,
                                 ...k8s.fluentbit.stream
                             },
