@@ -1,16 +1,17 @@
 module.exports = ({
     namespace,
     nodeSelector,
-    host = 'elasticsearch',
-    port = '9200',
-    version = '1.2.2'
+    elasticsearch,
+    loki,
+    stdout,
+    version = '1.6'
 }) => {
     const labels = {
         'app.kubernetes.io/name': 'fluent-bit',
         'app.kubernetes.io/version': version,
         'app.kubernetes.io/instance': 'fluent-bit_' + version
     };
-    return host && port && version && {
+    return {
         service: {
             apiVersion: 'v1',
             kind: 'Service',
@@ -62,26 +63,42 @@ module.exports = ({
                                 '/fluent-bit/bin/fluent-bit',
                                 '-i',
                                 'forward',
-                                '-o',
-                                'es',
-                                '-p',
-                                'Host=' + host,
-                                '-p',
-                                'Port=' + port,
-                                '-p',
-                                'Index=ut',
-                                '-p',
-                                'Type=_doc',
-                                '-p',
-                                'Buffer_Size=64KB',
-                                '-p',
-                                'Retry_Limit=1',
-                                '-m',
-                                '*',
-                                '-o',
-                                'stdout',
-                                '-m',
-                                '*',
+                                ...elasticsearch ? [
+                                    '-o',
+                                    'es',
+                                    '-p',
+                                    'Host=' + (elasticsearch.host || 'elasticsearch'),
+                                    '-p',
+                                    'Port=' + (elasticsearch.port || '9200'),
+                                    '-p',
+                                    'Index=ut',
+                                    '-p',
+                                    'Type=_doc',
+                                    '-p',
+                                    'Buffer_Size=64KB',
+                                    '-p',
+                                    'Retry_Limit=1',
+                                    '-m',
+                                    '*'
+                                ] : [],
+                                ...loki ? [
+                                    '-o',
+                                    'loki',
+                                    '-p',
+                                    'host=' + (loki.host || 'loki.monitoring.svc.cluster.local'),
+                                    '-p',
+                                    'labels=job=ut',
+                                    '-p',
+                                    'label_keys=$name,$context,$service,$impl,$env,$level',
+                                    '-m',
+                                    '*'
+                                ] : [],
+                                ...stdout ? [
+                                    '-o',
+                                    'stdout',
+                                    '-m',
+                                    '*'
+                                ] : [],
                                 '-v'
                             ],
                             ports: [{

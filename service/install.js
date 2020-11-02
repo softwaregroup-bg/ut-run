@@ -135,13 +135,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             host: 'utportconsole-udp-log'
                         }
                     },
-                    ...k8s.fluentbit && {
+                    ...k8s.fluentbit && k8s.fluentbit.stream && {
                         fluentbit: {
                             level: 'trace',
                             stream: '../fluentdStream',
                             streamConfig: {
-                                host: 'fluent-bit',
-                                port: 24224
+                                host: 'fluent-bit.logging.svc.cluster.local',
+                                port: 24224,
+                                ...k8s.fluentbit.stream
                             },
                             type: 'raw'
                         }
@@ -519,7 +520,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         },
         services: {
-            ...k8s.fluentbit && {
+            ...k8s.fluentbit && (k8s.fluentbit.elasticsearch || k8s.fluentbit.loki) && {
                 'services/fluentbit.yaml': fluentbit({
                     ...!kustomization && {namespace: namespace.metadata.name},
                     nodeSelector,
@@ -528,7 +529,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         },
         deployments: {
-            ...k8s.fluentbit && {
+            ...k8s.fluentbit && (k8s.fluentbit.elasticsearch || k8s.fluentbit.loki) && {
                 'deployments/fluentbit.yaml': fluentbit({
                     ...!kustomization && {namespace: namespace.metadata.name},
                     nodeSelector,
