@@ -1,3 +1,12 @@
+## [10.39.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.0...v10.39.1) (2020-11-02)
+
+
+### Bug Fixes
+
+* fluentbit stream host ([6748980](https://github.com/softwaregroup-bg/ut-run/commit/6748980b2c33bf1453edc2a83b9feee8826661ea))
+
+
+
 # [10.39.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.5...v10.39.0) (2020-11-02)
 
 
