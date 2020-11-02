@@ -1,3 +1,119 @@
+## [10.39.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.0...v10.39.1) (2020-11-02)
+
+
+### Bug Fixes
+
+* fluentbit stream host ([6748980](https://github.com/softwaregroup-bg/ut-run/commit/6748980b2c33bf1453edc2a83b9feee8826661ea))
+
+
+
+# [10.39.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.5...v10.39.0) (2020-11-02)
+
+
+### Bug Fixes
+
+* disable istion in db-create job ([8cb5a3e](https://github.com/softwaregroup-bg/ut-run/commit/8cb5a3e9ccb86b65074338d53f02a0312a58f900))
+
+
+### Features
+
+* fluentbit config ([2091ad0](https://github.com/softwaregroup-bg/ut-run/commit/2091ad0ea44586cbcdfc33611c3daf75736d61d0))
+
+
+
+## [10.38.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.4...v10.38.5) (2020-10-28)
+
+
+
+## [10.38.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.3...v10.38.4) (2020-10-28)
+
+
+
+## [10.38.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.2...v10.38.3) (2020-10-27)
+
+
+
+## [10.38.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.1...v10.38.2) (2020-10-27)
+
+
+
+## [10.38.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.38.0...v10.38.1) (2020-10-26)
+
+
+### Bug Fixes
+
+* pass joi to ut-bus ([8342cb6](https://github.com/softwaregroup-bg/ut-run/commit/8342cb6a836ae79a74b2bb6b76975659658e84c2))
+
+
+
+# [10.38.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.37.1...v10.38.0) (2020-10-26)
+
+
+### Features
+
+* pass joi to modules ([2109333](https://github.com/softwaregroup-bg/ut-run/commit/210933327242c0ef5c5ae993c456bd14e3f4b31c))
+
+
+
+## [10.37.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.37.0...v10.37.1) (2020-10-23)
+
+
+
+# [10.37.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.36.1...v10.37.0) (2020-10-21)
+
+
+### Features
+
+* improve error logging during startup ([75db43e](https://github.com/softwaregroup-bg/ut-run/commit/75db43e38d5057fe807a0cad2bf398ce4821b715))
+* pass version checker ([a8625eb](https://github.com/softwaregroup-bg/ut-run/commit/a8625eb732fbed4cbfbd6c055919cd30ae298864))
+
+
+
+## [10.36.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.36.0...v10.36.1) (2020-10-19)
+
+
+### Bug Fixes
+
+* decrease startup probe period ([79d856a](https://github.com/softwaregroup-bg/ut-run/commit/79d856ad9b0de4d3abb257fda5bb758d1cb2d35c))
+
+
+
+# [10.36.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.35.0...v10.36.0) (2020-10-19)
+
+
+### Features
+
+* graceful exit ([cf7a529](https://github.com/softwaregroup-bg/ut-run/commit/cf7a529d93e89853454234dbeb06244bfade6c7d))
+
+
+
+# [10.35.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.34.1...v10.35.0) (2020-10-17)
+
+
+### Features
+
+* composable handlers ([8220f50](https://github.com/softwaregroup-bg/ut-run/commit/8220f50a33ff5ca786049dfb5c506379faa3b34f))
+
+
+
+## [10.34.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.34.0...v10.34.1) (2020-10-15)
+
+
+### Bug Fixes
+
+* ut-port typo ([ac441a9](https://github.com/softwaregroup-bg/ut-run/commit/ac441a9f706bc5151130de9b15367750799114a5))
+
+
+
+# [10.34.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.5...v10.34.0) (2020-10-15)
+
+
+### Features
+
+* update ut-port ([121a3df](https://github.com/softwaregroup-bg/ut-run/commit/121a3dfd6dc6b555dc5d5052262f0424febb039e))
+
+
+
 ## [10.33.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.33.4...v10.33.5) (2020-10-12)
 
 

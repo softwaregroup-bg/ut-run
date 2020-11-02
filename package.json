@@ -1,19 +1,21 @@
 {
   "name": "ut-run",
-  "version": "10.34.0-mle.1",
+  "version": "10.39.1",
   "dependencies": {
     "browser-process-hrtime": "1.0.0",
     "chokidar": "3.4.3",
     "escape-string-regexp": "4.0.0",
     "fs-plus": "3.1.1",
+    "joi": "17.3.0",
     "loadtest": "5.1.0",
+    "semver": "7.3.2",
     "sort-keys": "4.1.0",
     "stack-utils": "2.0.2",
     "through2": "2.0.3",
-    "ut-config": "^7.6.0",
-    "ut-bus": ">=7.33.0-mle.0 <7.33.0-mle.999",
-    "ut-log": "^6.6.11",
-    "ut-port": "^6.31.0",
+    "ut-config": "^7.6.1",
+    "ut-bus": ">=7.33.0-mle.1 <7.33.0-mle.999",
+    "ut-log": "^6.7.0",
+    "ut-port": "^6.34.1",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.10.0"
   },
@@ -25,10 +27,10 @@
     "tap": "^14.10.8",
     "ut-function.dispatch": "^1.2.0",
     "ut-port-script": "^7.1.1",
-    "ut-tools": "^6.34.1"
+    "ut-tools": "^6.34.2"
   },
   "peerDependencies": {
-    "why-is-node-running": "^2.1.0",
+    "why-is-node-running": "^2.2.0",
     "json-schema-to-markdown": "1.1.1"
   },
   "bin": {

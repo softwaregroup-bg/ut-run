@@ -47,10 +47,15 @@ module.exports = {
             if (
                 (config.run && config.run.stop) ||
                 (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling)
-            ) await result.stop();
+            ) {
+                await result.stop();
+            } else {
+                process.once('SIGTERM', () => result.stop());
+                process.once('SIGINT', () => result.stop());
+            }
             return result;
         } catch (err) {
-            console.error(JSON.stringify({
+            err && err.message !== 'silent' && console.error(JSON.stringify({
                 error: {...err, stack: err.stack.split('\n')},
                 level: 50,
                 service: config.service,

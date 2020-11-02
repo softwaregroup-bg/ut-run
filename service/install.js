@@ -43,7 +43,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         'app.kubernetes.io/instance': config.implementation + '_' + config.version
     };
     const commonAnnotations = merge({
-        'sidecar.istio.io/inject': 'true',
         'prometheus.io/scrape': 'true',
         'prometheus.io/port': '8090',
         'prometheus.io/scheme': 'http'
@@ -94,8 +93,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         },
         startupProbe: {
-            periodSeconds: 10,
-            failureThreshold: 12,
+            periodSeconds: 2,
+            failureThreshold: 60,
             httpGet: {
                 path: '/healthz',
                 port: 'http-jsonrpc'
@@ -136,13 +135,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             host: 'utportconsole-udp-log'
                         }
                     },
-                    ...k8s.fluentbit && {
+                    ...k8s.fluentbit && k8s.fluentbit.stream && {
                         fluentbit: {
                             level: 'trace',
                             stream: '../fluentdStream',
                             streamConfig: {
-                                host: 'fluent-bit',
-                                port: 24224
+                                host: (k8s.fluentbit.elasticsearch || k8s.fluentbit.loki) ? 'fluent-bit' : 'fluent-bit.logging.svc.cluster.local',
+                                port: 24224,
+                                ...k8s.fluentbit.stream
                             },
                             type: 'raw'
                         }
@@ -431,6 +431,11 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 spec: {
                     backoffLimit: 0,
                     template: {
+                        metadata: {
+                            annotations: {
+                                'sidecar.istio.io/inject': 'false'
+                            }
+                        },
                         spec: {
                             ...podDefaults,
                             containers: [{
@@ -515,7 +520,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         },
         services: {
-            ...k8s.fluentbit && {
+            ...k8s.fluentbit && (k8s.fluentbit.elasticsearch || k8s.fluentbit.loki) && {
                 'services/fluentbit.yaml': fluentbit({
                     ...!kustomization && {namespace: namespace.metadata.name},
                     nodeSelector,
@@ -524,7 +529,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
         },
         deployments: {
-            ...k8s.fluentbit && {
+            ...k8s.fluentbit && (k8s.fluentbit.elasticsearch || k8s.fluentbit.loki) && {
                 'deployments/fluentbit.yaml': fluentbit({
                     ...!kustomization && {namespace: namespace.metadata.name},
                     nodeSelector,
