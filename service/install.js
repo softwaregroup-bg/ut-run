@@ -43,7 +43,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         'app.kubernetes.io/instance': config.implementation + '_' + config.version
     };
     const commonAnnotations = merge({
-        'sidecar.istio.io/inject': 'true',
         'prometheus.io/scrape': 'true',
         'prometheus.io/port': '8090',
         'prometheus.io/scheme': 'http'
@@ -431,6 +430,11 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 spec: {
                     backoffLimit: 0,
                     template: {
+                        metadata: {
+                            annotations: {
+                                'sidecar.istio.io/inject': 'false'
+                            }
+                        },
                         spec: {
                             ...podDefaults,
                             containers: [{
