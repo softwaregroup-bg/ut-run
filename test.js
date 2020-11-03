@@ -136,7 +136,7 @@ function sequence(options, test, bus, flow, params, parent) {
                         })
                         .then(result => {
                             passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
-                            report && report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'faled'));
+                            report && report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'failed'));
                             return result;
                         }, error => {
                             passing = false;
