@@ -1,3 +1,13 @@
+## [10.39.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.1...v10.39.2) (2020-11-03)
+
+
+### Bug Fixes
+
+* improve error logging ([86a2c14](https://github.com/softwaregroup-bg/ut-run/commit/86a2c14f17a31a01760878d908008f87bc65ff4e))
+* typo ([2743477](https://github.com/softwaregroup-bg/ut-run/commit/2743477d09e45a94cc6880ec1753f59280308a9b))
+
+
+
 ## [10.39.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.0...v10.39.1) (2020-11-02)
 
 
