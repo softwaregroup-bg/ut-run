@@ -142,6 +142,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             );
         } catch (error) {
             if (!error.type) error.type = 'serviceLayer.create';
+            if (!log) throw error;
             log.error && log.error(error);
             throw new Error('silent');
         }
@@ -152,6 +153,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             return await servicePorts.start(ports);
         } catch (error) {
             if (!error.type) error.type = 'serviceLayer.start';
+            if (!log) throw error;
             log.error && log.error(error);
             throw new Error('silent');
         }
