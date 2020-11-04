@@ -1,3 +1,12 @@
+## [10.40.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.1...v10.40.2) (2020-11-04)
+
+
+### Bug Fixes
+
+* avoid MaxListenersExceededWarning during test ([983e608](https://github.com/softwaregroup-bg/ut-run/commit/983e608924fd523755451e836c8eed5013a9263c))
+
+
+
 ## [10.40.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.0...v10.40.1) (2020-11-04)
 
 
