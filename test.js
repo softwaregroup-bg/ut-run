@@ -509,15 +509,22 @@ module.exports = function(params, cache) {
     };
 
     const running = function() {
-        tap.setTimeout(10000);
-        tap.on('timeout', () => {
-            log && log({
-                error: function() {
-                    tap.comment(util.format(...arguments));
+        const last = params.serverConfig && params.serverConfig.run && params.serverConfig.run.last;
+        if (last !== false) {
+            tap.setTimeout(10000);
+            tap.on('timeout', () => {
+                if (log) {
+                    log({
+                        error: function() {
+                            tap.comment(util.format(...arguments));
+                        }
+                    });
+                } else {
+                    tap.comment('Looks like there are active handles, which prevent node from stopping. Rerun tests with WHY_IS_NODE_RUNNING=1 in the environment to list the handles.');
                 }
+                process.exit(1); // eslint-disable-line no-process-exit
             });
-            process.exit(1); // eslint-disable-line no-process-exit
-        });
+        }
     };
 
     return tests
