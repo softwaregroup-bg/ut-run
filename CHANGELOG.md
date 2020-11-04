@@ -1,3 +1,12 @@
+# [10.40.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.2...v10.40.0) (2020-11-04)
+
+
+### Features
+
+* add message for active handles ([6b9d743](https://github.com/softwaregroup-bg/ut-run/commit/6b9d7434af3fb493c4593ca7d266d8c444824f15))
+
+
+
 ## [10.39.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.1...v10.39.2) (2020-11-03)
 
 
