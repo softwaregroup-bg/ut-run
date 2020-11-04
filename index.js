@@ -50,6 +50,7 @@ module.exports = {
             ) {
                 await result.stop();
             } else {
+                if (process.getMaxListeners() < 15) process.setMaxListeners(15);
                 process.once('SIGTERM', () => result.stop());
                 process.once('SIGINT', () => result.stop());
             }
