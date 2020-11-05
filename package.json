@@ -13,7 +13,7 @@
     "stack-utils": "2.0.2",
     "through2": "2.0.3",
     "ut-config": "^7.6.1",
-    "ut-bus": "^7.33.1",
+    "ut-bus": "^7.33.2",
     "ut-log": "^6.7.1",
     "ut-port": "^6.34.1",
     "ut-function.merge": "^1.5.5",
