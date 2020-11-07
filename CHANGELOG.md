@@ -1,3 +1,39 @@
+## [10.40.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.2...v10.40.3) (2020-11-05)
+
+
+
+## [10.40.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.1...v10.40.2) (2020-11-04)
+
+
+### Bug Fixes
+
+* avoid MaxListenersExceededWarning during test ([983e608](https://github.com/softwaregroup-bg/ut-run/commit/983e608924fd523755451e836c8eed5013a9263c))
+
+
+
+## [10.40.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.0...v10.40.1) (2020-11-04)
+
+
+
+# [10.40.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.2...v10.40.0) (2020-11-04)
+
+
+### Features
+
+* add message for active handles ([6b9d743](https://github.com/softwaregroup-bg/ut-run/commit/6b9d7434af3fb493c4593ca7d266d8c444824f15))
+
+
+
+## [10.39.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.1...v10.39.2) (2020-11-03)
+
+
+### Bug Fixes
+
+* improve error logging ([86a2c14](https://github.com/softwaregroup-bg/ut-run/commit/86a2c14f17a31a01760878d908008f87bc65ff4e))
+* typo ([2743477](https://github.com/softwaregroup-bg/ut-run/commit/2743477d09e45a94cc6880ec1753f59280308a9b))
+
+
+
 ## [10.39.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.39.0...v10.39.1) (2020-11-02)
 
 
