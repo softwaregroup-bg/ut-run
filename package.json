@@ -15,7 +15,7 @@
     "ut-config": "^7.6.1",
     "ut-bus": "^7.34.0",
     "ut-log": "^6.7.1",
-    "ut-port": "^6.34.1",
+    "ut-port": "^6.34.2",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.10.0"
   },
