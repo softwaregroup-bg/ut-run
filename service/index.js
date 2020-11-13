@@ -4,6 +4,7 @@ const path = require('path');
 const {version} = require('../package.json');
 const gte = require('semver/functions/gte');
 const joi = require('joi');
+const merge = require('ut-function.merge');
 
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
@@ -34,6 +35,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
     function configure(obj = {}, config, moduleName, pkg) {
         return [].concat(...Object.entries(obj).map(([name, value]) => {
             let layer;
+            if (name === 'config') return [];
             if (value instanceof Function) {
                 const serviceName = value.name || name;
                 const propConfig = (config || {})[serviceName];
@@ -76,6 +78,28 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             }
         }
         if (utModule instanceof Function) utModule = [utModule]; // returned only one service
+
+        if (utModule && utModule.config && (moduleConfig || {}).config !== false) {
+            const defaults = (utModule.config instanceof Function) ? utModule.config(moduleConfig) : utModule.config;
+            const resultItem = name => {
+                const item = defaults[name];
+                return (item instanceof Function) ? item.apply(defaults, [{joi}]) : item;
+            };
+            const configs = (config.configFilenames || []).map(resultItem).filter(Boolean);
+            if (moduleConfig) configs.push(moduleConfig);
+            moduleConfig = merge({}, ...configs);
+            const validation = resultItem('validation');
+            if (validation) {
+                moduleConfig = joi.attempt(
+                    moduleConfig,
+                    validation,
+                    `Module ${pkg.name} configuration validation failed: `,
+                    {abortEarly: false}
+                );
+            }
+            if (moduleName) config[moduleName] = moduleConfig; else merge(config, moduleConfig);
+        }
+
         return configure(utModule, moduleConfig, moduleName, pkg);
     };
 
