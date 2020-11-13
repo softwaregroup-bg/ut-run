@@ -1,3 +1,12 @@
+# [10.41.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.7...v10.41.0) (2020-11-13)
+
+
+### Features
+
+* configuration layer ([0fd9401](https://github.com/softwaregroup-bg/ut-run/commit/0fd9401987c0b5a6262c49fa22c10e993dc77119))
+
+
+
 ## [10.40.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.40.6...v10.40.7) (2020-11-12)
 
 
