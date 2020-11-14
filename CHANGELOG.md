@@ -1,3 +1,12 @@
+## [10.41.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.41.1...v10.41.2) (2020-11-14)
+
+
+### Bug Fixes
+
+* do not handle signals during tests ([51956fd](https://github.com/softwaregroup-bg/ut-run/commit/51956fde3ec59d5bcdf5c20727aa6a5996cdee4f))
+
+
+
 ## [10.41.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.41.0...v10.41.1) (2020-11-14)
 
 
