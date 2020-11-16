@@ -1,3 +1,12 @@
+## [10.41.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.41.3...v10.41.4) (2020-11-16)
+
+
+### Bug Fixes
+
+* improve logging during tests ([f6fc1e6](https://github.com/softwaregroup-bg/ut-run/commit/f6fc1e6369917026bd06b1caf0ec488e902ed893))
+
+
+
 ## [10.41.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.41.2...v10.41.3) (2020-11-16)
 
 
