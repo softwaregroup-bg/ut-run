@@ -35,7 +35,7 @@ module.exports = {
         const main = params.main || require('./serverRequire')(params.resolve('./' + config.params.app));
         return methods[method](main, config, test, vfs);
     },
-    run: async function(params, test) {
+    run: async function(params, test, assert) {
         if (process.type === 'browser') {
             return require('./serverRequire')('ut-front/electron')({main: params.root});
         }
@@ -56,23 +56,27 @@ module.exports = {
             }
             return result;
         } catch (err) {
-            err && err.message !== 'silent' && console.error(JSON.stringify({
-                error: {...err, stack: err.stack.split('\n')},
-                level: 50,
-                service: config.service,
-                pid: process.pid,
-                hostname: require('os').hostname(),
-                name: 'run',
-                context: 'run',
-                mtd: 'error',
-                $meta: {
-                    method: 'utRun.run',
-                    mtid: 'error'
-                },
-                msg: err.message,
-                time: (new Date()).toISOString(),
-                v: 0
-            }));
+            if (assert) {
+                assert.threw(err);
+            } else if (err && err.message !== 'silent') {
+                console.error(JSON.stringify({
+                    error: {...err, stack: err.stack.split('\n')},
+                    level: 50,
+                    service: config.service,
+                    pid: process.pid,
+                    hostname: require('os').hostname(),
+                    name: 'run',
+                    context: 'run',
+                    mtd: 'error',
+                    $meta: {
+                        method: 'utRun.run',
+                        mtid: 'error'
+                    },
+                    msg: err.message,
+                    time: (new Date()).toISOString(),
+                    v: 0
+                }));
+            }
             process.exit(1); // this should be removed
         }
     }

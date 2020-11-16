@@ -166,7 +166,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             );
         } catch (error) {
             if (!error.type) error.type = 'serviceLayer.create';
-            if (!log) throw error;
+            if (!log || test) throw error;
             log.error && log.error(error);
             throw new Error('silent');
         }
