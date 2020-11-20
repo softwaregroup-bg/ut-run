@@ -1,3 +1,12 @@
+# [10.42.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.41.4...v10.42.0) (2020-11-20)
+
+
+### Features
+
+* pass implementation version to ut-bus constructor ([#83](https://github.com/softwaregroup-bg/ut-run/issues/83)) ([ecd4e22](https://github.com/softwaregroup-bg/ut-run/commit/ecd4e22fd8a0d60c29aa69fd72976a350116b796))
+
+
+
 ## [10.41.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.41.3...v10.41.4) (2020-11-16)
 
 
