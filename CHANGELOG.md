@@ -1,3 +1,12 @@
+# [10.43.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.42.1...v10.43.0) (2020-11-24)
+
+
+### Features
+
+* new ut-log config properties ([ab4b9e0](https://github.com/softwaregroup-bg/ut-run/commit/ab4b9e0b6c96efb7859edcc79b8db4a32482c1cf))
+
+
+
 ## [10.42.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.42.0...v10.42.1) (2020-11-23)
 
 
