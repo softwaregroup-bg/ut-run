@@ -120,8 +120,10 @@ module.exports = function(envConfig, vfs) {
             impl: mergedConfig.implementation,
             location: mergedConfig.location,
             env: mergedConfig.params && mergedConfig.params.env,
-            udf: mergedConfig.utLog && mergedConfig.utLog.udf,
-            transformData: (mergedConfig.utLog && (mergedConfig.utLog.transformData || {})),
+            udf: mergedConfig.utLog.udf,
+            transformData: mergedConfig.utLog.transformData,
+            maxFieldLength: mergedConfig.utLog.maxFieldLength,
+            maxArrayLength: mergedConfig.utLog.maxArrayLength,
             streams: Object.values(mergedConfig.utLog.streams)
         });
 

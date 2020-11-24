@@ -12,9 +12,9 @@
     "sort-keys": "4.1.0",
     "stack-utils": "2.0.2",
     "through2": "2.0.3",
-    "ut-config": "^7.7.0",
+    "ut-config": "^7.7.1",
     "ut-bus": "^7.35.5",
-    "ut-log": "^6.8.0",
+    "ut-log": "^6.9.0",
     "ut-port": "^6.34.2",
     "ut-function.merge": "^1.5.5",
     "yaml": "1.10.0"
@@ -71,6 +71,7 @@
     "cluster": false,
     "repl": false
   },
+  "types": "index",
   "repository": {
     "type": "git",
     "url": "git@github.com:softwaregroup-bg/ut-run.git"
