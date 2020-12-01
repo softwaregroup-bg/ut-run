@@ -1,3 +1,12 @@
+## [10.44.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.1...v10.44.2) (2020-12-01)
+
+
+### Bug Fixes
+
+* resolve when force killing worker 🤐 ([6e26d82](https://github.com/softwaregroup-bg/ut-run/commit/6e26d829160997ae2400194a36b86ae40f69774d))
+
+
+
 ## [10.44.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.0...v10.44.1) (2020-12-01)
 
 
