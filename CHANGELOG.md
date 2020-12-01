@@ -1,3 +1,12 @@
+## [10.44.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.0...v10.44.1) (2020-12-01)
+
+
+### Bug Fixes
+
+* increase stop timeout for load tests ([03436a3](https://github.com/softwaregroup-bg/ut-run/commit/03436a3a19cbccec56968cf9abc903923390908c))
+
+
+
 # [10.44.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.43.0...v10.44.0) (2020-12-01)
 
 
