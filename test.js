@@ -498,6 +498,7 @@ module.exports = function(params, cache) {
                         const force = setTimeout(() => {
                             assert.ok(true, `worker ${worker.id} kill`);
                             worker.process.kill();
+                            resolve();
                         }, 10000);
                         worker.on('exit', (code, signal) => {
                             clearTimeout(force);
