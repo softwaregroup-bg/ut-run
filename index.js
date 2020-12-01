@@ -8,14 +8,16 @@ module.exports = {
     runParams: async function(params = {}, test, config) {
         if (!config) config = await load(params);
         const method = config.params.method;
+        let cluster;
         if (config.cluster) {
-            const cluster = require('./serverRequire')('cluster');
+            cluster = require('./serverRequire')('cluster');
             if (cluster.isMaster) {
                 const workerCount = config.cluster.workers || require('os').cpus().length;
                 for (let i = 0; i < workerCount; i += 1) {
+                    cluster.setupMaster({args: [...process.argv.slice(2), `--service=${config.service}(${i})`]});
                     cluster.fork();
                 }
-                return Promise.resolve();
+                if (!['unit', 'load'].includes(method)) return Promise.resolve();
             } else {
                 if (config.runBroker) { // ensure that multiple brokers don't try to use the same socket / pipe.
                     if (typeof config.broker.socket === 'string') {
@@ -33,7 +35,7 @@ module.exports = {
             }
         }
         const main = params.main || require('./serverRequire')(params.resolve('./' + config.params.app));
-        return methods[method](main, config, test, vfs);
+        return methods[method](main, config, test, vfs, cluster);
     },
     run: async function(params, test, assert) {
         if (process.type === 'browser') {

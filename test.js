@@ -281,6 +281,27 @@ module.exports = function(params, cache) {
     };
 
     let tests = tap.test('Starting tests', () => Promise.resolve());
+
+    if (params.cluster) {
+        tests = tests.then(t => t.test('workers', {bufferred: false, bail: true}, assert =>
+            Promise.all(Object.values(params.cluster.workers).map(worker => new Promise((resolve, reject) => {
+                worker.once('listening', () => {
+                    assert.ok(true, `worker ${worker.id} listening`);
+                });
+                worker.once('error', reject);
+                worker.once('disconnect', reject);
+                worker.on('message', message => {
+                    if (message === 'ready') {
+                        worker.removeListener('error', reject);
+                        worker.removeListener('disconnect', reject);
+                        assert.ok(true, `worker ${worker.id} ready`);
+                        resolve(worker.id);
+                    }
+                });
+            })))
+        ));
+    }
+
     let brokerRun;
     if (params.brokerConfig) {
         const brokerConfig = {
@@ -470,6 +491,24 @@ module.exports = function(params, cache) {
                 });
         };
 
+        if (params.cluster) {
+            Object.values(params.cluster.workers).forEach(worker => {
+                step(`stop worker ${worker.id}`, () => {
+                    return worker.isDead() || new Promise((resolve, reject) => {
+                        const force = setTimeout(() => {
+                            assert.ok(true, `worker ${worker.id} kill`);
+                            worker.process.kill();
+                        }, 10000);
+                        worker.on('exit', (code, signal) => {
+                            clearTimeout(force);
+                            assert.ok(true, `worker ${worker.id} exit ${signal || code}`);
+                            resolve();
+                        });
+                        worker.kill();
+                    });
+                });
+            });
+        }
         x.ports.forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
         x.serviceBus && step('bus', () => x.serviceBus.destroy());
         x.broker && step('broker', () => x.broker.destroy());
