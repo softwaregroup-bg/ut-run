@@ -1,3 +1,12 @@
+## [10.44.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.2...v10.44.3) (2020-12-01)
+
+
+### Bug Fixes
+
+* increase timeout by number of workers ([747f05d](https://github.com/softwaregroup-bg/ut-run/commit/747f05dbbda0fdca6da2d346d077cfb876f76a9d))
+
+
+
 ## [10.44.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.1...v10.44.2) (2020-12-01)
 
 
