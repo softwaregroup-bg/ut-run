@@ -1,3 +1,12 @@
+# [10.44.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.43.0...v10.44.0) (2020-12-01)
+
+
+### Features
+
+* load tests ([460ca74](https://github.com/softwaregroup-bg/ut-run/commit/460ca74a1f744c36c94c3ce90afcee3d720dd971))
+
+
+
 # [10.43.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.42.1...v10.43.0) (2020-11-24)
 
 
