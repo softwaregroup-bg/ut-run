@@ -1,3 +1,12 @@
+## [10.44.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.3...v10.44.4) (2020-12-02)
+
+
+### Bug Fixes
+
+* add parentheses ([210b92d](https://github.com/softwaregroup-bg/ut-run/commit/210b92d017fbc743f2e90883a140ce6a18e9c68f))
+
+
+
 ## [10.44.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.2...v10.44.3) (2020-12-01)
 
 
