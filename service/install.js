@@ -63,7 +63,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         resources: {
             limits: {
                 memory: '250M',
-                cpu: '0.20'
+                cpu: '1'
             },
             requests: {
                 memory: '100M',
