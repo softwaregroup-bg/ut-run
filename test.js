@@ -517,7 +517,7 @@ module.exports = function(params, cache) {
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 reject(new Error('Timed out on ' + current + '.destroy'));
-            }, 10000 * (1 + params.cluster ? Object.keys(params.cluster.workers).length : 0));
+            }, 10000 * (1 + (params.cluster ? Object.keys(params.cluster.workers).length : 0)));
             promise
                 .then(value => {
                     clearTimeout(timeout);
