@@ -1,3 +1,12 @@
+## [10.44.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.4...v10.44.5) (2020-12-02)
+
+
+### Bug Fixes
+
+* limit cpu in k8s to 1 by default ([8a3cdfa](https://github.com/softwaregroup-bg/ut-run/commit/8a3cdfa41a8d661d417403add775aa029497774b))
+
+
+
 ## [10.44.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.3...v10.44.4) (2020-12-02)
 
 
