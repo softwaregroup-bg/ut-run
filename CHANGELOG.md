@@ -1,3 +1,12 @@
+# [10.45.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.5...v10.45.0) (2020-12-15)
+
+
+### Features
+
+* generation of type declarations ([6798518](https://github.com/softwaregroup-bg/ut-run/commit/67985183d996c0af0260e87ef987d8ea22aa2050))
+
+
+
 ## [10.44.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.4...v10.44.5) (2020-12-02)
 
 
