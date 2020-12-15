@@ -1,2 +1,3 @@
 tap-snapshots
 doc/examples
+*.d.ts

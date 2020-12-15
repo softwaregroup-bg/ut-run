@@ -3,5 +3,6 @@ module.exports = {
     kustomize: require('./kustomize'),
     debug: require('./debug'),
     unit: require('./unit'),
+    types: require('./types'),
     doc: require('./doc')
 };
