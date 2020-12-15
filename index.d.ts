@@ -44,7 +44,7 @@ interface key {
     params?: object
 }
 
-export type error = ((message: string) => Error) | (({ params: object }) => Error)
+export type error = (message?: string | { params: object }) => Error
 interface errorMap {
     [name: string]: error
 }
@@ -115,16 +115,46 @@ type handlerOrLib<methods, errors> = handlerFactory<methods, errors> | libFactor
 
 type validation = {
     joi: joi.Root,
+    /**
+     * partial schema
+     */
     lib: {
         [name: string]: joi.Schema
-    }
+    },
+    /**
+     * module configuration map
+     */
+    config: {
+        [name: string]: any
+    },
 }
+
+type validationSetting = joi.Schema | boolean
+type auth = false | 'preauthorized' | 'exchange'
 
 export type validationFactory = (api: validation) => {
     [name: string]: () => {
-        description: string,
+        description?: string,
+        auth?: auth,
         params: joi.Schema,
         result: joi.Schema
+    } | {
+        description?: string,
+        auth?: auth,
+        method: 'GET' | 'PUT' | 'POST' | 'DELETE',
+        path: string,
+        cors?: object,
+        validate?: {
+            params?: validationSetting,
+            query?: validationSetting,
+            payload?: validationSetting,
+            headers?: validationSetting,
+            state?: validationSetting
+        },
+        /**
+         * @deprecated
+         */
+        isRpc?: boolean
     }
 }
 
