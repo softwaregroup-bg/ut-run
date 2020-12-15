@@ -1,3 +1,12 @@
+## [10.45.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.0...v10.45.1) (2020-12-15)
+
+
+### Bug Fixes
+
+* validation types ([3425eb7](https://github.com/softwaregroup-bg/ut-run/commit/3425eb7bddcc8fd71861b6bdcbc12989d4947b07))
+
+
+
 # [10.45.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.44.5...v10.45.0) (2020-12-15)
 
 
