@@ -1,3 +1,12 @@
+## [10.45.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.1...v10.45.2) (2020-12-16)
+
+
+### Bug Fixes
+
+* improve typings ([6010c55](https://github.com/softwaregroup-bg/ut-run/commit/6010c557f35b6741eb4add3aa8903448e2ce9188))
+
+
+
 ## [10.45.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.0...v10.45.1) (2020-12-15)
 
 
