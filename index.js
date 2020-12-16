@@ -62,7 +62,7 @@ module.exports = {
                 assert.threw(err);
             } else if (err && err.message !== 'silent') {
                 console.error(JSON.stringify({
-                    error: {...err, stack: err.stack.split('\n')},
+                    error: {...err, stack: err.stack && err.stack.split && err.stack.split('\n')},
                     level: 50,
                     service: config.service,
                     pid: process.pid,

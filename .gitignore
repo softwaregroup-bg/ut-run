@@ -1,10 +1,19 @@
-.nyc_output
+.env
+.eslintcache
 .history
 .idea
 .lint
+.next
+.node_repl_history
+.npm
+.nyc_output
 .tern*
 .ut_*
+.yarn-integrity
 *.log
+*.marko.js
+bin/impl-*
+bin/package.json
 coverage
 dev
 dist
@@ -12,4 +21,4 @@ node_modules
 npm-debug.*
 package-lock.json
 yarn.lock
-.ut_*rc
+.scannerwork
