@@ -1,3 +1,12 @@
+## [10.45.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.2...v10.45.3) (2020-12-16)
+
+
+### Bug Fixes
+
+* check if stack exists ([840a1fb](https://github.com/softwaregroup-bg/ut-run/commit/840a1fb8916e168f7b55aa77419e7e020286eab0))
+
+
+
 ## [10.45.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.1...v10.45.2) (2020-12-16)
 
 
