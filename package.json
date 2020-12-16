@@ -28,7 +28,7 @@
     "tap": "^14.10.8",
     "ut-function.dispatch": "^1.2.0",
     "ut-port-script": "^7.1.1",
-    "ut-tools": "^6.35.2"
+    "ut-tools": "^6.36.0"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.2.0",

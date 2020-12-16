@@ -4,15 +4,30 @@ export as namespace ut
 
 interface meta {
     method?: string,
-    forward?: object
+    forward?: object,
+    httpResponse?: {
+        type?: string,
+        redirect?: string,
+        cookie?: object,
+        header?: string[]
+    },
+    httpRequest?: {
+        url: string,
+        headers: object
+    }
+}
+
+export type error = (message?: string | { params: object }) => Error
+interface errorMap {
+    [name: string]: error
 }
 
 export type remoteHandler<request, response> = (params: request, $meta?: meta) => Promise<response>
-export type portHandler<request, response> = (this: port, params: request, $meta?: meta) => Promise<response> | Error
+export type portHandler<request, response> = (this: port, params: request, $meta?: meta) => Promise<response> | Error | response
 
-type fn = (...params: any[]) => any;
-type logger = (message: string | object) => void;
-type errorLogger = (error: Error) => void;
+type fn = (...params: any[]) => any
+type logger = (message: string | object) => void
+type errorLogger = (error: Error) => void
 
 interface port {
     findHandler: (name: string) => portHandler<any, any>,
@@ -30,23 +45,20 @@ interface port {
         warn?: errorLogger,
         fatal?: errorLogger
     },
+    errors: errorMap,
     request: fn,
     publish: fn,
     drain: fn,
     isDebug: () => boolean,
     getConversion: () => ($meta: meta, type: string) => portHandler<any, any>,
-    merge: (...params: object[]) => object
+    merge: (...params: object[]) => object,
+    [name: string]: any
 }
 
 interface key {
     id: string,
     segment?: string,
     params?: object
-}
-
-export type error = (message?: string | { params: object }) => Error
-interface errorMap {
-    [name: string]: error
 }
 
 type api<imports> = {
@@ -92,7 +104,21 @@ type api<imports> = {
         fetchErrors: (type:string) => errorMap } & {
         readonly [name: string]: error
     },
-    version: (version: string) => boolean
+    version: (version: string) => boolean,
+    utBus: {
+        config: {
+            workDir: string
+        },
+        info: () => {
+            encrypt: object,
+            sign: object,
+            uri: string,
+            port: number | string,
+            host: string,
+            address: undefined | string,
+            protocol: 'http' | 'https' | 'socket'
+        }
+    }
 }
 
 export type handlers<imports> = (api: api<imports>) => {
@@ -126,11 +152,11 @@ type validation = {
      */
     config: {
         [name: string]: any
-    },
+    }
 }
 
 type validationSetting = joi.Schema | boolean
-type auth = false | 'preauthorized' | 'exchange'
+type auth = boolean | 'preauthorized' | 'exchange'
 
 export type validationFactory = (api: validation) => {
     [name: string]: () => {
