@@ -1,3 +1,12 @@
+## [10.45.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.3...v10.45.4) (2020-12-17)
+
+
+### Bug Fixes
+
+* sort types ([0389452](https://github.com/softwaregroup-bg/ut-run/commit/03894527c3b56d67b851b9e5722c0ded636e4cfd))
+
+
+
 ## [10.45.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.2...v10.45.3) (2020-12-16)
 
 
