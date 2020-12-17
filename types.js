@@ -1,3 +1,4 @@
+const sortKeys = require('sort-keys');
 const create = require('./create');
 const {convertSchema} = require('joi-to-typescript');
 const escape = string => string.replace(/\bdelete\b/g, 'delete$');
@@ -37,7 +38,7 @@ module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
     const indent = (string, spaces = 2) => string.split('\n').join('\n' + ' '.repeat(spaces));
     const any = (string, name) => string === 'any' ? `export type ${name} = any;` : string;
     fs.writeFileSync('handlers.d.ts', '');
-    Object.entries(validations.imported).forEach(([name, validation]) => {
+    Object.entries(sortKeys({...validations.imported})).forEach(([name, validation]) => {
         const schema = validation();
         const params = schema.params && convertSchema({commentEverything: false}, schema.params.label('params'));
         const result = schema.result && convertSchema({commentEverything: false}, schema.result.label('result'));
