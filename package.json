@@ -61,6 +61,7 @@
   "browser": {
     "./install": "./browser/install",
     "./kustomize": "./browser/kustomize",
+    "./types": "./browser/types",
     "./doc": "./browser/doc",
     "./service/install": false,
     "./unit": "./browser/unit",

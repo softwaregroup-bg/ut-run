@@ -51,7 +51,7 @@ module.exports = {
                 (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling)
             ) {
                 await result.stop();
-            } else if (!test) {
+            } else if (!test && process.getMaxListeners) {
                 if (process.getMaxListeners() < 15) process.setMaxListeners(15);
                 process.once('SIGTERM', () => result.stop());
                 process.once('SIGINT', () => result.stop());
