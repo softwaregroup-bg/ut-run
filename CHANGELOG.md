@@ -1,3 +1,12 @@
+## [10.45.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.5...v10.45.6) (2021-01-06)
+
+
+### Bug Fixes
+
+* avoid front end errors ([6419c82](https://github.com/softwaregroup-bg/ut-run/commit/6419c824922b0e83d90287bed2dbd890cb1b6ebb))
+
+
+
 ## [10.45.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.4...v10.45.5) (2020-12-21)
 
 
