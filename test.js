@@ -198,7 +198,7 @@ function performanceTest(params, assert, bus, flow) {
                     if (cookie) {
                         params.cookies = cookie;
                     }
-                    result = response ? JSON.parse(response.body) : {};
+                    result = JSON.parse(response.body);
                     if (result.error) {
                         state = false;
                         errors.push(result.error.message);
@@ -228,10 +228,10 @@ function performanceTest(params, assert, bus, flow) {
 
             if (result.errorCodes) {
                 const keys = Object.keys(result.errorCodes);
-                keys.map(function(key) {
+                keys.forEach(function(key) {
                     const errorCode = params.name && bus.performance &&
                         bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorCode' + key, 'Error code ' + key);
-                    errorCode(result.errorCodes[key]);
+                    if (typeof errorCode === 'function') errorCode(result.errorCodes[key]);
                 });
             }
             bus.performance && bus.performance.write(metrics);
