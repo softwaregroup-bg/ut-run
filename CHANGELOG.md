@@ -1,3 +1,18 @@
+# [10.46.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.6...v10.46.0) (2021-01-07)
+
+
+### Bug Fixes
+
+* add utNotify ([6a7913e](https://github.com/softwaregroup-bg/ut-run/commit/6a7913e0340fb1c238b7f1c30204357af8009f69))
+* lint errors ([1f3b4ab](https://github.com/softwaregroup-bg/ut-run/commit/1f3b4abd8765017636a0b0ea66c7d04e6c1dab62))
+
+
+### Features
+
+* update dependencies ([7c094fa](https://github.com/softwaregroup-bg/ut-run/commit/7c094fa51df9c4fce169cb5118516d1e39dd8455))
+
+
+
 ## [10.45.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.45.5...v10.45.6) (2021-01-06)
 
 
