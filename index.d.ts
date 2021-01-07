@@ -85,6 +85,7 @@ type api<imports> = {
         fallback?: fn,
         returnMeta?: boolean
     }) => remoteHandler<any, any>,
+    utNotify: (methodName: string) => remoteHandler<any, any>,
     /**
      * import remote handlers
      */
