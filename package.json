@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "9.7.1",
+  "version": "9.7.2-config-crypt-9-7-1.0",
   "dependencies": {
     "loadtest": "2.3.0",
     "minimist": "1.2.0",
