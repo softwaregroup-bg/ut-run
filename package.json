@@ -7,7 +7,8 @@
     "rc": "1.2.6",
     "ut-log": "^6.3.0-rc-einstein.2",
     "ut-port": "^6.7.0-rc-einstein.4",
-    "ut-bus": "^6.6.0-rc-einstein.5"
+    "ut-bus": "^6.6.0-rc-einstein.5",
+    "ut-config": "7.7.2"
   },
   "devDependencies": {
     "tap": "^10.7.3",

@@ -63,12 +63,16 @@ function getConfig(params = {}, parent = module.parent) {
             config.params.env = params.env;
         }
     }
-
-    return rc([
-        'ut',
-        (config.implementation || 'ut5').replace(/[-/\\]/g, '_'),
-        process.env.UT_ENV || params.env || 'dev'
-    ].join('_'), config);
+    return require("ut-config").load({
+      config: rc(
+        [
+          "ut",
+          (config.implementation || "ut5").replace(/[-/\\]/g, "_"),
+          process.env.UT_ENV || params.env || "dev",
+        ].join("_"),
+        config
+      ),
+    });
 }
 
 module.exports = {
