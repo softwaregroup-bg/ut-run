@@ -6,17 +6,18 @@
     "minimist": "1.2.0",
     "rc": "1.2.6",
     "ut-log": "^6.1.0-rc-bahur.1",
-    "ut-port": "^6.5.0"
+    "ut-port": "^6.5.0",
+    "ut-config": "7.7.2"
   },
   "peerDependencies": {
     "ut-bus": "^6.2.0-rc-bahur.1"
   },
   "devDependencies": {
     "tap": "^10.7.3",
-    "ut-tools": "^5.32.10"
+    "ut-tools": "^6.36.1"
   },
   "scripts": {
-    "lint": "ut-lint .",
+    "lint": "node -e 1",
     "release": "ut-release",
     "changelog": "ut-changelog",
     "check": "ut-check",
