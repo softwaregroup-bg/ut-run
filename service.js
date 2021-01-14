@@ -48,6 +48,9 @@ module.exports = ({bus, logFactory}) => {
         }
         config = config || {};
         var ports = [];
+        serviceConfig.ports && serviceConfig.ports.map(p => {
+            p.concurrency = p.concurrency || (config.utPort || {}).concurrency;
+        });
         if (Array.isArray(serviceConfig.ports)) {
             ports.push.apply(ports, serviceConfig.ports);
         }
