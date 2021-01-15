@@ -1,19 +1,25 @@
 import joi from 'joi'
 
 export as namespace ut
-
 interface meta {
     method?: string,
     forward?: object,
     httpResponse?: {
         type?: string,
         redirect?: string,
-        cookie?: object,
+        state?: any[],
         header?: string[]
     },
     httpRequest?: {
-        url: string,
+        url: URL,
         headers: object
+    },
+    auth: {
+        mlek: object,
+        mlsk: object,
+        permissionMap: Buffer,
+        actorId: string | number,
+        sessionId: string
     }
 }
 
@@ -85,6 +91,7 @@ type api<imports> = {
         fallback?: fn,
         returnMeta?: boolean
     }) => remoteHandler<any, any>,
+    utMeta: (params?: object) => meta,
     utNotify: (methodName: string) => remoteHandler<any, any>,
     /**
      * import remote handlers
