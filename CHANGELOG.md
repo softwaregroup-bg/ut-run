@@ -1,3 +1,12 @@
+## [10.46.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.46.2...v10.46.3) (2021-01-21)
+
+
+### Bug Fixes
+
+* types handling ([ebf0ff5](https://github.com/softwaregroup-bg/ut-run/commit/ebf0ff56a0f543e30e23a23d07f7077cbd517cb7))
+
+
+
 ## [10.46.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.46.1...v10.46.2) (2021-01-18)
 
 
