@@ -20,7 +20,9 @@ interface meta {
         permissionMap: Buffer,
         actorId: string | number,
         sessionId: string
-    }
+    },
+    conId: number,
+    destination: string
 }
 
 export type error = (message?: string | { params: object }) => Error
