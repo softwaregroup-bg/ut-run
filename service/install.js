@@ -32,7 +32,10 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     const k8s = config.k8s || {};
     const docker = (k8s.username && k8s.password && `${k8s.username}:${k8s.password}`);
     const image = (k8s.repository ? k8s.repository + '/' : '') + (k8s.image || (`ut/impl-${config.implementation}:${config.version}`));
-    const mountPath = (`/etc/ut_${config.implementation.replace(/[-/\\]/g, '_')}_${config.params.env}`).toLowerCase();
+    const appname = `ut_${config.implementation.replace(/[-/\\]/g, '_')}_${config.params.env}`.toLowerCase();
+    const mountPath = `/etc/${appname}`;
+    const mountPathAppRc = `/app/.${appname}rc`;
+    const mountPathEtcRc = `/etc/${appname}rc`;
     const commonLabels = merge({
         'app.kubernetes.io/part-of': config.implementation,
         'app.kubernetes.io/managed-by': 'ut-run'
@@ -56,6 +59,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         volumeMounts: [{
             name: 'config',
             mountPath
+        }, {
+            name: 'apprc',
+            mountPath: mountPathAppRc,
+            subPath: path.basename(mountPathAppRc)
+        }, {
+            name: 'etcrc',
+            mountPath: mountPathEtcRc,
+            subPath: path.basename(mountPathEtcRc)
         }, k8s && k8s.minikube && {
             name: 'ut',
             mountPath: '/ut/impl'
@@ -172,6 +183,25 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             name: 'config',
             secret: {
                 secretName
+            }
+        }, {
+            name: 'rc',
+            secret: {
+                secretName: 'rc',
+                items: [{
+                    key: 'rc.yaml',
+                    path: path.basename(mountPathAppRc)
+                }]
+            }
+        }, {
+            name: 'etcrc',
+            secret: {
+                secretName: 'etcrc',
+                optional: true,
+                items: [{
+                    key: 'etcrc.yaml',
+                    path: path.basename(mountPathEtcRc)
+                }]
             }
         }, k8s && k8s.minikube && {
             name: 'ut',
@@ -352,7 +382,6 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                     args: [
                                         config.params.app,
                                         '--service=' + deploymentName,
-                                        kustomization && `--config=${mountPath}/rc`,
                                         (deploymentName === 'console') && '--utLog.streams.udp=0'
                                     ].filter(x => x),
                                     ...containerDefaults()
