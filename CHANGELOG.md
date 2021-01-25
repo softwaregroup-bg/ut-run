@@ -1,3 +1,13 @@
+# [10.47.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.46.3...v10.47.0) (2021-01-25)
+
+
+### Features
+
+* allow modules to define volume claims ([25cb955](https://github.com/softwaregroup-bg/ut-run/commit/25cb955e3bfd155788a1c92d009750c194f80c02))
+* mount secret rc and optional secret etcrc ([b2c6e0f](https://github.com/softwaregroup-bg/ut-run/commit/b2c6e0f1c490be72041848ddcc89b0514c82ff99))
+
+
+
 ## [10.46.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.46.2...v10.46.3) (2021-01-21)
 
 
