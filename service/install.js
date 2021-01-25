@@ -31,8 +31,8 @@ const readConfig = filename => {
 module.exports = ({portsAndModules, log, layers, config, secret, kustomization}) => {
     const k8s = config.k8s || {};
     const docker = (k8s.username && k8s.password && `${k8s.username}:${k8s.password}`);
-    const image = (k8s.repository ? k8s.repository + '/' : '') + (k8s.image || ('ut/impl-' + config.implementation + ':' + config.version));
-    const mountPath = ('/etc/ut_' + config.implementation.replace(/[-/\\]/g, '_') + '_' + config.params.env).toLowerCase();
+    const image = (k8s.repository ? k8s.repository + '/' : '') + (k8s.image || (`ut/impl-${config.implementation}:${config.version}`));
+    const mountPath = (`/etc/ut_${config.implementation.replace(/[-/\\]/g, '_')}_${config.params.env}`).toLowerCase();
     const commonLabels = merge({
         'app.kubernetes.io/part-of': config.implementation,
         'app.kubernetes.io/managed-by': 'ut-run'
@@ -40,14 +40,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     const deploymentLabels = {
         version: config.version,
         'app.kubernetes.io/version': config.version,
-        'app.kubernetes.io/instance': config.implementation + '_' + config.version
+        'app.kubernetes.io/instance': `${config.implementation}_${config.version}`
     };
     const commonAnnotations = merge({
         'prometheus.io/scrape': 'true',
         'prometheus.io/port': '8090',
         'prometheus.io/scheme': 'http'
     }, k8s.annotations);
-    const containerDefaults = merge({
+    const containerDefaults = () => merge({
         name: 'ut',
         env: [{
             name: 'UT_ENV',
@@ -113,7 +113,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 cpu: '0.01'
             }
         }
-    }, k8s.job))(containerDefaults);
+    }, k8s.job))(containerDefaults());
     if (secret) {
         secret = yaml.stringify(sortKeys(merge(secret, {
             run: {
@@ -159,14 +159,14 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         apiVersion: 'v1',
         kind: 'Namespace',
         metadata: {
-            name: k8s.namespace || (config.implementation + '-' + config.params.env),
+            name: k8s.namespace || (`${config.implementation}-${config.params.env}`),
             labels: {
                 'istio-injection': 'enabled'
             }
         }
     };
     const secretName = kustomization ? 'config' : 'config-' + configFile.hash;
-    const podDefaults = merge({
+    const podDefaults = () => merge({
         ...(docker || k8s.pullSecrets !== false) && {imagePullSecrets: [{name: 'docker'}]},
         volumes: [{
             name: 'config',
@@ -191,6 +191,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         const layer = portOrModule.config.pkg.layer;
         const ports = (portOrModule.config.k8s && portOrModule.config.k8s.ports) || [];
         const ingresses = (portOrModule.config.k8s && portOrModule.config.k8s.ingresses) || [];
+        const volumes = (portOrModule.config.k8s && portOrModule.config.k8s.volumes) || [];
+        const portOrModuleName = portOrModule.config.id.replace(/\./g, '-');
         const containerPorts = ports.map(port => ({
             name: port.name,
             protocol: port.protocol || 'TCP',
@@ -210,7 +212,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             };
             if (host || path) {
                 if (!ingress.spec.rules) ingress.spec.rules = [];
-                const ingressRule = prev.ingressRules[name + '@' + (host || '')] || {
+                const ingressRule = prev.ingressRules[`${name}@${host || ''}`] || {
                     ...host && {host},
                     http: {
                         paths: []
@@ -242,7 +244,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             }
                         });
                 }
-                prev.ingressRules[name + '@' + (host || '')] = ingressRule;
+                prev.ingressRules[`${name}@${host || ''}`] = ingressRule;
             } else {
                 ingress.spec.backend = {
                     serviceName: serviceName.toLowerCase(),
@@ -271,7 +273,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             'app.kubernetes.io/name': deploymentName,
                             'app.kubernetes.io/component': portOrModule.config.pkg.name,
                             'app.kubernetes.io/version': portOrModule.config.pkg.version,
-                            'app.kubernetes.io/instance': deploymentName + '_' + portOrModule.config.pkg.version,
+                            'app.kubernetes.io/instance': `${deploymentName}_${portOrModule.config.pkg.version}`,
                             ...!kustomization && commonLabels
                         }
                     },
@@ -339,7 +341,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             spec: {
                                 ...nodeSelector,
                                 serviceAccountName: 'ut',
-                                ...podDefaults,
+                                ...podDefaults(),
                                 initContainers: [{
                                     name: 'db-create-wait',
                                     image: 'd3fk/kubectl:v1.18',
@@ -350,10 +352,10 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                     args: [
                                         config.params.app,
                                         '--service=' + deploymentName,
-                                        kustomization && '--config=' + mountPath + '/rc',
+                                        kustomization && `--config=${mountPath}/rc`,
                                         (deploymentName === 'console') && '--utLog.streams.udp=0'
                                     ].filter(x => x),
-                                    ...containerDefaults
+                                    ...containerDefaults()
                                 }]
                             }
                         }
@@ -364,10 +366,25 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 if (!args.includes('--' + layer)) args.push('--' + layer);
                 container.ports = [...container.ports, ...containerPorts];
                 prev.deployments[deploymentKey] = deployment;
+                function addIfNotExists(where, item) {
+                    if (!where.find(({name}) => name === item.name)) where.push(item);
+                }
+                Object.entries(volumes).forEach(([name, volume]) => {
+                    addIfNotExists(container.volumeMounts, {
+                        name: `${portOrModuleName}-${name}-volume`,
+                        mountPath: volume
+                    });
+                    addIfNotExists(deployment.spec.template.spec.volumes, {
+                        name: `${portOrModuleName}-${name}-volume`,
+                        persistentVolumeClaim: {
+                            claimName: `${portOrModuleName}-${name}-claim`
+                        }
+                    });
+                });
             });
             if (deploymentNames.length === 1) {
                 portOrModule.config.id && portOrModule.config.type !== 'module' && addService({
-                    name: portOrModule.config.id.replace(/\./g, '-') + '-service',
+                    name: portOrModuleName + '-service',
                     deploymentName: deploymentNames[0],
                     port: 8090,
                     targetPort: 'http-jsonrpc'
@@ -389,7 +406,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     }]
                 }));
                 ports.forEach(port => port.service && addService({
-                    name: portOrModule.config.id.replace(/\./g, '-') + '-' + port.name,
+                    name: `${portOrModuleName}-${port.name}`,
                     deploymentName: deploymentNames[0],
                     port: port.containerPort,
                     protocol: port.protocol,
@@ -398,13 +415,13 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 }));
                 ports.forEach(port => port.ingress && [].concat(port.ingress).forEach(config => config && addIngress({
                     ...ingressConfig,
-                    name: deploymentNames[0] + '-' + port.name,
-                    serviceName: portOrModule.config.id.replace(/\./g, '-') + '-' + port.name,
+                    name: `${deploymentNames[0]}-${port.name}`,
+                    serviceName: `${portOrModuleName}-${port.name}`,
                     servicePort: port.name,
                     ...config
                 })));
             }
-        };
+        }
         if (![undefined, null, false].includes(layers[layer])) ingresses.forEach(ingress => addIngress({...ingressConfig, ...ingress}));
         return prev;
     }, {
@@ -437,7 +454,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             }
                         },
                         spec: {
-                            ...podDefaults,
+                            ...podDefaults(),
                             containers: [{
                                 name: 'ut',
                                 image: 'impl',
@@ -560,7 +577,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             name: 'config',
             files: ['config=config.yaml'],
             literals: [
-                'rc=install: ' + mountPath + '/rc'
+                `rc=install: ${mountPath}/rc`
             ],
             type: 'Opaque'
         }];
