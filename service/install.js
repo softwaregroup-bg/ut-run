@@ -400,13 +400,13 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 }
                 Object.entries(volumes).forEach(([name, volume]) => {
                     addIfNotExists(container.volumeMounts, {
-                        name: `${portOrModuleName}-${name}-volume`,
+                        name: `${portOrModuleName}-${name}-volume`.toLowerCase(),
                         mountPath: volume
                     });
                     addIfNotExists(deployment.spec.template.spec.volumes, {
-                        name: `${portOrModuleName}-${name}-volume`,
+                        name: `${portOrModuleName}-${name}-volume`.toLowerCase(),
                         persistentVolumeClaim: {
-                            claimName: `${portOrModuleName}-${name}-claim`
+                            claimName: `${portOrModuleName}-${name}-claim`.toLowerCase()
                         }
                     });
                 });
