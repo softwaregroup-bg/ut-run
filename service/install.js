@@ -185,7 +185,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 secretName
             }
         }, {
-            name: 'rc',
+            name: 'apprc',
             secret: {
                 secretName: 'rc',
                 items: [{
