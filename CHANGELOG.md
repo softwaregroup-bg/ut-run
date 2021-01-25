@@ -1,3 +1,12 @@
+## [10.47.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.1...v10.47.2) (2021-01-25)
+
+
+### Bug Fixes
+
+* volume name ([3286427](https://github.com/softwaregroup-bg/ut-run/commit/32864276c3dc73bcec9c8c0f76a61411482cf832))
+
+
+
 ## [10.47.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.0...v10.47.1) (2021-01-25)
 
 
