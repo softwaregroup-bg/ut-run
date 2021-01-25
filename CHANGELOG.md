@@ -1,3 +1,12 @@
+## [10.47.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.0...v10.47.1) (2021-01-25)
+
+
+### Bug Fixes
+
+* lowercase PVC name ([5ad5e0c](https://github.com/softwaregroup-bg/ut-run/commit/5ad5e0c21e7d95321917e02a0fe5590baf5cd56c))
+
+
+
 # [10.47.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.46.3...v10.47.0) (2021-01-25)
 
 
