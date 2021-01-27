@@ -1,3 +1,12 @@
+## [10.47.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.2...v10.47.3) (2021-01-27)
+
+
+### Bug Fixes
+
+* polyfill meta in tests ([#87](https://github.com/softwaregroup-bg/ut-run/issues/87)) ([517338e](https://github.com/softwaregroup-bg/ut-run/commit/517338e68d95fa7078d84bb253c62ed01751cec4))
+
+
+
 ## [10.47.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.1...v10.47.2) (2021-01-25)
 
 
