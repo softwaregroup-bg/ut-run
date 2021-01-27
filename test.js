@@ -105,7 +105,7 @@ function sequence(options, test, bus, flow, params, parent) {
                             }
                             const promise = step.$meta
                                 ? step.$meta(context).then($meta => step.method(params, buildMeta($meta)))
-                                : step.method.call(step, params, buildMeta(context.$meta));
+                                : step.method(params, buildMeta(context.$meta));
                             return promise
                                 .then(function(result) {
                                     duration && duration(Date.now() - start);
