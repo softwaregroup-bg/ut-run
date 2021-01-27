@@ -5,6 +5,7 @@ const run = require('./index');
 const util = require('util');
 const hrtime = require('browser-process-hrtime');
 const cucumber = require('./cucumber');
+const uuid = require('uuid').v4;
 
 function sequence(options, test, bus, flow, params, parent) {
     const previous = [];
@@ -47,6 +48,8 @@ function sequence(options, test, bus, flow, params, parent) {
             return steps;
         }, []);
     }
+
+    const buildMeta = ($meta = {}) => $meta.forward ? $meta : {...$meta, forward: {'x-b3-traceid': uuid().replace(/-/g, '')}};
 
     return (function runSequence(flow, params, parent) {
         const context = parent || {
@@ -101,8 +104,8 @@ function sequence(options, test, bus, flow, params, parent) {
                                     .then(steps => sequence(options, assert, bus, steps, undefined, context));
                             }
                             const promise = step.$meta
-                                ? step.$meta(context).then($meta => step.method(params, $meta))
-                                : step.method.apply(step, context.$meta ? [params, context.$meta] : [params]);
+                                ? step.$meta(context).then($meta => step.method(params, buildMeta($meta)))
+                                : step.method(params, buildMeta(context.$meta));
                             return promise
                                 .then(function(result) {
                                     duration && duration(Date.now() - start);

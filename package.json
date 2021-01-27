@@ -18,6 +18,7 @@
     "ut-log": "^6.9.0",
     "ut-port": "^6.37.0",
     "ut-function.merge": "^1.5.5",
+    "uuid": "3.3.2",
     "yaml": "1.10.0"
   },
   "devDependencies": {
