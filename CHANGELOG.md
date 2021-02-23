@@ -1,3 +1,12 @@
+## [10.47.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.3...v10.47.4) (2021-02-23)
+
+
+### Bug Fixes
+
+* handle missing dependencies ([#88](https://github.com/softwaregroup-bg/ut-run/issues/88)) ([e4f645a](https://github.com/softwaregroup-bg/ut-run/commit/e4f645a7e84c8d4e7ab720d0bcf187aacfe3db81))
+
+
+
 ## [10.47.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.2...v10.47.3) (2021-01-27)
 
 
