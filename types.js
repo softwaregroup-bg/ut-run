@@ -59,7 +59,7 @@ export interface errors {
 ${Object.keys(importedErrors.imported).sort().map(errors).join(',\n')}
 }
 
-${mergedConfig.utRun.types.dependencies.split(',').map(dep => `import ${dep.replace(/-/g, '')} from 'ut-${dep}/handlers'
+${mergedConfig.utRun.types.dependencies.split(',').map(dep => dep && `import ${dep.replace(/-/g, '')} from 'ut-${dep}/handlers'
 interface methods extends ${dep.replace(/-/g, '')}.handlers {}
 `).join('\n')}
 export type libFactory = ut.libFactory<methods, errors>
