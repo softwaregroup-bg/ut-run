@@ -45,9 +45,18 @@ module.exports = {
                 var cluster = serverRequire('cluster');
                 if (cluster.isMaster) {
                     var workerCount = config.cluster.workers || require('os').cpus().length;
-                    for (var i = 0; i < workerCount; i += 1) {
-                        cluster.fork();
+                    for (var i = 1; i <= workerCount; i += 1) {
+                        var env = { isSpecialWorker: i === 1 };
+                        let worker = cluster.fork(env);
+                        worker.process.env = env;
                     }
+                    cluster.on('exit', function(worker, code, signal) {
+                        console.error(`Worker ${worker.process.pid} died with code/signal ${signal || code}. Restarting worker...` );
+                        var env = worker.process.env;
+                        let newWorker = cluster.fork();
+                        newWorker = cluster.fork(env);
+                        newWorker.process.env = env;
+                    });
                     return Promise.resolve();
                 } else {
                     if (config.runMaster) { // ensure that multiple master bus instances don't try to use the same socket / pipe.
