@@ -1,3 +1,12 @@
+# [10.48.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.4...v10.48.0) (2021-03-11)
+
+
+### Features
+
+* update dependencies ([fa501ed](https://github.com/softwaregroup-bg/ut-run/commit/fa501ed6943b2d39f95c951c9a50783b2784de2f))
+
+
+
 ## [10.47.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.3...v10.47.4) (2021-02-23)
 
 
