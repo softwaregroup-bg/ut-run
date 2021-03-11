@@ -1,3 +1,12 @@
+## [10.48.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.48.0...v10.48.1) (2021-03-11)
+
+
+### Bug Fixes
+
+* deps ([31b3ebc](https://github.com/softwaregroup-bg/ut-run/commit/31b3ebc96969a5cb2f45e708d4396e6544dc163b))
+
+
+
 # [10.48.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.47.4...v10.48.0) (2021-03-11)
 
 
