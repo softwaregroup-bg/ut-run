@@ -53,8 +53,7 @@ module.exports = {
                     cluster.on('exit', function(worker, code, signal) {
                         console.error(`Worker ${worker.process.pid} died with code/signal ${signal || code}. Restarting worker...` );
                         var env = worker.process.env;
-                        let newWorker = cluster.fork();
-                        newWorker = cluster.fork(env);
+                        let newWorker = cluster.fork(env);
                         newWorker.process.env = env;
                     });
                     return Promise.resolve();
