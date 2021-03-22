@@ -34,7 +34,7 @@ function sequence(options, test, bus, flow, params, parent) {
             const {method: stepMethod, $meta: stepMeta, params: stepParams, ...rest} = step;
             steps.push({
                 methodName: stepMethod,
-                method: stepMethod ? bus.importMethod(stepMethod) : async params => params,
+                method: stepMethod ? bus.importMethod(stepMethod, {returnMeta: true}) : async(params, $meta) => [params, $meta],
                 async params() {
                     return (typeof stepParams === 'function') ? stepParams(...arguments) : stepParams;
                 },
@@ -107,13 +107,13 @@ function sequence(options, test, bus, flow, params, parent) {
                                 ? step.$meta(context).then($meta => step.method(params, buildMeta($meta)))
                                 : step.method(params, buildMeta(context.$meta));
                             return promise
-                                .then(function(result) {
+                                .then(function([result, $meta]) {
                                     duration && duration(Date.now() - start);
                                     passed && passed((result && result._isOk) ? 1 : 0);
                                     performanceWrite();
                                     context[step.name] = result;
                                     if (typeof step.result === 'function') {
-                                        step.result.call(context, result, assert);
+                                        step.result.call(context, result, assert, $meta);
                                     } else if (typeof step.error === 'function') {
                                         assert.fail('Result is expected to be an error');
                                     } else {
@@ -352,14 +352,32 @@ module.exports = function(params, cache) {
 
     const serverConfig = {
         main: params.server,
-        config: params.serverConfig,
+        config: [].concat(params.serverConfig, {
+            utBus: {
+                serviceBus: {
+                    test: true
+                }
+            },
+            utPort: {
+                test: true
+            }
+        }),
         app: params.serverApp || '../../server',
         env: params.serverEnv || 'test',
         method: params.serverMethod || 'debug'
     };
     clientConfig = params.client && {
         main: params.client,
-        config: params.clientConfig,
+        config: [].concat(params.clientConfig, {
+            utBus: {
+                serviceBus: {
+                    test: true
+                }
+            },
+            utPort: {
+                test: true
+            }
+        }),
         app: params.clientApp || '../../desktop',
         env: params.clientEnv || 'test',
         method: params.clientMethod || 'debug'
