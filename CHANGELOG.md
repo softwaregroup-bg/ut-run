@@ -1,3 +1,12 @@
+# [10.49.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.48.2...v10.49.0) (2021-03-22)
+
+
+### Features
+
+* return $meta during tests ([aafe31f](https://github.com/softwaregroup-bg/ut-run/commit/aafe31ffd131d08cc5e07472fee3b62046ca4ff9))
+
+
+
 ## [10.48.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.48.1...v10.48.2) (2021-03-12)
 
 
