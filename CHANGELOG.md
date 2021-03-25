@@ -1,3 +1,12 @@
+# [10.50.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.49.2...v10.50.0) (2021-03-25)
+
+
+### Features
+
+* pass steps proxy during tests ([77f9a3b](https://github.com/softwaregroup-bg/ut-run/commit/77f9a3bf4f183872f524d15bce837ca9cadaebda))
+
+
+
 ## [10.49.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.49.1...v10.49.2) (2021-03-22)
 
 
