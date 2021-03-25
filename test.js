@@ -6,6 +6,23 @@ const util = require('util');
 const hrtime = require('browser-process-hrtime');
 const cucumber = require('./cucumber');
 const uuid = require('uuid').v4;
+const lowercase = (match, word1, word2, letter) => `${word1}.${word2.toLowerCase()}${letter ? ('.' + letter.toLowerCase()) : ''}`;
+const capitalWords = /^([^A-Z]+)([A-Z][^A-Z]+)([A-Z])?/;
+const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-Z0-9]+)*(#\[[0+?^]?])?$/;
+
+const proxy = imported => new Proxy({}, {
+    get(target, key) {
+        if (!importKeyRegexp.test(key)) throw new Error('wrong import proxy key format');
+        let method = key.replace(/\$/g, '/');
+        if (!method.includes('.')) method = method.replace(capitalWords, lowercase);
+        const fn = imported && imported['steps.' + method];
+        if (fn instanceof Function) {
+            return fn;
+        } else {
+            throw new Error('Step not found in imports: ' + 'steps.' + method);
+        }
+    }
+});
 
 function sequence(options, test, bus, flow, params, parent) {
     const previous = [];
@@ -416,12 +433,12 @@ module.exports = function(params, cache) {
 
     const testClient = testConfig => assert => assert.test('client tests', async assert => {
         const client = await startClient(assert);
-        await testConfig.steps(assert, client.serviceBus, sequence.bind(null, testConfig), client.ports);
+        await testConfig.steps(assert, client.serviceBus, sequence.bind(null, testConfig), client.ports, proxy(testConfig.imported));
         await assert.test('client stop', a => stop(a, client));
     }).catch(assert.threw);
 
     const testServer = testConfig => assert => assert.test('server tests', async assert => {
-        await testConfig.steps(assert, serverObj.serviceBus, sequence.bind(null, testConfig), serverObj.ports);
+        await testConfig.steps(assert, serverObj.serviceBus, sequence.bind(null, testConfig), serverObj.ports, proxy(testConfig.imported));
     }).catch(assert.threw);
 
     const testAny = clientConfig ? testClient : testServer;

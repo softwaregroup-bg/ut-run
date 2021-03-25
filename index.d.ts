@@ -1,4 +1,6 @@
 import joi from 'joi'
+import {readdir, readFileSync} from 'fs';
+import {CallSiteLike} from 'stack-utils';
 
 export as namespace ut
 interface meta {
@@ -69,6 +71,13 @@ interface key {
     params?: object
 }
 
+interface vfs {
+    compile: () => boolean;
+    readdir: typeof readdir;
+    isFile: (fileName: string) => boolean;
+    readFileSync: typeof readFileSync;
+}
+
 type api<imports> = {
     joi: joi.Root,
     /**
@@ -115,6 +124,8 @@ type api<imports> = {
         readonly [name: string]: error
     },
     version: (version: string) => boolean,
+    vfs: vfs,
+    callSite?: () => CallSiteLike,
     utBus: {
         config: {
             workDir: string
