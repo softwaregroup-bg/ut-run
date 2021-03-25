@@ -1,3 +1,12 @@
+## [10.50.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.50.0...v10.50.1) (2021-03-25)
+
+
+### Bug Fixes
+
+* webpack error ([4421eac](https://github.com/softwaregroup-bg/ut-run/commit/4421eac91f4f0aac817df0b2d82bd8053e532e42))
+
+
+
 # [10.50.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.49.2...v10.50.0) (2021-03-25)
 
 
