@@ -210,7 +210,7 @@ function convertStep(step, options) {
         step.arguments = step.match ? [step.match(step.description || '')] : [];
         const fn = options.imported && options.imported['steps.' + step.name];
         if (fn instanceof Function) {
-            Object.assign(step, fn(traceStep, ...step.arguments));
+            Object.assign(step, step?.arguments?.length ? fn(...step.arguments) : fn(traceStep));
         } else {
             throw new Error('Step not found in imports: ' + step.name);
         }
