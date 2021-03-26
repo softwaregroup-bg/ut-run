@@ -1,3 +1,12 @@
+# [10.51.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.50.1...v10.51.0) (2021-03-26)
+
+
+### Features
+
+* deprecate usage of traceStep ([2940d0b](https://github.com/softwaregroup-bg/ut-run/commit/2940d0b5937d7d9f218c4b616c04ea3a34be883c))
+
+
+
 ## [10.50.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.50.0...v10.50.1) (2021-03-25)
 
 
