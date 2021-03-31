@@ -1,3 +1,12 @@
+## [10.51.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.51.0...v10.51.1) (2021-03-31)
+
+
+### Bug Fixes
+
+* update dependencies ([77788b4](https://github.com/softwaregroup-bg/ut-run/commit/77788b4af636c956544942d461e4c6941a32314c))
+
+
+
 # [10.51.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.50.1...v10.51.0) (2021-03-26)
 
 
