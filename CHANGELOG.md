@@ -1,3 +1,12 @@
+# [10.52.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.51.1...v10.52.0) (2021-04-10)
+
+
+### Features
+
+* update ut-port ([0072d84](https://github.com/softwaregroup-bg/ut-run/commit/0072d842e2c1da7a9ea0d08092483324a429f0c5))
+
+
+
 ## [10.51.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.51.0...v10.51.1) (2021-03-31)
 
 
