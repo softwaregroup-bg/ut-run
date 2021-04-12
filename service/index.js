@@ -93,7 +93,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
                 moduleConfig = joi.attempt(
                     moduleConfig,
                     validation,
-                    `Module ${pkg.name} configuration validation failed: `,
+                    `Module ${pkg ? pkg.name : moduleName} configuration validation failed: `,
                     {abortEarly: false}
                 );
             }
