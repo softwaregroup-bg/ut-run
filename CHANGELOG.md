@@ -1,3 +1,12 @@
+## [10.52.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.52.0...v10.52.1) (2021-04-12)
+
+
+### Bug Fixes
+
+* handle missing pkg ([607c260](https://github.com/softwaregroup-bg/ut-run/commit/607c26059d81d2378a1b33140a10c21b33ea1fcc))
+
+
+
 # [10.52.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.51.1...v10.52.0) (2021-04-10)
 
 
