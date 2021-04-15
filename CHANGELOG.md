@@ -1,3 +1,12 @@
+# [10.53.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.52.1...v10.53.0) (2021-04-15)
+
+
+### Features
+
+* deps ([#89](https://github.com/softwaregroup-bg/ut-run/issues/89)) ([f199f2c](https://github.com/softwaregroup-bg/ut-run/commit/f199f2cd6c77ecb85cf77abc1afd76d0730780dc))
+
+
+
 ## [10.52.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.52.0...v10.52.1) (2021-04-12)
 
 
