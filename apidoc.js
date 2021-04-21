@@ -1,5 +1,7 @@
 const got = require('got');
-const stream = require('readable-stream');
+// as this is a dev dependency, we can ignore restricted modules
+// eslint-disable-next-line no-restricted-modules
+const stream = require('stream');
 const {promisify} = require('util');
 const fs = require('fs');
 const fsplus = require('fs-plus');
