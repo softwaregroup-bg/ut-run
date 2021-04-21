@@ -1,6 +1,8 @@
 const sortKeys = require('sort-keys');
-const create = require('./create');
+const fs = require('fs');
 const {convertSchema} = require('joi-to-typescript');
+const create = require('./create');
+const apidoc = require('./apidoc');
 const escape = string => string.replace(/\bdelete\b/g, 'delete$');
 const camelCase = name => name.replace(/^([a-z]+)(\.[a-z])([a-z]+)(\.[a-z])([^.]+)$/, (match, word1, word2, word3, word4, word5) =>
     `${word1}${word2.substr(1, 1).toUpperCase()}${word3}${word4.substr(1, 1).toUpperCase()}${word5}`);
@@ -18,15 +20,27 @@ const errors = name => {
     return error(name) + ((name === camelCaseName) ? '' : ',\n' + error(camelCaseName, ''));
 };
 
-const fs = require('fs');
-
 module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
-    const {service, serviceBus, mergedConfig} = await create({
+    const {
+        service,
+        serviceBus,
+        mergedConfig
+    } = await create({
         implementation: 'doc',
         repl: false,
         log: false,
-        utLog: { streams: { udp: false } },
-        utBus: { serviceBus: { jsonrpc: true } },
+        utLog: {
+            streams: {
+                udp: false
+            }
+        },
+        utBus: {
+            serviceBus: {
+                jsonrpc: {
+                    utLogin: false
+                }
+            }
+        },
         configFilenames: ['common', 'types'],
         ...envConfig
     }, vfs);
@@ -66,5 +80,6 @@ export type libFactory = ut.libFactory<methods, errors>
 export type handlerFactory = ut.handlerFactory<methods, errors>
 export type handlerSet = ut.handlerSet<methods, errors>
 `);
+    await apidoc(serviceBus);
     await serviceBus.stop();
 };
