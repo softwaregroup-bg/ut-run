@@ -1,3 +1,17 @@
+# [10.54.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.53.0...v10.54.0) (2021-04-21)
+
+
+### Bug Fixes
+
+* use node streams ([07cb2e8](https://github.com/softwaregroup-bg/ut-run/commit/07cb2e8be7cc716200338989e4ed4678508daac1))
+
+
+### Features
+
+* publish api doc ([c2b766c](https://github.com/softwaregroup-bg/ut-run/commit/c2b766c8b51cde81179e58d32eacd00a680d0e61))
+
+
+
 # [10.53.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.52.1...v10.53.0) (2021-04-15)
 
 
