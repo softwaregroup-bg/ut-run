@@ -1,3 +1,12 @@
+## [10.55.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.0...v10.55.1) (2021-05-27)
+
+
+### Bug Fixes
+
+* ingress TLS is array [UTCORE-121] ([c2dd213](https://github.com/softwaregroup-bg/ut-run/commit/c2dd213610f0776c4dd3eef23e178873be7cdb1d))
+
+
+
 # [10.55.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.54.0...v10.55.0) (2021-05-27)
 
 
