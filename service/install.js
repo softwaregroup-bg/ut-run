@@ -250,8 +250,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
                 if (tls && host) {
-                    if (!ingress.spec.tls) ingress.spec.tls = {hosts: [], secretName: name + '-tls'};
-                    if (!ingress.spec.tls.hosts.includes(host)) ingress.spec.tls.hosts.push(host);
+                    if (!ingress.spec.tls) ingress.spec.tls = [{hosts: [], secretName: name + '-tls'}];
+                    if (!ingress.spec.tls[0].hosts.includes(host)) ingress.spec.tls[0].hosts.push(host);
                     const {manager = 'certmanager'} = tls;
                     if (['certmanager', 'cert-manager.io', 'cert-manager.io/v1'].includes(manager)) {
                         ingress.metadata.annotations = ingress.metadata.annotations || {};
