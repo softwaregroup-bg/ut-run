@@ -1,3 +1,12 @@
+# [10.55.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.54.0...v10.55.0) (2021-05-27)
+
+
+### Features
+
+* k8s TLS ingress config [UTCORE-121] ([0934d29](https://github.com/softwaregroup-bg/ut-run/commit/0934d293e6eea939eea032ed215534a7981ff3ed))
+
+
+
 # [10.54.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.53.0...v10.54.0) (2021-04-21)
 
 
