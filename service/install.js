@@ -229,7 +229,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             containerPort: port.containerPort
         }));
         const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
-        const addIngress = ({path, host, name, servicePort, serviceName, pathType = 'Prefix', apiVersion = 'networking.k8s.io/v1'}) => {
+        const addIngress = ({path, host, name, servicePort, serviceName, pathType = 'Prefix', apiVersion = 'networking.k8s.io/v1', tls}) => {
             const ingressKey = `ingresses/${name}.yaml`;
             const ingress = prev.ingresses[ingressKey] || {
                 apiVersion,
@@ -249,6 +249,15 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     }
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
+                if (tls && host) {
+                    if (!ingress.spec.tls) ingress.spec.tls = {hosts: [], secretName: name + '-tls'};
+                    if (!ingress.spec.tls.hosts.includes(host)) ingress.spec.tls.hosts.push(host);
+                    const {manager = 'certmanager'} = tls;
+                    if (['certmanager', 'cert-manager.io', 'cert-manager.io/v1'].includes(manager)) {
+                        ingress.metadata.annotations = ingress.metadata.annotations || {};
+                        ingress.metadata.annotations['cert-manager.io/cluster-issuer'] = tls.issuer || 'letsencrypt';
+                    };
+                }
                 switch (apiVersion) {
                     case 'extensions/v1beta1':
                     case 'networking.k8s.io/v1beta1':

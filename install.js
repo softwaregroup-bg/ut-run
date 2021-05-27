@@ -93,6 +93,21 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                                     apiDocs: {
                                         type: 'boolean',
                                         title: 'Expose internal microservices API docs'
+                                    },
+                                    tls: {
+                                        type: 'object',
+                                        title: 'TLS configuration',
+                                        properties: {
+                                            manager: {
+                                                type: 'string',
+                                                default: 'cert-manager.io/v1',
+                                                title: 'Certificate manager'
+                                            },
+                                            issuer: {
+                                                type: 'string',
+                                                title: 'Certificate issuer'
+                                            }
+                                        }
                                     }
                                 }
                             }
