@@ -1,3 +1,12 @@
+## [10.55.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.3...v10.55.4) (2021-06-15)
+
+
+### Bug Fixes
+
+* types [UTCORE-121] ([5789770](https://github.com/softwaregroup-bg/ut-run/commit/5789770c11518c2dbe7196987d7deeaf83d0c546))
+
+
+
 ## [10.55.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.2...v10.55.3) (2021-06-02)
 
 
