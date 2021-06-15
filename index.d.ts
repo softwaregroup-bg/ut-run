@@ -4,7 +4,8 @@ import {CallSiteLike} from 'stack-utils';
 
 export as namespace ut
 interface meta {
-    method?: string,
+    mtid: 'request' | 'response' | 'error' | 'notification' | 'discard',
+    method: string,
     forward?: object,
     httpResponse?: {
         type?: string,
@@ -24,7 +25,11 @@ interface meta {
         sessionId: string
     },
     conId: number,
-    destination: string
+    destination?: string,
+    dispatch?: () => [msg: object, $meta: meta] | boolean,
+    timer?: (name?: string, newTime: [number, number]) => {
+        [name: string]: number
+    }
 }
 
 export type error = (message?: string | { params: object }) => Error
@@ -32,8 +37,17 @@ interface errorMap {
     [name: string]: error
 }
 
-export type remoteHandler<request, response> = (params: request, $meta?: meta) => Promise<response>
-export type portHandler<request, response> = (this: port, params: request, $meta?: meta) => Promise<response> | Error | response
+interface context {
+    session?: {
+        [name: string]: any
+    },
+    conId?: string,
+    requests: Map,
+    waiting: Set
+}
+
+export type remoteHandler<request, response> = (params: request, $meta: meta) => Promise<response>
+export type portHandler<request, response> = (this: port, params: request, $meta: meta, context?: context) => Promise<response> | Error | response
 
 type fn = (...params: any[]) => any
 type logger = (message: string | object) => void
@@ -86,6 +100,7 @@ type api<imports> = {
      */
     utMethod: (methodName: string, options?: {
         timeout?: number,
+        retry?: number,
         /**
          * Cache configuration for remote call
          * @see [ut-port-cache](https://github.com/softwaregroup-bg/ut-port-cache)
