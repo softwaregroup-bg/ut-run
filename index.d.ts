@@ -2,10 +2,14 @@ import joi from 'joi'
 import {readdir, readFileSync} from 'fs';
 import {CallSiteLike} from 'stack-utils';
 
+type hrtime = [number, number];
+
 export as namespace ut
 interface meta {
     mtid: 'request' | 'response' | 'error' | 'notification' | 'discard',
     method: string,
+    opcode?: string,
+    source?: string,
     forward?: object,
     httpResponse?: {
         type?: string,
@@ -26,8 +30,9 @@ interface meta {
     },
     conId: number,
     destination?: string,
-    dispatch?: () => [msg: object, $meta: meta] | boolean,
-    timer?: (name?: string, newTime: [number, number]) => {
+    dispatch?: (msg?: object, $meta?: meta) => [msg: object, $meta: meta] | boolean | Promise<boolean>,
+    timeout: hrtime,
+    timer?: (name?: string, newTime?: hrtime) => {
         [name: string]: number
     }
 }
@@ -42,8 +47,8 @@ interface context {
         [name: string]: any
     },
     conId?: string,
-    requests: Map,
-    waiting: Set
+    requests: Map<string, {$meta: meta, end: (error: Error) => void}>,
+    waiting: Set<(error: Error) => void>
 }
 
 export type remoteHandler<request, response> = (params: request, $meta: meta) => Promise<response>
@@ -76,6 +81,12 @@ interface port {
     isDebug: () => boolean,
     getConversion: () => ($meta: meta, type: string) => portHandler<any, any>,
     merge: (...params: object[]) => object,
+    timing: {
+        diff: (time: hrtime, newtime: hrtime) => number,
+        after: (number) => hrtime,
+        isAfter: (time: hrtime, timeout: hrtime) => boolean
+        now: () => hrtime
+    },
     [name: string]: any
 }
 
