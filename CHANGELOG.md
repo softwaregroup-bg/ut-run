@@ -1,3 +1,12 @@
+# [10.56.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.8...v10.56.0) (2021-06-18)
+
+
+### Features
+
+* tap 15 [UTCORE-121] ([5926835](https://github.com/softwaregroup-bg/ut-run/commit/59268359941d1f5190e97307d5359b767f6cf5bd))
+
+
+
 ## [10.55.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.7...v10.55.8) (2021-06-18)
 
 
