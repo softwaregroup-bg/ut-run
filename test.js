@@ -117,7 +117,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                 return sequence(options, assert, bus, step.steps, undefined, context);
                             } else if (typeof step.steps === 'function') {
                                 return Promise.resolve()
-                                    .then(() => step.steps(context))
+                                    .then(() => step.steps(context, proxy(options.imported)))
                                     .then(steps => sequence(options, assert, bus, steps, undefined, context));
                             }
                             const promise = step.$meta
