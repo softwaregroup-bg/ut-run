@@ -430,13 +430,13 @@ module.exports = function(params, cache) {
             });
     }
 
-    const testClient = testConfig => assert => assert.test('client tests', async assert => {
+    const testClient = testConfig => assert => tap.test('client tests', async assert => {
         const client = await startClient(assert);
         await testConfig.steps(assert, client.serviceBus, sequence.bind(null, testConfig), client.ports, proxy(testConfig.imported));
         await assert.test('client stop', a => stop(a, client));
     }).catch(assert.threw);
 
-    const testServer = testConfig => assert => assert.test('server tests', async assert => {
+    const testServer = testConfig => assert => tap.test('server tests', async assert => {
         await testConfig.steps(assert, serverObj.serviceBus, sequence.bind(null, testConfig), serverObj.ports, proxy(testConfig.imported));
     }).catch(assert.threw);
 
