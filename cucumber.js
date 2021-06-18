@@ -52,9 +52,9 @@ function writeReport(report) {
     };
 }
 
-function testFeatures(assert, params, serverObj, report, imported, testAny) {
-    if (!params.features) return assert;
-    return assert.test('features', { jobs: 100 }, test => {
+function testFeatures(tap, params, serverObj, report, imported, testAny) {
+    if (!params.features) return true;
+    return tap.test('features', { jobs: 100 }, test => {
         const target = {};
         serverObj.serviceBus.attachHandlers(target, [params.features]);
         const sources = Object.values(target.imported).map(feature => ({ source: feature() }));

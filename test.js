@@ -430,13 +430,13 @@ module.exports = function(params, cache) {
             });
     }
 
-    const testClient = testConfig => assert => tap.test('client tests', async assert => {
+    const testClient = testConfig => assert => assert.test('client tests', async assert => {
         const client = await startClient(assert);
         await testConfig.steps(assert, client.serviceBus, sequence.bind(null, testConfig), client.ports, proxy(testConfig.imported));
         await assert.test('client stop', a => stop(a, client));
     }).catch(assert.threw);
 
-    const testServer = testConfig => assert => tap.test('server tests', async assert => {
+    const testServer = testConfig => assert => assert.test('server tests', async assert => {
         await testConfig.steps(assert, serverObj.serviceBus, sequence.bind(null, testConfig), serverObj.ports, proxy(testConfig.imported));
     }).catch(assert.threw);
 
@@ -451,7 +451,7 @@ module.exports = function(params, cache) {
             return t;
         });
     }
-    tests = tests.then(assert => cucumber.testFeatures(assert, params, serverObj, cucumberReport, imported, testAny));
+    tests = tests.then(() => cucumber.testFeatures(tap, params, serverObj, cucumberReport, imported, testAny));
     if (params.jobs) {
         tests = tests.then(() => tap.test('jobs', {jobs: 100}, test => {
             let jobs = params.jobs;
@@ -502,7 +502,7 @@ module.exports = function(params, cache) {
                 .catch(test.threw);
         }));
     } else {
-        tests = tests.then(testAny({...params, imported}));
+        tests = tests.then(() => testAny({...params, imported})(tap));
     }
 
     tests = tests.then(() => cucumber.writeReport(cucumberReport)(tap));
