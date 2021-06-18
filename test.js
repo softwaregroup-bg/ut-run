@@ -288,7 +288,7 @@ module.exports = function(params, cache) {
         if (!services.length) {
             return Promise.resolve();
         }
-        return test.test('Stopping services...', {bufferred: false}, (assert) => {
+        return tap.test('Stopping services...', {bufferred: false}, (assert) => {
             return services.reduce((promise, service) => {
                 return promise.then(() => {
                     return service.app.stop()
@@ -301,9 +301,8 @@ module.exports = function(params, cache) {
     };
 
     let tests = tap.test('Starting tests', () => Promise.resolve());
-
     if (params.cluster) {
-        tests = tests.then(t => t.test('workers', {bufferred: false, bail: true}, assert =>
+        tests = tests.then(() => tap.test('workers', {bufferred: false, bail: true}, assert =>
             Promise.all(Object.values(params.cluster.workers).map(worker => new Promise((resolve, reject) => {
                 worker.once('listening', () => {
                     assert.ok(true, `worker ${worker.id} listening`);
@@ -330,14 +329,14 @@ module.exports = function(params, cache) {
             env: 'test',
             method: 'debug'
         };
-        tests = tests.then(t => t.test('broker start', {bufferred: false, bail: true}, assert => {
+        tests = tests.then(() => tap.test('broker start', {bufferred: false, bail: true}, assert => {
             brokerRun = run.run(brokerConfig, module.parent, assert);
             return brokerRun;
         }));
     }
 
     if (Array.isArray(params.services)) {
-        tests = tests.then(t => t.test('Starting services...', {bufferred: false, bail: true}, (assert) => {
+        tests = tests.then(() => tap.test('Starting services...', {bufferred: false, bail: true}, (assert) => {
             return params.services.reduce((promise, service) => {
                 return promise.then(() => {
                     return service()
@@ -403,7 +402,7 @@ module.exports = function(params, cache) {
     let serverRun;
     let serverObj;
     // tap.jobs = 1;
-    tests = tests.then(t => t.test('server start', {bufferred: false, bail: true}, assert => {
+    tests = tests.then(() => tap.test('server start', {bufferred: false, bail: true}, assert => {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             serverObj = server;
@@ -454,7 +453,7 @@ module.exports = function(params, cache) {
     }
     tests = tests.then(assert => cucumber.testFeatures(assert, params, serverObj, cucumberReport, imported, testAny));
     if (params.jobs) {
-        tests = tests.then(main => main.test('jobs', {jobs: 100}, test => {
+        tests = tests.then(() => tap.test('jobs', {jobs: 100}, test => {
             let jobs = params.jobs;
             if (typeof jobs === 'string' || jobs instanceof RegExp) {
                 const target = {};
@@ -506,7 +505,7 @@ module.exports = function(params, cache) {
         tests = tests.then(testAny({...params, imported}));
     }
 
-    tests = tests.then(cucumber.writeReport(cucumberReport));
+    tests = tests.then(() => cucumber.writeReport(cucumberReport)(tap));
 
     function stop(assert, x) {
         let promise = Promise.resolve();
