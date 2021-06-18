@@ -1,3 +1,12 @@
+## [10.55.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.6...v10.55.7) (2021-06-18)
+
+
+### Bug Fixes
+
+* pass steps import proxy down the steps chain UTCORE-121 ([#91](https://github.com/softwaregroup-bg/ut-run/issues/91)) ([0575cc0](https://github.com/softwaregroup-bg/ut-run/commit/0575cc0869a70a34624f97ac8745fdabbe9319b5))
+
+
+
 ## [10.55.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.55.5...v10.55.6) (2021-06-17)
 
 
