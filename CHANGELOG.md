@@ -1,3 +1,12 @@
+# [10.57.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.56.2...v10.57.0) (2021-06-23)
+
+
+### Features
+
+* support traefik tls [UTCORE-121] ([9637c83](https://github.com/softwaregroup-bg/ut-run/commit/9637c8300cc3dab7f2fa3920e67584914663c5a8))
+
+
+
 ## [10.56.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.56.1...v10.56.2) (2021-06-18)
 
 
