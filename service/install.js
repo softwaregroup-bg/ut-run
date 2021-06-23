@@ -250,11 +250,12 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 };
                 if (!ingressRule.http.paths.length) ingress.spec.rules.push(ingressRule);
                 if (tls && host) {
+                    ingress.metadata.annotations = ingress.metadata.annotations || {};
+                    ingress.metadata.annotations['traefik.ingress.kubernetes.io/router.tls'] = 'true';
                     if (!ingress.spec.tls) ingress.spec.tls = [{hosts: [], secretName: name + '-tls'}];
                     if (!ingress.spec.tls[0].hosts.includes(host)) ingress.spec.tls[0].hosts.push(host);
                     const {manager = 'certmanager'} = tls;
                     if (['certmanager', 'cert-manager.io', 'cert-manager.io/v1'].includes(manager)) {
-                        ingress.metadata.annotations = ingress.metadata.annotations || {};
                         ingress.metadata.annotations['cert-manager.io/cluster-issuer'] = tls.issuer || 'letsencrypt';
                     };
                 }
