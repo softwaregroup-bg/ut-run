@@ -1,3 +1,12 @@
+# [10.58.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.57.4...v10.58.0) (2021-08-19)
+
+
+### Features
+
+* steps can be objects [UTCORE-121] ([d6c199d](https://github.com/softwaregroup-bg/ut-run/commit/d6c199d735aadb543b3901a0e973a2f6a14df747))
+
+
+
 ## [10.57.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.57.3...v10.57.4) (2021-07-02)
 
 
