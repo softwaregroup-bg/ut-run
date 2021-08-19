@@ -15,9 +15,9 @@
     "stack-utils": "2.0.3",
     "through2": "2.0.3",
     "ut-config": "^7.7.3",
-    "ut-bus": "^7.47.4",
+    "ut-bus": "^7.48.0",
     "ut-log": "^6.10.1",
-    "ut-port": "^6.43.3",
+    "ut-port": "^6.43.4",
     "ut-function.merge": "^1.5.6",
     "uuid": "3.3.2",
     "yaml": "1.10.0"

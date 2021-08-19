@@ -37,7 +37,7 @@ interface meta {
     }
 }
 
-export type error = (message?: string | { params: object }) => Error
+export type error = (message?: string | { params: object; cause?: error }) => Error
 interface errorMap {
     [name: string]: error
 }

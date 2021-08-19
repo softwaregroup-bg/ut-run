@@ -16,7 +16,7 @@ const proxy = imported => new Proxy({}, {
         let method = key.replace(/\$/g, '/');
         if (!method.includes('.')) method = method.replace(capitalWords, lowercase);
         const fn = imported && imported['steps.' + method];
-        if (fn instanceof Function) {
+        if (fn) {
             return fn;
         } else {
             throw new Error('Step not found in imports: ' + 'steps.' + method);
