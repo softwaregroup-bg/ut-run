@@ -1,3 +1,12 @@
+# [10.59.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.58.0...v10.59.0) (2021-08-28)
+
+
+### Features
+
+* improve types ([778b5d2](https://github.com/softwaregroup-bg/ut-run/commit/778b5d258188c871fa1988fca8023b669fbfd109))
+
+
+
 # [10.58.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.57.4...v10.58.0) (2021-08-19)
 
 
