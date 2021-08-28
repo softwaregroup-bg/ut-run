@@ -7,7 +7,7 @@ const escape = string => string.replace(/\bdelete\b/g, 'delete$');
 const camelCase = name => name.replace(/^([a-z]+)(\.[a-z])([a-z]+)(\.[a-z])([^.]+)$/, (match, word1, word2, word3, word4, word5) =>
     `${word1}${word2.substr(1, 1).toUpperCase()}${word3}${word4.substr(1, 1).toUpperCase()}${word5}`);
 
-const handler = (name, int, quote = '\'') => `  ${quote}${name}${quote}: ut.remoteHandler<${escape(int)}.params, ${escape(int)}.result>`;
+const handler = (name, int, quote = '\'') => `  ${quote}${name}${quote}?: ut.remoteHandler<${escape(int)}.params, ${escape(int)}.result>`;
 const handlers = name => {
     const camelCaseName = camelCase(name);
     return handler(name, name) + ((name === camelCaseName) ? '' : ',\n' + handler(camelCaseName, name, ''));
@@ -77,8 +77,10 @@ ${mergedConfig.utRun.types.dependencies.split(',').map(dep => dep && `import ${d
 interface methods extends ${dep.replace(/-/g, '')}.handlers {}
 `).join('\n')}
 export type libFactory = ut.libFactory<methods, errors>
-export type handlerFactory = ut.handlerFactory<methods, errors>
-export type handlerSet = ut.handlerSet<methods, errors>
+export type handlerFactory = ut.handlerFactory<methods, errors, handlers>
+export type handlerSet = ut.handlerSet<methods, errors, handlers>
+export type pageFactory = ut.pageFactory<methods, errors>
+export type pageSet = ut.pageSet<methods, errors>
 `);
     await apidoc(serviceBus);
     await serviceBus.stop();

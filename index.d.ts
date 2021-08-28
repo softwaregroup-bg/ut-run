@@ -82,7 +82,7 @@ interface port {
     getConversion: () => ($meta: meta, type: string) => portHandler<any, any>,
     merge: (...params: object[]) => object,
     timing: {
-        diff: (time: hrtime, newtime: hrtime) => number,
+        diff: (time: hrtime, newTime: hrtime) => number,
         after: (number) => hrtime,
         isAfter: (time: hrtime, timeout: hrtime) => boolean
         now: () => hrtime
@@ -168,23 +168,28 @@ type api<imports> = {
     }
 }
 
-export type handlers<imports> = (api: api<imports>) => {
+interface genericExport {
     [name: string]: portHandler<any, any>
 }
 
+export type handlers<imports, exports = genericExport> = (api: api<imports>) => exports
+
 type handlerOrError = remoteHandler<any, any> & error
 
+interface genericErrors {
+    [name: `error${string}`]: error;
+}
 interface genericHandlers {
-    [name: string]: handlerOrError
+    [name: string]: remoteHandler<any, any>;
 }
 
 type lib<imports> = (api: api<imports>) => {
     [name: string]: any
 }
 
-export type handlerFactory<methods, errors> = handlers<methods & errors & genericHandlers>
+export type handlerFactory<methods, errors, exports> = handlers<methods & errors & genericErrors & genericHandlers, exports>
 export type libFactory<methods, errors> = lib<methods & errors & genericHandlers>
-type handlerOrLib<methods, errors> = handlerFactory<methods, errors> | libFactory<methods, errors>
+type handlerOrLib<methods, errors, exports> = handlerFactory<methods, errors, exports> | libFactory<methods, errors>
 
 type validation = {
     joi: joi.Root,
@@ -237,4 +242,15 @@ export type validationLib = (api: validation) => {
 type validationOrLib = validationFactory | validationLib
 
 export type validationSet = () => validationOrLib[]
-export type handlerSet<methods, errors> = (api: api<errors>) => handlerOrLib<methods, errors>[]
+export type handlerSet<methods, errors, exports> = (api: api<errors>) => handlerOrLib<methods, errors, exports>[]
+
+interface pages {
+    [name: string]: () => {
+        title: string,
+        permission?: string | string[],
+        component: () => Promise<React.FC<{id: any}>>
+    }
+}
+
+export type pageSet<methods, errors> = handlerSet<methods, errors, pages | genericHandlers>
+export type pageFactory<methods, errors> = handlerFactory<methods, errors, pages>
