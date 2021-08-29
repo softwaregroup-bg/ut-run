@@ -1,3 +1,7 @@
+## [10.59.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.59.0...v10.59.1) (2021-08-29)
+
+
+
 # [10.59.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.58.0...v10.59.0) (2021-08-28)
 
 
