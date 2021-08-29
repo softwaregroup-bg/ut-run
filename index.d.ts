@@ -1,4 +1,5 @@
 import joi from 'joi'
+import commonJoi from 'ut-function.common-joi';
 import {readdir, readFileSync} from 'fs';
 import {CallSiteLike} from 'stack-utils';
 
@@ -196,9 +197,7 @@ type validation = {
     /**
      * partial schema
      */
-    lib: {
-        [name: string]: joi.Schema
-    },
+    lib: ReturnType<typeof commonJoi>,
     /**
      * module configuration map
      */
