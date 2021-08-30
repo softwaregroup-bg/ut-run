@@ -29,6 +29,9 @@ interface meta {
         actorId: string | number,
         sessionId: string
     },
+    language: {
+        languageId: string | number
+    },
     conId: number,
     destination?: string,
     dispatch?: (msg?: object, $meta?: meta) => [msg: object, $meta: meta] | boolean | Promise<boolean>,
@@ -54,6 +57,7 @@ interface context {
 
 export type remoteHandler<request, response> = (params: request, $meta: meta) => Promise<response>
 export type portHandler<request, response> = (this: port, params: request, $meta: meta, context?: context) => Promise<response> | Error | response
+export type handler<request, response, location> = location extends 'local' ? portHandler<request, response> : remoteHandler<request, response>
 
 type fn = (...params: any[]) => any
 type logger = (message: string | object) => void
@@ -88,6 +92,7 @@ interface port {
         isAfter: (time: hrtime, timeout: hrtime) => boolean
         now: () => hrtime
     },
+    fireEvent(event: string, data: any, mapper?: 'asyncMap' | 'reduce'),
     [name: string]: any
 }
 
@@ -173,7 +178,7 @@ interface genericExport {
     [name: string]: portHandler<any, any>
 }
 
-export type handlers<imports, exports = genericExport> = (api: api<imports>) => exports
+export type handlers<imports, exports = genericExport> = (api: api<imports>) => exports & genericExport
 
 type handlerOrError = remoteHandler<any, any> & error
 
@@ -208,19 +213,53 @@ type validation = {
 
 type validationSetting = joi.Schema | boolean
 type auth = boolean | 'preauthorized' | 'exchange'
+type timeout = {
+    server?: number | boolean,
+    socket?: number | boolean
+}
+type cors = {
+    origin?: string[],
+    maxAge?: number,
+    headers?: string[],
+    additionalHeaders?: string[],
+    exposedHeaders?: string[],
+    additionalExposedHeaders?: string[],
+    credentials?: boolean
+}
+
+type security = {
+    hsts?: true | number | {
+        maxAge: number;
+        includeSubDomains: boolean;
+        preload: boolean
+    },
+    xframe?: true | 'deny' | 'sameorigin' | {
+        rule: 'deny' | 'sameorigin' | 'allow-from',
+        source: string
+    },
+    xss?: boolean,
+    noOpen?: boolean,
+    noSniff?: boolean,
+    referrer?: object,
+}
 
 export type validationFactory = (api: validation) => {
     [name: string]: () => {
         description?: string,
         auth?: auth,
+        cors?: cors,
+        timeout?: timeout,
+        security?: security,
         params: joi.Schema,
         result: joi.Schema
     } | {
         description?: string,
-        auth?: auth,
         method: 'GET' | 'PUT' | 'POST' | 'DELETE',
         path: string,
-        cors?: object,
+        auth?: auth,
+        cors?: cors,
+        timeout?: timeout,
+        security?: security,
         validate?: {
             params?: validationSetting,
             query?: validationSetting,
@@ -247,7 +286,7 @@ interface pages {
     [name: string]: () => {
         title: string,
         permission?: string | string[],
-        component: () => Promise<React.FC<{id: any}>>
+        component: () => (Promise<React.FC<{id: any}>> | React.FC<{id: any}>)
     }
 }
 

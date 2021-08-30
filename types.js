@@ -7,7 +7,7 @@ const escape = string => string.replace(/\bdelete\b/g, 'delete$');
 const camelCase = name => name.replace(/^([a-z]+)(\.[a-z])([a-z]+)(\.[a-z])([^.]+)$/, (match, word1, word2, word3, word4, word5) =>
     `${word1}${word2.substr(1, 1).toUpperCase()}${word3}${word4.substr(1, 1).toUpperCase()}${word5}`);
 
-const handler = (name, int, quote = '\'') => `  ${quote}${name}${quote}?: ut.remoteHandler<${escape(int)}.params, ${escape(int)}.result>`;
+const handler = (name, int, quote = '\'') => `  ${quote}${name}${quote}?: ut.handler<${escape(int)}.params, ${escape(int)}.result, location>`;
 const handlers = name => {
     const camelCaseName = camelCase(name);
     return handler(name, name) + ((name === camelCaseName) ? '' : ',\n' + handler(camelCaseName, name, ''));
@@ -65,7 +65,7 @@ module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
         fs.appendFileSync('handlers.d.ts', namespace);
     });
     fs.appendFileSync('handlers.d.ts', `import ut from 'ut-run';
-export interface handlers {
+export interface handlers<location = ''> {
 ${Object.keys(validations.imported).sort().map(handlers).join(',\n')}
 }
 
@@ -77,8 +77,8 @@ ${mergedConfig.utRun.types.dependencies.split(',').map(dep => dep && `import ${d
 interface methods extends ${dep.replace(/-/g, '')}.handlers {}
 `).join('\n')}
 export type libFactory = ut.libFactory<methods, errors>
-export type handlerFactory = ut.handlerFactory<methods, errors, handlers>
-export type handlerSet = ut.handlerSet<methods, errors, handlers>
+export type handlerFactory = ut.handlerFactory<methods, errors, handlers<'local'>>
+export type handlerSet = ut.handlerSet<methods, errors, handlers<'local'>>
 export type pageFactory = ut.pageFactory<methods, errors>
 export type pageSet = ut.pageSet<methods, errors>
 `);
