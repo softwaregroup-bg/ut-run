@@ -178,14 +178,23 @@ interface genericExport {
     [name: string]: portHandler<any, any>
 }
 
-export type handlers<imports, exports = genericExport> = (api: api<imports>) => exports & genericExport
+interface eventHandlers {
+    start?: (this: port) => Promise<any>,
+    ready?: (this: port) => Promise<any>,
+    stop?: (this: port) => Promise<any>,
+    send?: portHandler<any, any>,
+    receive?: portHandler<any, any>,
+    'error.receive'?: portHandler<any, any>,
+}
+
+export type handlers<imports, exports = genericExport> = (api: api<imports>) => exports & eventHandlers
 
 type handlerOrError = remoteHandler<any, any> & error
 
 interface genericErrors {
     [name: `error${string}`]: error;
 }
-interface genericHandlers {
+export interface genericHandlers {
     [name: string]: remoteHandler<any, any>;
 }
 
@@ -281,14 +290,3 @@ type validationOrLib = validationFactory | validationLib
 
 export type validationSet = () => validationOrLib[]
 export type handlerSet<methods, errors, exports> = (api: api<errors>) => handlerOrLib<methods, errors, exports>[]
-
-interface pages {
-    [name: string]: () => {
-        title: string,
-        permission?: string | string[],
-        component: () => (Promise<React.FC<{id: any}>> | React.FC<{id: any}>)
-    }
-}
-
-export type pageSet<methods, errors> = handlerSet<methods, errors, pages | genericHandlers>
-export type pageFactory<methods, errors> = handlerFactory<methods, errors, pages>

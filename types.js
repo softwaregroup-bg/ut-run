@@ -79,8 +79,10 @@ interface methods extends ${dep.replace(/-/g, '')}.handlers {}
 export type libFactory = ut.libFactory<methods, errors>
 export type handlerFactory = ut.handlerFactory<methods, errors, handlers<'local'>>
 export type handlerSet = ut.handlerSet<methods, errors, handlers<'local'>>
-export type pageFactory = ut.pageFactory<methods, errors>
-export type pageSet = ut.pageSet<methods, errors>
+
+import portal from 'ut-portal'
+export type pageFactory = portal.pageFactory<methods, errors>
+export type pageSet = portal.pageSet<methods, errors>
 `);
     await apidoc(serviceBus);
     await serviceBus.stop();
