@@ -1,3 +1,12 @@
+# [10.61.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.60.0...v10.61.0) (2021-09-02)
+
+
+### Features
+
+* microservice debug ([b25152c](https://github.com/softwaregroup-bg/ut-run/commit/b25152c3c1f043196855752d9076a1a2d4e69b9c))
+
+
+
 # [10.60.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.59.3...v10.60.0) (2021-09-02)
 
 
