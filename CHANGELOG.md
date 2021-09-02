@@ -1,3 +1,12 @@
+# [10.62.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.61.0...v10.62.0) (2021-09-02)
+
+
+### Features
+
+* run single microservice ([99b13e3](https://github.com/softwaregroup-bg/ut-run/commit/99b13e3d4e2aecbfd521fe12e06758d0c1c6b39e))
+
+
+
 # [10.61.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.60.0...v10.61.0) (2021-09-02)
 
 
