@@ -1,3 +1,12 @@
+# [10.60.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.59.3...v10.60.0) (2021-09-02)
+
+
+### Features
+
+* watch *.yaml and *.slq ([b6bfabf](https://github.com/softwaregroup-bg/ut-run/commit/b6bfabfb8708939180309c208606c3a96a628b6c))
+
+
+
 ## [10.59.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.59.2...v10.59.3) (2021-08-31)
 
 
