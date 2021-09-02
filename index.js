@@ -2,6 +2,7 @@
 const methods = require('./methods');
 const {load} = require('ut-config');
 const vfs = require('./vfs');
+const { dirname } = require('path');
 
 module.exports = {
     getConfig: load,
@@ -81,5 +82,34 @@ module.exports = {
             }
             process.exit(1); // this should be removed
         }
+    },
+    microservice(mod, req) {
+        const result = params => module.exports.run({
+            version: req('./package.json').version,
+            root: dirname(mod.filename),
+            resolve: req.resolve,
+            defaultConfig: {
+                repl: false,
+                utPort: {
+                    concurrency: 200,
+                    logLevel: 'debug'
+                },
+                utBus: {
+                    serviceBus: {
+                        logLevel: 'debug',
+                        jsonrpc: {
+                            debug: true,
+                            host: 'localhost',
+                            port: 8090
+                        }
+                    }
+                },
+                run: {
+                    logLevel: 'debug'
+                }
+            },
+            ...params
+        });
+        return (require.main === mod) ? result({defaultOverlays: 'microservice'}) : result;
     }
 };
