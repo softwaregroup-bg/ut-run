@@ -9,7 +9,7 @@ const merge = require('ut-function.merge');
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
         const cwd = path.dirname(filename);
-        const fsWatcher = require('chokidar').watch('**/*.js', {
+        const fsWatcher = require('chokidar').watch(['**/*.js', '**/*.yaml', '**/*.sql'], {
             cwd,
             ignoreInitial: true,
             ignored: ['.git/**', 'node_modules/**', 'ui/**']
