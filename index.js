@@ -83,8 +83,8 @@ module.exports = {
             process.exit(1); // this should be removed
         }
     },
-    microservice(mod, req) {
-        const result = params => module.exports.run({
+    microservice(mod, req, fn) {
+        const run = params => module.exports.run({
             version: req('./package.json').version,
             root: dirname(mod.filename),
             resolve: req.resolve,
@@ -110,6 +110,9 @@ module.exports = {
             },
             ...params
         });
-        return (require.main === mod) ? result({defaultOverlays: 'microservice'}) : result;
+        if (!fn) throw new Error('Missing parameter: microservice function');
+        fn.run = run;
+        if (require.main === mod) setImmediate(() => run({defaultOverlays: 'microservice'}));
+        return fn;
     }
 };

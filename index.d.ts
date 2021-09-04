@@ -149,6 +149,9 @@ type api<imports> = {
     config: {
         [name: string]: any
     },
+    registerErrors: () => {
+        [name: string]: string | {}
+    },
     utError: {
         defineError: (id: string, superType: string, message: string) => error,
         getError: (() => errorMap) | ((type: string) => error),
@@ -157,7 +160,7 @@ type api<imports> = {
     },
     version: (version: string) => boolean,
     vfs: vfs,
-    callSite?: () => CallSiteLike,
+    callSite: () => CallSiteLike,
     utBus: {
         config: {
             workDir: string
@@ -211,7 +214,9 @@ type validation = {
     /**
      * partial schema
      */
-    lib: ReturnType<typeof commonJoi>,
+    lib: ReturnType<typeof commonJoi> & {
+        [name: string]: joi.Schema
+    },
     /**
      * module configuration map
      */
@@ -289,4 +294,51 @@ export type validationLib = (api: validation) => {
 type validationOrLib = validationFactory | validationLib
 
 export type validationSet = () => validationOrLib[]
+export type validationMap = {
+    [name: string]: validationFactory
+}
 export type handlerSet<methods, errors, exports> = (api: api<errors>) => handlerOrLib<methods, errors, exports>[]
+
+type schema = {
+    path: string,
+    linkSP?: boolean,
+    config: {}
+}
+
+type microserviceResult = {
+    config: () => {
+        validation: (api: {joi: joi.Root}) => joi.Schema
+    },
+    adapter?: () => ((api: api<{}>) => {
+        namespace: string | string[],
+        schema: schema[]
+    } | {
+        seed: schema[]
+    })[],
+    gateway?: () => validationSet[],
+    test?: () => (((api: api<{}>) => {}) | validationFactory)[]
+} & {
+    [layer: string]: (handlerSet<{}, {}, {}> | validationSet)[] | unknown
+}
+
+export function run(params: {
+    method: 'types',
+    main: () => {}[][],
+    config: {}
+} | {
+    method?: 'debug',
+    version: string,
+    root: string,
+    resolve: NodeJS.RequireResolve,
+    params: {}
+} | {
+    method: 'unit'
+}): void;
+
+type microserviceExport = () => () => microserviceResult;
+type microserviceExportRun = {
+    run: typeof run,
+    (): () => microserviceResult
+}
+
+export function microservice(module: Partial<NodeJS.Module>, require: NodeJS.Require, fn?: microserviceExport): microserviceExportRun;
