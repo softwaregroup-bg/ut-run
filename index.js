@@ -1,4 +1,5 @@
 /* eslint no-console:0, no-process-exit:0 */
+const log = process.env.WHY_IS_NODE_RUNNING && require('why-is-node-running'); // eslint-disable-line no-process-env
 const methods = require('./methods');
 const {load} = require('ut-config');
 const vfs = require('./vfs');
@@ -46,16 +47,23 @@ module.exports = {
         try {
             config = await load(params);
             const result = await this.runParams(params, test, config);
+            async function stop() {
+                try {
+                    await result.stop();
+                } finally {
+                    if (log) setTimeout(log, 10000);
+                }
+            }
             process.send && process.send('ready');
             if (
                 (config.run && config.run.stop) ||
                 (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling)
             ) {
-                await result.stop();
+                await stop();
             } else if (!test && process.getMaxListeners) {
                 if (process.getMaxListeners() < 15) process.setMaxListeners(15);
-                process.once('SIGTERM', () => result.stop());
-                process.once('SIGINT', () => result.stop());
+                process.once('SIGTERM', () => stop());
+                process.once('SIGINT', () => stop());
             }
             return result;
         } catch (err) {
