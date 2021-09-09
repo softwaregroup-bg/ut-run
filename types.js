@@ -55,7 +55,7 @@ module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
     for (const port of ports) {
         Object.assign(portMethods, await port?.types?.());
     }
-    fs.writeFileSync('handlers.d.ts', '');
+    fs.writeFileSync('handlers.d.ts', `declare namespace ${mergedConfig.utRun.types.validation.match(/^ut(.*)\./)[1].toLowerCase()}TableTypes {}\n`);
     Object.entries(sortKeys({...portMethods, ...validations.imported})).forEach(([name, validation]) => {
         const schema = validation();
         const params = schema?.params?.meta && convertSchema({commentEverything: false}, schema.params.meta({className: 'params'}), undefined, true);
