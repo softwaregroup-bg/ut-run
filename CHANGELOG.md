@@ -1,3 +1,12 @@
+# [10.64.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.63.0...v10.64.0) (2021-09-09)
+
+
+### Features
+
+* generate types for SP params ([a44af52](https://github.com/softwaregroup-bg/ut-run/commit/a44af526e5b050813fe5778bd309cc1e6bd5ae64))
+
+
+
 # [10.63.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.62.0...v10.63.0) (2021-09-04)
 
 
