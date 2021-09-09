@@ -1,5 +1,4 @@
 const dispatch = require('ut-function.dispatch');
-const joi = require('joi');
 
 require('ut-run').run({
     main: [{
@@ -9,7 +8,7 @@ require('ut-run').run({
             })
         ],
         gateway: [
-            function validation() {
+            function validation({joi}) {
                 return {
                     'subject.object.predicate': () => ({
                         auth: false,

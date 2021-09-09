@@ -100,7 +100,6 @@ The validation function defines the way the API is exposed:
 
 ```js
 const dispatch = require('ut-function.dispatch');
-const joi = require('joi');
 
 require('ut-run').run({
     main: [{
@@ -110,7 +109,7 @@ require('ut-run').run({
             })
         ],
         gateway: [
-            function validation() {
+            function validation({joi}) {
                 return {
                     'subject.object.predicate': () => ({
                         auth: false,
@@ -150,7 +149,6 @@ which exposes the paths passed in the configuration `apiGateway.api`.
 
 ```js
 const dispatch = require('ut-function.dispatch');
-const joi = require('joi');
 
 require('ut-run').run({
     main: [{
@@ -160,7 +158,7 @@ require('ut-run').run({
             })
         ],
         gateway: [
-            function validation() {
+            function validation({joi}) {
                 return {
                     'subject.object.predicate': () => ({
                         auth: false,
