@@ -13,11 +13,11 @@ const handlers = name => {
     return handler(name, name) + ((name === camelCaseName) ? '' : ',\n' + handler(camelCaseName, name, ''));
 };
 
-const error = (name, quote = '\'') => `  ${quote}${name}${quote}: ut.error`;
-const errors = name => {
+const error = (name, params, quote = '\'') => `  ${quote}${name}${quote}: ut.error${params?.length ? `<{ ${params.map(param => `${param}: string | number`).join(', ')} }>` : ''}`;
+const errors = ([name, err]) => {
     name = 'error.' + name;
     const camelCaseName = camelCase(name);
-    return error(name) + ((name === camelCaseName) ? '' : ',\n' + error(camelCaseName, ''));
+    return error(name, err.params) + ((name === camelCaseName) ? '' : ',\n' + error(camelCaseName, err.params, ''));
 };
 
 module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
@@ -79,7 +79,7 @@ ${Object.keys(validations.imported).sort().map(handlers).join(',\n')}
 }
 
 export interface errors {
-${Object.keys(importedErrors.imported).sort().map(errors).join(',\n')}
+${Object.entries(sortKeys({...importedErrors.imported})).map(errors).join(',\n')}
 }
 
 ${mergedConfig.utRun.types.dependencies.split(',').map(dep => dep && `import ${dep.replace(/-/g, '')}, {${dep.replace(/-/g, '')}TableTypes} from 'ut-${dep}/handlers'

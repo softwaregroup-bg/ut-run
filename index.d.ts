@@ -41,7 +41,9 @@ interface meta {
     }
 }
 
-export type error = (message?: string | { params: object; cause?: error }) => Error
+export type error<params = never> = params extends {}
+    ? ((message: { params: params; cause?: Error }) => Error)
+    : ((message?: (string | { cause?: Error })) => Error)
 interface errorMap {
     [name: string]: error
 }
