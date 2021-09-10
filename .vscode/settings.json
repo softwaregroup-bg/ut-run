@@ -1,3 +1,11 @@
 {
-    "debug.node.autoAttach": "on"
+    "debug.node.autoAttach": "on",
+    "cSpell.words": [
+        "hsts",
+        "mlek",
+        "mlsk",
+        "preauthorized",
+        "sameorigin",
+        "xframe"
+    ]
 }

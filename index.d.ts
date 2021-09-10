@@ -41,9 +41,8 @@ interface meta {
     }
 }
 
-export type error<params = never> = params extends {}
-    ? ((message: { params: params; cause?: Error }) => Error)
-    : ((message?: (string | { cause?: Error })) => Error)
+export type errorParam<params> = (message: { params: params; cause?: Error }) => Error
+export type error = ((message?: (string | { params: never; cause?: Error })) => Error)
 interface errorMap {
     [name: string]: error
 }
@@ -228,7 +227,7 @@ type validation = {
 }
 
 type validationSetting = joi.Schema | boolean
-type auth = boolean | 'preauthorized' | 'exchange'
+type auth = boolean | 'preauthorized' | 'exchange' | 'asset'
 type timeout = {
     server?: number | boolean,
     socket?: number | boolean
@@ -265,7 +264,7 @@ export type validationFactory = (api: validation) => {
         auth?: auth,
         cors?: cors,
         timeout?: timeout,
-        security?: security,
+        security?: security | boolean,
         params: joi.Schema,
         result: joi.Schema
     } | {
@@ -275,7 +274,7 @@ export type validationFactory = (api: validation) => {
         auth?: auth,
         cors?: cors,
         timeout?: timeout,
-        security?: security,
+        security?: security | boolean,
         validate?: {
             params?: validationSetting,
             query?: validationSetting,
