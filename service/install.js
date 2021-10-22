@@ -497,7 +497,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             containers: [{
                                 name: 'ut',
                                 image: 'impl',
-                                args: ['server', '--overlay=db', '--run.stop', `--config=${mountPath}/rc`],
+                                // TODO temporary fix for fluent-logger socket
+                                args: ['server', '--overlay=db', '--run.stop', '--utLog.streams.fluentbit=false', `--config=${mountPath}/rc`],
                                 ...jobContainerDefaults
                             }],
                             restartPolicy: 'Never'
