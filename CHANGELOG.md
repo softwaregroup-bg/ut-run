@@ -1,3 +1,12 @@
+## [10.64.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.5...v10.64.6) (2021-10-22)
+
+
+### Bug Fixes
+
+* turn off fluent logger for db job ([e043a76](https://github.com/softwaregroup-bg/ut-run/commit/e043a769707bf85f76ee272ba3fe2447ee03c161))
+
+
+
 ## [10.64.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.4...v10.64.5) (2021-10-20)
 
 
