@@ -408,8 +408,8 @@ module.exports = function(params, cache) {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             if (fs.existsSync('.lint')) {
-                const testNme = path.relative('.', require.main.filename).trim().replace(/[^a-zA-Z0-9._-]+/g, '-');
-                fs.writeFileSync(`.lint/config-${testNme}.json`, JSON.stringify(server.config, null, 4));
+                const testName = path.relative('.', require.main.filename).trim().replace(/[^a-zA-Z0-9._-]+/g, '-');
+                fs.writeFileSync(`.lint/config-${testName}.json`, JSON.stringify(server.config, null, 4));
             }
             serverObj = server;
             !clientConfig && cache && (cache.serviceBus = server.serviceBus) && (cache.ports = server.ports);
