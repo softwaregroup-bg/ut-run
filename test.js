@@ -172,103 +172,7 @@ function sequence(options, test, bus, flow, params, parent) {
     })(flow, params, parent);
 }
 
-function performanceTest(params, assert, bus, flow) {
-    const loadtest = require('loadtest');
-    const step = flow.shift();
-    const start = Date.now();
-    params.context = params.context || {};
-
-    const passed = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'p', 'Passed tests');
-    const duration = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'd', 'Test duration');
-    const totalRequests = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'TotalRequests', 'Total requests');
-    const totalErrors = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'TotalErrors', 'Total errors');
-    const errorMessage = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorMessage', 'Error message');
-    const rps = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'RpS', 'Requests per seconds');
-    const meanLatencyMs = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'MeanLatencyMS', 'Mean latency');
-    const maxLatencyMs = params.name && bus.performance &&
-        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'MaxLatencyMs', 'Max latency');
-
-    const errors = [];
-    assert.test(step.name || ('testing method ' + step.methodName), {bufferred: false}, (methodAssert) => {
-        let state = true;
-        const httpSettings = {
-            url: step.url || params.url,
-            body: Object.assign({method: step.method, params: (typeof step.params === 'function') ? step.params(params.context) : step.params},
-                params.body || {jsonrpc: '2.0', id: 1}),
-            method: step.httpMethod || params.httpMethod || 'POST',
-            contentType: step.contentType || params.contentType || 'application/json',
-            maxRequests: step.maxRequests || params.maxRequests || 10, // max requests per api call for the whole test
-            concurrency: step.concurrency || params.concurrency || 1, // threads in parallel
-            timeout: step.timeout || params.timeout || 30000,
-            cookies: step.cookies || params.cookies || [],
-            statusCallback: function(latency, response, error) {
-                if (error) {
-                    state = false;
-                }
-                let result;
-                if (response) {
-                    const cookie = step.storeCookies && response.headers && response.headers['set-cookie'] && (response.headers['set-cookie'][0].split(';'))[0];
-                    if (cookie) {
-                        params.cookies = cookie;
-                    }
-                    result = JSON.parse(response.body);
-                    if (result.error) {
-                        state = false;
-                        errors.push(result.error.message);
-                        methodAssert.true(state, result.error.message);
-                    }
-                    params.context[step.name] = result;
-                    step.result(result, assert, response);
-                }
-                state = state && assert._ok && result;
-            }
-        };
-        return new Promise(function(resolve, reject) {
-            loadtest.loadTest(httpSettings, function(error, result) {
-                error ? reject(error) : resolve(result);
-            });
-        }).then(function(result) {
-            duration && duration(Date.now() - start);
-            passed && passed(state ? 1 : 0);
-            totalRequests && totalRequests(result.totalRequests);
-            totalErrors && totalErrors(result.totalErrors);
-            errorMessage && errorMessage(errors);
-            rps && rps(result.rps);
-            meanLatencyMs && meanLatencyMs(result.meanLatencyMs);
-            maxLatencyMs && maxLatencyMs(result.maxLatencyMs);
-
-            const metrics = {stepName: step.name, method: step.method};
-
-            if (result.errorCodes) {
-                const keys = Object.keys(result.errorCodes);
-                keys.forEach(function(key) {
-                    const errorCode = params.name && bus.performance &&
-                        bus.performance.register(bus.config.implementation + '_test_' + params.name, 'gauge', 'ErrorCode' + key, 'Error code ' + key);
-                    if (typeof errorCode === 'function') errorCode(result.errorCodes[key]);
-                });
-            }
-            bus.performance && bus.performance.write(metrics);
-            if (flow.length) {
-                performanceTest(params, assert, bus, flow);
-            } else {
-                setTimeout(() => {
-                    bus && bus.performance && bus.performance.stop();
-                }, 5000);
-            }
-            return true;
-        });
-    });
-}
-
 module.exports = function(params, cache) {
-    let clientConfig;
     const cucumberReport = {};
 
     if (cache && cache.uttest) {
@@ -352,20 +256,6 @@ module.exports = function(params, cache) {
         }));
     }
 
-    if (params.type && params.type === 'performance') {
-        clientConfig = {
-            main: params.client,
-            config: params.clientConfig,
-            method: 'debug'
-        };
-        const clientsRun = run.run(clientConfig);
-        tap.test('Performance test start', (assert) => clientsRun.then((client) => {
-            params.steps(assert, client.serviceBus, performanceTest.bind(null, params), client.ports);
-            return true;
-        }));
-        return;
-    }
-
     const serverConfig = {
         main: params.server,
         config: [].concat(params.serverConfig, {
@@ -382,7 +272,7 @@ module.exports = function(params, cache) {
         env: params.serverEnv || 'test',
         method: params.serverMethod || 'debug'
     };
-    clientConfig = params.client && {
+    const clientConfig = params.client && {
         main: params.client,
         config: [].concat(params.clientConfig, {
             utBus: {
