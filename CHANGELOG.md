@@ -1,3 +1,12 @@
+## [10.64.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.7...v10.64.8) (2021-12-03)
+
+
+### Bug Fixes
+
+* remove performanceTest ([#93](https://github.com/softwaregroup-bg/ut-run/issues/93)) ([4957926](https://github.com/softwaregroup-bg/ut-run/commit/4957926c02080c85d3f5e7990a9738a307572729))
+
+
+
 ## [10.64.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.6...v10.64.7) (2021-11-24)
 
 
