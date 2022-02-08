@@ -1,9 +1,7 @@
 {
     "debug.node.autoAttach": "on",
     "cSpell.words": [
-        "apidoc",
         "hsts",
-        "kustomize",
         "mlek",
         "mlsk",
         "preauthorized",
