@@ -1,7 +1,7 @@
 const create = require('./create');
 
 module.exports = async function(serviceConfig, envConfig, assert, vfs) {
-    const {broker, serviceBus, service, mergedConfig, logFactory} = await create(envConfig, vfs);
+    const {broker, serviceBus, service, mergedConfig, logFactory, log} = await create(envConfig, vfs);
     try {
         const ports = (service && mergedConfig) ? await service.start(await service.create(serviceConfig, mergedConfig, assert)) : [];
         return {
@@ -14,7 +14,8 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             }, {}),
             broker,
             serviceBus,
-            log: logFactory,
+            logFactory,
+            log,
             config: mergedConfig,
             stop: () => {
                 let innerPromise = Promise.resolve();

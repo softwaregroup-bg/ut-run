@@ -4,5 +4,6 @@ module.exports = {
     debug: require('./debug'),
     unit: require('./unit'),
     types: require('./types'),
-    doc: require('./doc')
+    doc: require('./doc'),
+    api: require('./api')
 };
