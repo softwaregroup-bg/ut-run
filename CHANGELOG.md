@@ -1,3 +1,12 @@
+## [10.65.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.65.0...v10.65.1) (2022-02-09)
+
+
+### Bug Fixes
+
+* do not break webpack ([76ff991](https://github.com/softwaregroup-bg/ut-run/commit/76ff9915fe49bdd7673f8d018b9975fe264c7eb1))
+
+
+
 # [10.65.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.13...v10.65.0) (2022-02-09)
 
 
