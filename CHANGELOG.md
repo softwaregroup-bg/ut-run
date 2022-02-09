@@ -1,3 +1,12 @@
+# [10.65.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.13...v10.65.0) (2022-02-09)
+
+
+### Features
+
+* api method ([#94](https://github.com/softwaregroup-bg/ut-run/issues/94)) ([09429bf](https://github.com/softwaregroup-bg/ut-run/commit/09429bf5006e48104a278eb559703434fb39e52c))
+
+
+
 ## [10.64.13](https://github.com/softwaregroup-bg/ut-run/compare/v10.64.12...v10.64.13) (2022-02-08)
 
 
