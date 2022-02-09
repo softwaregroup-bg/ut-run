@@ -120,7 +120,7 @@ module.exports = {
         });
         if (!fn) throw new Error('Missing parameter: microservice function');
         fn.run = run;
-        if (require.main === mod) setImmediate(() => run({defaultOverlays: 'microservice'}));
+        if (require.main === mod) setImmediate(() => run(process.argv[3] ? {} : {defaultOverlays: 'microservice'}));
         return fn;
     }
 };

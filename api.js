@@ -3,36 +3,39 @@ const merge = require('ut-function.merge');
 const got = require('got');
 const fs = require('fs-plus');
 module.exports = async function(serviceConfig, envConfig, assert, vfs) {
-    const extraConfig = Object.keys(envConfig.run?.layers || []).reduce((config, name) => {
-        const [utModule, layer] = name.split('.');
-        if (layer === 'gateway') merge(config, {[utModule]: {[layer]: true}});
-        return config;
-    }, {
+    const extraConfig = {
+        run: {
+            logLevel: 'info'
+        },
+        utPort: {
+            logLevel: 'warn'
+        },
         utBus: {
             serviceBus: {
+                logLevel: 'warn',
                 jsonrpc: {
+                    utLogin: false,
                     api: true
                 }
             }
-        },
-        gateway: true,
-        utLogin: {
-            adapter: true
         }
-    });
+    };
     const {serviceBus, log, stop} = await debug(serviceConfig, merge(envConfig, extraConfig), assert, vfs);
     try {
         const api = `${serviceBus.rpc.info().uri}/api`;
         const modules = await got(`${api}.json`).json();
-        fs.removeSync('system/api');
         for (const {namespace, openapi, swagger} of modules) {
             if (openapi) {
+                const filename = `system/api/${namespace}/openapi.json`;
+                log.info && log.info('saving ' + filename);
                 const doc = await got(`${api}/${namespace}/openapi.json`).json();
-                fs.writeFileSync(`system/api/${namespace}/openapi.json`, JSON.stringify(doc, null, 4));
+                fs.writeFileSync(filename, JSON.stringify(doc, null, 4));
             }
             if (swagger) {
+                const filename = `system/api/${namespace}/swagger.json`;
+                log.info && log.info('saving ' + filename);
                 const doc = await got(`${api}/${namespace}/swagger.json`).json();
-                fs.writeFileSync(`system/api/${namespace}/swagger.json`, JSON.stringify(doc, null, 4));
+                fs.writeFileSync(filename, JSON.stringify(doc, null, 4));
             }
         }
     } catch (e) {
