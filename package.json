@@ -63,6 +63,7 @@
   "browser": {
     "./install": "./browser/install",
     "./kustomize": "./browser/kustomize",
+    "./api": "./browser/api",
     "./types": "./browser/types",
     "./doc": "./browser/doc",
     "./service/install": false,
