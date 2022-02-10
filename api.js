@@ -20,7 +20,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             }
         }
     };
-    const {serviceBus, log, stop} = await debug(serviceConfig, merge(envConfig, extraConfig), assert, vfs);
+    const {serviceBus, logger: log, stop} = await debug(serviceConfig, merge(envConfig, extraConfig), assert, vfs);
     try {
         const api = `${serviceBus.rpc.info().uri}/api`;
         const modules = await got(`${api}.json`).json();

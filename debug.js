@@ -14,8 +14,8 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             }, {}),
             broker,
             serviceBus,
-            logFactory,
-            log,
+            log: logFactory,
+            logger: log,
             config: mergedConfig,
             stop: () => {
                 let innerPromise = Promise.resolve();
