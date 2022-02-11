@@ -150,6 +150,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                         }
                                         step.error.call(context, error, assert);
                                     } else {
+                                        bus.log.fatal?.(Object.assign(error, {$test: {step, test: options.name}}));
                                         throw error;
                                     }
                                 });
