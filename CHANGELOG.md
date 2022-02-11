@@ -1,3 +1,12 @@
+## [10.65.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.65.2...v10.65.3) (2022-02-11)
+
+
+### Bug Fixes
+
+* do not change logLevel for unit tests ([a0a64b5](https://github.com/softwaregroup-bg/ut-run/commit/a0a64b57df2a5a6d37acff018b4edf7c47762ec1))
+
+
+
 ## [10.65.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.65.1...v10.65.2) (2022-02-10)
 
 
