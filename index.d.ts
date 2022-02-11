@@ -333,7 +333,11 @@ export function run(params: {
     resolve: NodeJS.RequireResolve,
     params: {}
 } | {
-    method: 'unit'
+    method: 'unit',
+    params?: {},
+    version?: string,
+    root?: string,
+    resolve?: (string) => string
 }): void;
 
 type microserviceExport = () => () => microserviceResult;

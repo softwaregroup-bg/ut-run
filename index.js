@@ -100,11 +100,11 @@ module.exports = {
                 repl: false,
                 utPort: {
                     concurrency: 200,
-                    logLevel: 'debug'
+                    ...(params?.method !== 'unit') && {logLevel: 'debug'}
                 },
                 utBus: {
                     serviceBus: {
-                        logLevel: 'debug',
+                        ...(params?.method !== 'unit') && {logLevel: 'debug'},
                         jsonrpc: {
                             debug: true,
                             host: 'localhost',
@@ -113,14 +113,14 @@ module.exports = {
                     }
                 },
                 run: {
-                    logLevel: 'debug'
+                    ...(params?.method !== 'unit') && {logLevel: 'debug'}
                 }
             },
             ...params
         });
         if (!fn) throw new Error('Missing parameter: microservice function');
         fn.run = run;
-        if (require.main === mod) setImmediate(() => run(process.argv[3] ? {} : {defaultOverlays: 'microservice'}));
+        if (require.main === mod) setImmediate(() => run(process.argv[3]?.match(/^[a-z]+$/) ? {} : {defaultOverlays: 'microservice'}));
         return fn;
     }
 };
