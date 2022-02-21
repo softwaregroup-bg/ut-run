@@ -259,6 +259,11 @@ module.exports = function(params, cache) {
     const serverConfig = {
         main: params.server,
         config: [].concat(params.serverConfig, {
+            utRun: {
+                test: {
+                    type: params.type
+                }
+            },
             utBus: {
                 serviceBus: {
                     test: true
@@ -275,6 +280,11 @@ module.exports = function(params, cache) {
     const clientConfig = params.client && {
         main: params.client,
         config: [].concat(params.clientConfig, {
+            utRun: {
+                test: {
+                    type: params.type
+                }
+            },
             utBus: {
                 serviceBus: {
                     test: true
