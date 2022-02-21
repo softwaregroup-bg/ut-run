@@ -1,5 +1,7 @@
 const merge = require('ut-function.merge');
 module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vfs, cluster) {
+    const jobNames = envConfig.jobs || (cluster ? 'load' : 'test');
+    const featureNames = envConfig.jobs ? `${envConfig.jobs}Features` : 'features';
     const server = () => {
         if (typeof serviceConfig === 'function') {
             return [{test: [serviceConfig]}];
@@ -17,8 +19,8 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
         },
         utRun: {
             test: {
-                jobs: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.${cluster ? 'load' : 'test'}`, 'i'),
-                features: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.features`, 'i'),
+                jobs: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.${jobNames}`, 'i'),
+                features: envConfig.implementation && new RegExp(`^ut${envConfig.implementation}.${featureNames}`, 'i'),
                 imports: envConfig.implementation && /\.steps$/,
                 context: {
                     loginMeta: true
