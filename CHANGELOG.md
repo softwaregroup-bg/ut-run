@@ -1,3 +1,13 @@
+# [10.66.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.65.5...v10.66.0) (2022-02-21)
+
+
+### Features
+
+* jobs parameter during unit tests ([ad06900](https://github.com/softwaregroup-bg/ut-run/commit/ad06900961d0761e99c8bb99f1438ce29eb5c792))
+* set test type in config ([f929796](https://github.com/softwaregroup-bg/ut-run/commit/f9297962eefef0f8e5c880fd0c7fcb689335b30e))
+
+
+
 ## [10.65.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.65.4...v10.65.5) (2022-02-17)
 
 
