@@ -328,10 +328,12 @@ export function run(params: {
     config: {}
 } | {
     method?: 'debug',
-    version: string,
-    root: string,
-    resolve: NodeJS.RequireResolve,
-    params: {}
+    version?: string,
+    root?: string,
+    main?: () => microserviceResult[],
+    config?: {}[],
+    resolve?: NodeJS.RequireResolve,
+    params?: {}
 } | {
     method: 'unit',
     params?: {},
