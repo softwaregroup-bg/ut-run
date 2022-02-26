@@ -6,7 +6,7 @@
     "lodash.merge": "4.6.0",
     "minimist": "1.2.0",
     "rc": "1.2.2",
-    "ut-log": "^6.1.0-rc-bahur.1",
+    "ut-log": "6.2.3",
     "ut-port": "6.5.1",
     "why-is-node-running": "^2.1.0"
   },
