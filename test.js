@@ -67,6 +67,7 @@ function sequence(options, test, bus, flow, params, parent) {
     }
 
     const buildMeta = ($meta = {}) => $meta.forward ? $meta : {...$meta, forward: {'x-b3-traceid': uuid().replace(/-/g, '')}};
+    const buildParams = (params, {$http}) => $http ? {$http, ...params} : params;
 
     return (function runSequence(flow, params, parent) {
         const context = parent || {
@@ -121,8 +122,8 @@ function sequence(options, test, bus, flow, params, parent) {
                                     .then(steps => sequence(options, assert, bus, steps, undefined, context));
                             }
                             const promise = step.$meta
-                                ? step.$meta(context).then($meta => step.method(params, buildMeta($meta)))
-                                : step.method(params, buildMeta(context.$meta));
+                                ? step.$meta(context).then($meta => step.method(buildParams(params, context), buildMeta($meta)))
+                                : step.method(buildParams(params, context), buildMeta(context.$meta));
                             return promise
                                 .then(function([result, $meta]) {
                                     duration && duration(Date.now() - start);
