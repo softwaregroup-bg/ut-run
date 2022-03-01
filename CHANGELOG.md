@@ -1,3 +1,12 @@
+## [10.66.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.66.1...v10.66.2) (2022-03-01)
+
+
+### Bug Fixes
+
+* consider context. when bilding params ([#96](https://github.com/softwaregroup-bg/ut-run/issues/96)) ([cbe75f3](https://github.com/softwaregroup-bg/ut-run/commit/cbe75f3f67b061fc34980c68a1e3b85590ab0713))
+
+
+
 ## [10.66.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.66.0...v10.66.1) (2022-02-22)
 
 
