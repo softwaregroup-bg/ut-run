@@ -6,7 +6,7 @@ import {CallSiteLike} from 'stack-utils';
 type hrtime = [number, number];
 
 export as namespace ut
-interface meta {
+export interface meta {
     mtid: 'request' | 'response' | 'error' | 'notification' | 'discard',
     method: string,
     opcode?: string,
@@ -62,9 +62,10 @@ export type handler<request, response, location> = location extends 'local' ? po
 
 type fn = (...params: any[]) => any
 type logger = (message: string | object) => void
-type errorLogger = (error: Error) => void
+type warnLogger = (error: Error | string) => void
+type errorLogger = (error: Error | object) => void
 
-interface port {
+export interface port {
     findHandler: (name: string) => portHandler<any, any>,
     includesConfig: (name: string, values: any, defaultValue: boolean) => boolean,
     validator: (schema: joi.Schema, method: string, type: 'params' | 'result') => ((value: any) => any),
@@ -77,7 +78,7 @@ interface port {
         debug?: logger,
         info?: logger,
         error?: errorLogger,
-        warn?: errorLogger,
+        warn?: warnLogger,
         fatal?: errorLogger
     },
     errors: errorMap,

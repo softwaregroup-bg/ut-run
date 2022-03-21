@@ -293,10 +293,11 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             }
             prev.ingresses[ingressKey] = ingress;
         };
-        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP, loadBalancerIP, ingress, deploymentName}) => {
+        const addService = ({name, port, targetPort, protocol = 'TCP', clusterIP, loadBalancerIP, ingress, deploymentName, allowDuplication}) => {
             const serviceKey = `services/${name.toLowerCase()}.yaml`;
             if (prev.services[serviceKey]) {
                 const existing = prev.services[serviceKey].metadata.labels['app.kubernetes.io/name'];
+                if (allowDuplication && existing === deploymentName) return;
                 const error = new Error(`Duplication of service ${name} in ${existing} and ${portOrModule.config.pkg.layer}`);
                 prev.errors.push(error);
                 log && log.error && log.error(error);
@@ -345,6 +346,8 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
         };
         if (deploymentNames.length) {
             deploymentNames.forEach(deploymentName => {
+                const auto = !deploymentName.startsWith('?');
+                deploymentName = deploymentName.replace(/^\?/, '');
                 const deploymentKey = `deployments/${deploymentName}.yaml`;
                 const deployment = prev.deployments[deploymentKey] || {
                     apiVersion: 'apps/v1',
@@ -402,7 +405,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 };
                 const container = deployment.spec.template.spec.containers[0];
                 const args = container.args;
-                if (!args.includes('--' + layer)) args.push('--' + layer);
+                if (auto && !args.includes('--' + layer)) args.push('--' + layer);
                 container.ports = [...container.ports, ...containerPorts];
                 prev.deployments[deploymentKey] = deployment;
                 function addIfNotExists(where, item) {
@@ -422,15 +425,18 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 });
             });
             if (deploymentNames.length === 1) {
+                const auto = !deploymentNames[0].startsWith('?');
+                const deploymentName = deploymentNames[0].replace(/^\?/, '');
                 portOrModule.config.id && portOrModule.config.type !== 'module' && addService({
                     name: portOrModuleName + '-service',
-                    deploymentName: deploymentNames[0],
+                    deploymentName,
                     port: 8090,
                     targetPort: 'http-jsonrpc'
                 });
                 [].concat(portOrModule.config.namespace).forEach(ns => ns && addService({
                     name: ns.replace(/\//g, '-') + '-service',
-                    deploymentName: deploymentNames[0],
+                    allowDuplication: !auto,
+                    deploymentName,
                     port: 8090,
                     targetPort: 'http-jsonrpc',
                     ingress: [ingressConfig.rpc && {
@@ -446,7 +452,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 }));
                 ports.forEach(port => port.service && addService({
                     name: `${portOrModuleName}-${port.name}`,
-                    deploymentName: deploymentNames[0],
+                    deploymentName,
                     port: port.containerPort,
                     protocol: port.protocol,
                     targetPort: port.name,
@@ -454,7 +460,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 }));
                 ports.forEach(port => port.ingress && [].concat(port.ingress).forEach(config => config && addIngress({
                     ...ingressConfig,
-                    name: `${deploymentNames[0]}-${port.name}`,
+                    name: `${deploymentName}-${port.name}`,
                     serviceName: `${portOrModuleName}-${port.name}`,
                     servicePort: port.name,
                     ...config
