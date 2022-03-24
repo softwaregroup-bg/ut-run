@@ -1,3 +1,12 @@
+# [10.67.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.66.5...v10.67.0) (2022-03-24)
+
+
+### Features
+
+* support node 16 ([e8c6bde](https://github.com/softwaregroup-bg/ut-run/commit/e8c6bded17ae0cd655b4df8310e5e9be2e5c0afd))
+
+
+
 ## [10.66.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.66.4...v10.66.5) (2022-03-17)
 
 
