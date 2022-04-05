@@ -15,7 +15,7 @@
     "stack-utils": "2.0.5",
     "through2": "2.0.3",
     "ut-config": "^7.9.3",
-    "ut-bus": "^7.58.0",
+    "ut-bus": ">=7.59.0-jose.0 <7.59.0-jose.99",
     "ut-log": "^6.10.2",
     "ut-port": "^6.43.8",
     "ut-function.merge": "^1.5.6",
