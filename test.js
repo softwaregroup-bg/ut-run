@@ -131,7 +131,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                     performanceWrite();
                                     context[step.name] = result;
                                     if (typeof step.result === 'function') {
-                                        step.result.call(context, result, assert, $meta);
+                                        return step.result.call(context, result, assert, $meta);
                                     } else if (typeof step.error === 'function') {
                                         assert.fail('Result is expected to be an error');
                                     } else {
@@ -149,7 +149,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                         if (error && error.type === 'httpServerPort.notPermitted') { // temp workaround
                                             error.type = 'HttpServer.NotPermitted';
                                         }
-                                        step.error.call(context, error, assert);
+                                        return step.error.call(context, error, assert);
                                     } else {
                                         throw error;
                                     }
