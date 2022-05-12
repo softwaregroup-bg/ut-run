@@ -38,11 +38,9 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             ]
                 .filter(x => x[0] && x[1])
                 .forEach(([name, item]) => {
-                    const splitpath = name.split(path.sep);
-                    const filename = splitpath.pop();
-                    const pathname = path.join('system', 'kustomize', ...splitpath);
-                    fs.mkdirSync(pathname, {recursive: true});
-                    fs.writeFileSync(path.join(pathname, filename), (typeof item === 'string') ? item : yaml.stringify(sortKeys(item, {deep: true})));
+                    const dirname = path.dirname('system/kustomize/' + name);
+                    fs.mkdirSync(dirname, {recursive: true});
+                    fs.writeFileSync(path.join(dirname, path.basename(name)), (typeof item === 'string') ? item : yaml.stringify(sortKeys(item, {deep: true})));
                 });
         } finally {
             strOptions.fold.lineWidth = lineWidth;
