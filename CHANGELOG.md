@@ -1,3 +1,12 @@
+## [10.68.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.68.0...v10.68.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* load test validations ([9511119](https://github.com/softwaregroup-bg/ut-run/commit/9511119425d9fd93b64684a0775b10ae8eceb37b))
+
+
+
 # [10.68.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.67.0...v10.68.0) (2022-05-04)
 
 
