@@ -1,7 +1,8 @@
 const create = require('./create');
 const {strOptions} = require('yaml/types');
 const yaml = require('yaml');
-const fs = require('fs-plus');
+const path = require('path');
+const fs = require('fs');
 const sortKeys = require('sort-keys');
 
 module.exports = async function(serviceConfig, envConfig, assert, vfs) {
@@ -22,7 +23,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
         const secret = {};
         const resources = service.install({layers: mergedConfig.run.layers, config: mergedConfig, secret, kustomization: true});
         const lineWidth = strOptions.fold.lineWidth; // yet another stupid singleton
-        fs.removeSync('system/kustomize');
+        fs.rmSync(path.join('system', 'kustomize'), {recursive: true, force: true}); // force <boolean> When true, exceptions will be ignored if path does not exist
         try {
             strOptions.fold.lineWidth = 1e6;
             [
@@ -37,7 +38,9 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             ]
                 .filter(x => x[0] && x[1])
                 .forEach(([name, item]) => {
-                    fs.writeFileSync('system/kustomize/' + name, (typeof item === 'string') ? item : yaml.stringify(sortKeys(item, {deep: true})));
+                    const dirname = path.dirname('system/kustomize/' + name);
+                    fs.mkdirSync(dirname, {recursive: true});
+                    fs.writeFileSync(path.join(dirname, path.basename(name)), (typeof item === 'string') ? item : yaml.stringify(sortKeys(item, {deep: true})));
                 });
         } finally {
             strOptions.fold.lineWidth = lineWidth;

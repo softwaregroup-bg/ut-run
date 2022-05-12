@@ -1,7 +1,8 @@
 const debug = require('./debug');
 const merge = require('ut-function.merge');
 const got = require('got');
-const fs = require('fs-plus');
+const fs = require('fs');
+const path = require('path');
 module.exports = async function(serviceConfig, envConfig, assert, vfs) {
     const extraConfig = {
         run: {
@@ -25,14 +26,16 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
         const api = `${serviceBus.rpc.info().uri}/api`;
         const modules = await got(`${api}.json`).json();
         for (const {namespace, openapi, swagger} of modules) {
+            const pathname = path.join('system', 'api', namespace);
+            fs.mkdirSync(pathname, {recursive: true});
             if (openapi) {
-                const filename = `system/api/${namespace}/openapi.json`;
+                const filename = path.join(pathname, 'openapi.json');
                 log.info && log.info('saving ' + filename);
                 const doc = await got(`${api}/${namespace}/openapi.json`).json();
                 fs.writeFileSync(filename, JSON.stringify(doc, null, 4));
             }
             if (swagger) {
-                const filename = `system/api/${namespace}/swagger.json`;
+                const filename = path.join(pathname, 'swagger.json');
                 log.info && log.info('saving ' + filename);
                 const doc = await got(`${api}/${namespace}/swagger.json`).json();
                 fs.writeFileSync(filename, JSON.stringify(doc, null, 4));
