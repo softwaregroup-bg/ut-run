@@ -15,6 +15,7 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
             logLevel: 'warn'
         },
         utPort: {
+            test: true,
             logLevel: 'warn'
         },
         utRun: {
