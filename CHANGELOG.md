@@ -1,3 +1,12 @@
+# [10.69.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.68.2...v10.69.0) (2022-05-18)
+
+
+### Features
+
+* api docs authentication ([096f87e](https://github.com/softwaregroup-bg/ut-run/commit/096f87ed394d18754cf0448536dac5495ec31bdd))
+
+
+
 ## [10.68.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.68.1...v10.68.2) (2022-05-12)
 
 
