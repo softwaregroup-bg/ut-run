@@ -341,7 +341,19 @@ export function run(params: {
     version?: string,
     root?: string,
     resolve?: (string) => string
-}): void;
+}): Promise<{
+    ports: {}[],
+    portsMap: Record<string, any>,
+    serviceBus: {
+        publicApi: {
+            importMethod: (name: string) => (params, $meta) => any
+        }
+    },
+    log: any,
+    logger: any,
+    config: {},
+    stop: () => void
+}>;
 
 type microserviceExport = () => () => microserviceResult;
 type microserviceExportRun = {

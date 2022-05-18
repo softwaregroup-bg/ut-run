@@ -29,7 +29,7 @@
     "tap": "^16.2.0",
     "ut-function.dispatch": "^1.4.1",
     "ut-port-script": "^7.2.0",
-    "ut-tools": "^6.40.8"
+    "ut-tools": "^6.40.9"
   },
   "peerDependencies": {
     "why-is-node-running": "^2.2.0",
