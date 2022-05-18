@@ -37,7 +37,12 @@ module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
         utBus: {
             serviceBus: {
                 jsonrpc: {
-                    utLogin: false
+                    utLogin: false,
+                    api: {
+                        ui: {
+                            auth: false
+                        }
+                    }
                 }
             }
         },

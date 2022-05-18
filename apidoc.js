@@ -41,5 +41,5 @@ async function crawl(root, page, visited) {
 module.exports = async function apidoc(serviceBus) {
     await serviceBus.publicApi.ready();
     const root = serviceBus.publicApi.info().uri;
-    await crawl(root, new URL('api', root).href, []);
+    await crawl(root, new URL('aa/api', root).href, []);
 };

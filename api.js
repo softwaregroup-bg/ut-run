@@ -16,14 +16,18 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                 logLevel: 'warn',
                 jsonrpc: {
                     utLogin: false,
-                    api: true
+                    api: {
+                        ui: {
+                            auth: false
+                        }
+                    }
                 }
             }
         }
     };
     const {serviceBus, logger: log, stop} = await debug(serviceConfig, merge(envConfig, extraConfig), assert, vfs);
     try {
-        const api = `${serviceBus.rpc.info().uri}/api`;
+        const api = `${serviceBus.rpc.info().uri}/aa/api`;
         const modules = await got(`${api}.json`).json();
         for (const {namespace, openapi, swagger} of modules) {
             const pathname = path.join('system', 'api', namespace);
