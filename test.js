@@ -448,7 +448,7 @@ module.exports = function(params, cache) {
                 });
             });
         }
-        x.ports.forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
+        [...x.ports].reverse().forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
         x.serviceBus && step('bus', () => x.serviceBus.destroy());
         x.broker && step('broker', () => x.broker.destroy());
         x.log && x.log.destroy && step('main loger', () => x.log.destroy());
