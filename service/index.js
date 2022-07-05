@@ -5,6 +5,7 @@ const {version} = require('../package.json');
 const gte = require('semver/functions/gte');
 const joi = require('joi');
 const merge = require('ut-function.merge');
+const clone = require('lodash.clonedeep');
 
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
@@ -69,11 +70,12 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         if (utModule instanceof Function) {
             if (utModule.name) {
                 moduleConfig = config[utModule.name];
+                if (moduleConfig) moduleConfig = clone(moduleConfig === true ? {} : moduleConfig);
                 moduleName = utModule.name;
                 utModule = moduleConfig && utModule({config: moduleConfig});
             } else {
                 moduleName = '';
-                moduleConfig = config;
+                moduleConfig = clone(config);
                 utModule = utModule(moduleConfig);
             }
         }
@@ -87,7 +89,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             };
             const configs = (config.configFilenames || []).map(resultItem).filter(Boolean);
             if (moduleConfig) configs.push(moduleConfig);
-            moduleConfig = merge({}, ...configs);
+            moduleConfig = merge(moduleConfig || {}, ...configs);
             const validation = resultItem('validation');
             if (validation) {
                 moduleConfig = joi.attempt(

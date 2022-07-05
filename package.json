@@ -9,6 +9,7 @@
     "joi": "17.4.2",
     "joi-to-typescript": "2.2.1",
     "loadtest": "5.1.0",
+    "lodash.clonedeep": "4.5.0",
     "semver": "7.3.2",
     "sort-keys": "4.1.0",
     "stack-utils": "2.0.5",
