@@ -1,3 +1,12 @@
+# [10.70.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.69.12...v10.70.0) (2022-07-06)
+
+
+### Features
+
+* pass cloned config by reference ([7198458](https://github.com/softwaregroup-bg/ut-run/commit/71984581d01a1eeb74d30ce0386fc6eb53a2d06e))
+
+
+
 ## [10.69.12](https://github.com/softwaregroup-bg/ut-run/compare/v10.69.11...v10.69.12) (2022-06-30)
 
 
