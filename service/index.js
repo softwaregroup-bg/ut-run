@@ -89,7 +89,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             };
             const configs = (config.configFilenames || []).map(resultItem).filter(Boolean);
             if (moduleConfig) configs.push(moduleConfig);
-            moduleConfig = merge(moduleConfig || {}, ...configs);
+            moduleConfig = merge(moduleConfig, merge({}, ...configs));
             const validation = resultItem('validation');
             if (validation) {
                 moduleConfig = joi.attempt(
