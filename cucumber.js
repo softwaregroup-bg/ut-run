@@ -205,6 +205,8 @@ function convertStep(step, options) {
             description: step,
             cucumber: true
         };
+    } else if (!step.name && step.method) {
+        step.name = step.method;
     }
     if (step.cucumber === true) {
         step.arguments = step.match ? [step.match(step.description || '')] : [];
