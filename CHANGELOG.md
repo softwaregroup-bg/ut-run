@@ -1,3 +1,12 @@
+## [10.70.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.0...v10.70.1) (2022-07-19)
+
+
+### Bug Fixes
+
+* use step.method as step.name if no step.name specified ([#98](https://github.com/softwaregroup-bg/ut-run/issues/98)) ([6afcc2f](https://github.com/softwaregroup-bg/ut-run/commit/6afcc2f5e5635f5cb77a23046d074977be4a1011))
+
+
+
 # [10.70.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.69.12...v10.70.0) (2022-07-06)
 
 
