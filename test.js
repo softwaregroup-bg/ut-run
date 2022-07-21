@@ -156,7 +156,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                 });
                         })
                         .then(result => {
-                            if (passing) passing = assert.passing();
+                            if (passing && step.bail !== false) passing = assert.passing();
                             report && report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'failed'));
                             return result;
                         }, error => {
