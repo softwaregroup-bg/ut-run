@@ -160,7 +160,7 @@ function sequence(options, test, bus, flow, params, parent) {
                             report && report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'failed'));
                             return result;
                         }, error => {
-                            passing = false;
+                            if (step.bail !== false) passing = false;
                             report && report.push(cucumber.reportStep(step, starthr, 'failed'));
                             throw error;
                         });
