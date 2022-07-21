@@ -1,3 +1,12 @@
+## [10.70.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.1...v10.70.2) (2022-07-21)
+
+
+### Bug Fixes
+
+* skip all subsequent tests once a failure occurs ([#99](https://github.com/softwaregroup-bg/ut-run/issues/99)) ([951aaff](https://github.com/softwaregroup-bg/ut-run/commit/951aaff9deb7656f2134204714a0e80f6e9a8f72))
+
+
+
 ## [10.70.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.0...v10.70.1) (2022-07-19)
 
 
