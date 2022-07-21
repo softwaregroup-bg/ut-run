@@ -156,11 +156,11 @@ function sequence(options, test, bus, flow, params, parent) {
                                 });
                         })
                         .then(result => {
-                            passing = passing && (Array.isArray(step.steps) || (typeof step.steps === 'function') || assert.passing());
+                            if (passing && step.bail !== false) passing = assert.passing();
                             report && report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'failed'));
                             return result;
                         }, error => {
-                            passing = false;
+                            if (step.bail !== false) passing = false;
                             report && report.push(cucumber.reportStep(step, starthr, 'failed'));
                             throw error;
                         });
