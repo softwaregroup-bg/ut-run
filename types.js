@@ -66,8 +66,8 @@ module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
         const params = schema?.params?.meta && convertSchema({commentEverything: false}, schema.params.meta({className: 'params'}), undefined, true);
         const result = schema?.result?.meta && convertSchema({commentEverything: false}, schema.result.meta({className: 'result'}), undefined, true);
         const namespace = `declare namespace ${schema.name || escape(name)} {
-  ${params ? indent(any(params.content.trim(), 'params')) : ''}
-  ${result ? indent(any(result.content.trim(), 'result')) : ''}
+  ${params ? indent(any(params.content.trim(), 'params')) : indent('export type params = unknown;')}
+  ${result ? indent(any(result.content.trim(), 'result')) : indent('export type result = unknown;')}
 }
 
 `;
