@@ -1,3 +1,12 @@
+## [10.70.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.3...v10.70.4) (2022-08-18)
+
+
+### Bug Fixes
+
+* improve type definition generation ([395985f](https://github.com/softwaregroup-bg/ut-run/commit/395985f2e60dc11746db71a7b1e908cfe80be896))
+
+
+
 ## [10.70.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.2...v10.70.3) (2022-08-18)
 
 
