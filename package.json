@@ -2,6 +2,7 @@
   "name": "ut-run",
   "version": "10.70.5",
   "dependencies": {
+    "@types/tap": "^15.0.7",
     "browser-process-hrtime": "1.0.0",
     "chokidar": "3.5.3",
     "escape-string-regexp": "4.0.0",

@@ -93,8 +93,9 @@ interface methods extends ${dep.replace(/-/g, '')}.handlers {}
 export type libFactory = ut.libFactory<methods, errors>
 export type handlerFactory = ut.handlerFactory<methods, errors, handlers<'local'>>
 export type handlerSet = ut.handlerSet<methods, errors, handlers<'local'>>
+export type test = ut.test<keyof methods | keyof handlers>
 
-import portal from 'ut-portal/handlers'
+import portal from 'ut-portal'
 export type pageFactory = portal.pageFactory<methods, errors>
 export type pageSet = portal.pageSet<methods, errors>
 `);
