@@ -1,3 +1,12 @@
+## [10.70.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.6...v10.70.7) (2022-08-25)
+
+
+### Bug Fixes
+
+* ut-api align ([97c24cc](https://github.com/softwaregroup-bg/ut-run/commit/97c24ccdd284934becb7d864a2723ab75cd3b4db))
+
+
+
 ## [10.70.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.5...v10.70.6) (2022-08-25)
 
 

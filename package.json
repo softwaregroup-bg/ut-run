@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "10.70.6",
+  "version": "10.70.7",
   "dependencies": {
     "@types/tap": "^15.0.7",
     "browser-process-hrtime": "1.0.0",
