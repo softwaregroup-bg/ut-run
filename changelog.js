@@ -1,7 +1,7 @@
 const Arborist = require('@npmcli/arborist');
 const create = require('./create');
 const merge = require('ut-function.merge');
-const {readFile, appendFileSync} = require('fs');
+const fs = require('fs');
 const path = require('path');
 module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     const arb = new Arborist({path: process.cwd()});
@@ -41,16 +41,22 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
                 } catch (e) {
                     return reject(e);
                 }
-                readFile(moduleChangelogLocation, (err, data) => {
+                fs.open(moduleChangelogLocation, (err, fd) => {
                     if (err) return reject(err);
-                    const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersion.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
-                    const content = data.toString().replace(/#+/g, x => x + '##').match(match);
-                    resolve(`## ${moduleName} (${fromVersion} -> ${toVersion})\n\n${content}`);
+                    fs.read(fd, {buffer: Buffer.alloc(345678)}, (err, bytesRead, buffer) => {
+                        if (err) return reject(err);
+                        fs.close(fd, err => {
+                            if (err) return reject(err);
+                            const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersion.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
+                            const content = buffer.toString().replace(/#+/g, x => x + '##').match(match);
+                            resolve(`## ${moduleName} (${fromVersion} -> ${toVersion})\n\n${content}`);
+                        });
+                    });
                 });
             }))
     );
 
-    await appendFileSync(path.join(tree.path, 'UT-CHANGELOG.md'), `# ${tree.version}\n\n${excerpts.join('\n\n')}`);
+    await fs.appendFileSync(path.join(tree.path, 'UT-CHANGELOG.md'), `# ${tree.version}\n\n${excerpts.join('\n\n')}`);
 
     await serviceBus.importMethod('tools.record.add')({
         record: {
