@@ -274,7 +274,7 @@ E.g.
 ```json
 {
     "scripts": {
-        "doc": "ut-doc"
+        "doc": "ut-run doc"
     },
     "devDependencies": {
         "json-schema-to-markdown": "1.1.1",
