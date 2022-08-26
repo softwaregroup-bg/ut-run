@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const pkgJson = require('../package.json');
 const vfs = require('../vfs');
 const serviceConfig = require(process.cwd());

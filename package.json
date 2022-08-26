@@ -39,7 +39,6 @@
     "why-is-node-running": "^2.2.0"
   },
   "bin": {
-    "ut-doc": "./bin/ut-doc.js",
     "ut-run": "./bin/ut-run.js"
   },
   "scripts": {
