@@ -28,7 +28,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
     const {serviceBus, logger: log, stop} = await debug(serviceConfig, merge(envConfig, extraConfig), assert, vfs);
     try {
         const api = `${serviceBus.rpc.info().uri}/aa/api`;
-        const modules = await got(`${api}.json`).json();
+        const {api: modules} = await got(`${api}.json`).json();
         for (const {namespace, openapi, swagger} of modules) {
             const pathname = path.join('system', 'api', namespace);
             fs.mkdirSync(pathname, {recursive: true});

@@ -2,6 +2,7 @@ import joi from 'joi'
 import commonJoi from 'ut-function.common-joi';
 import {readdir, readFileSync} from 'fs';
 import {CallSiteLike} from 'stack-utils';
+import 'tap';
 
 type hrtime = [number, number];
 
@@ -38,7 +39,8 @@ export interface meta {
     timeout: hrtime,
     timer?: (name?: string, newTime?: hrtime) => {
         [name: string]: number
-    }
+    },
+    validation?: unknown
 }
 
 export type errorParam<params> = (message: { params: params; cause?: Error }) => Error
@@ -362,3 +364,23 @@ type microserviceExportRun = {
 }
 
 export function microservice(module: Partial<NodeJS.Module>, require: NodeJS.Require, fn?: microserviceExport): microserviceExportRun;
+
+interface Step<methods> {
+    method: methods,
+    name?: string,
+    params: {} | (() => {}),
+    result?: (this: any, result: any, assert: Tap.Test, $meta?: meta) => void,
+    error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void
+}
+
+export type test<methods = string> = () => Record<string, (
+    test: unknown,
+    bus: unknown,
+    run: (
+        test: unknown,
+        bus: unknown,
+        steps: (Step<methods> | string)[]
+    ) => unknown,
+    ports: {}[],
+    steps: Record<string, any>
+) => unknown>;

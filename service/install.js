@@ -22,7 +22,7 @@ const readConfig = filename => {
         .trim()
         .replace(/\r\n/g, '\n');
     return {
-        content: content,
+        content,
         // https://github.com/kubernetes/kubernetes/blob/release-1.15/staging/src/k8s.io/cli-runtime/pkg/kustomize/k8sdeps/transformer/hash/hash.go#L123
         hash: hash(content)
     };
@@ -477,7 +477,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 kind: 'Kustomization',
                 namespace: namespace.metadata.name,
                 bases: [],
-                commonLabels: commonLabels
+                commonLabels
             }
         },
         namespaces: {
