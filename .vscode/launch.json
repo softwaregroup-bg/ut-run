@@ -53,6 +53,22 @@
             "linux": {
                 "protocol": "inspector"
             }
+        },
+        {
+            "name": "bin script",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/ut-run.js",
+            "args": [
+                "changelog",
+                "--fromVersion=10.69.5",
+                "--toolsUrl=http://localhost:8091",
+                "--toolsUsername=ci",
+                "--toolsPassword=***",
+                "--branchName=test",
+                "--buildNumber=1"
+            ],
+            "outputCapture": "std"
         }
     ],
     "inputs": [{
