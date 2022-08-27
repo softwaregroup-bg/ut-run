@@ -366,14 +366,24 @@ type microserviceExportRun = {
 export function microservice(module: Partial<NodeJS.Module>, require: NodeJS.Require, fn?: microserviceExport): microserviceExportRun;
 
 type Step<methods> = {
+    name: string,
+    params?: () => boolean,
+    steps?: () => (Step<methods> | string)[]
+} | {
     [Property in keyof methods]: methods[Property] extends ((...args: any) => any) ? {
         method: Property,
         name?: string,
         params: Parameters<methods[Property]>[0] | ((context: Record<string, any>) => Parameters<methods[Property]>[0]),
         result?: (this: any, result: Awaited<ReturnType<methods[Property]>>, assert: Tap.Test, $meta?: meta) => void,
-        error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void
+        error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void,
+        steps?: () => (Step<methods> | string)[]
     } : never
 }[keyof methods];
+
+type Imported<methods> = {
+    [name: string]: any;
+    (...args: any): (string | Step<methods>)
+};
 
 export type test<methods> = () => Record<string, (
     test: unknown,
@@ -384,5 +394,5 @@ export type test<methods> = () => Record<string, (
         steps: (Step<methods> | string)[]
     ) => unknown,
     ports: {}[],
-    steps: Record<string, any>
+    steps: Record<string, Imported<methods>>
 ) => unknown>;
