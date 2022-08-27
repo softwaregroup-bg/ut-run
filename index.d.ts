@@ -365,15 +365,17 @@ type microserviceExportRun = {
 
 export function microservice(module: Partial<NodeJS.Module>, require: NodeJS.Require, fn?: microserviceExport): microserviceExportRun;
 
-interface Step<methods> {
-    method: methods,
-    name?: string,
-    params: {} | (() => {}),
-    result?: (this: any, result: any, assert: Tap.Test, $meta?: meta) => void,
-    error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void
-}
+type Step<methods> = {
+    [Property in keyof methods]: methods[Property] extends ((...args: any) => any) ? {
+        method: Property,
+        name?: string,
+        params: Parameters<methods[Property]>[0] | ((context: Record<string, any>) => Parameters<methods[Property]>[0]),
+        result?: (this: any, result: Awaited<ReturnType<methods[Property]>>, assert: Tap.Test, $meta?: meta) => void,
+        error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void
+    } : never
+}[keyof methods];
 
-export type test<methods = string> = () => Record<string, (
+export type test<methods> = () => Record<string, (
     test: unknown,
     bus: unknown,
     run: (
