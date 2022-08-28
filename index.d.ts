@@ -380,6 +380,23 @@ type Step<methods> = {
     } : never
 }[keyof methods];
 
+type StepCallSite<methods> = {
+    callSite: unknown,
+    name: string,
+    params?: () => boolean,
+    steps?: () => (Step<methods> | string)[]
+} | {
+    [Property in keyof methods]: methods[Property] extends ((...args: any) => any) ? {
+        callSite: unknown,
+        method: Property,
+        name?: string,
+        params: Parameters<methods[Property]>[0] | ((context: Record<string, any>) => Parameters<methods[Property]>[0]),
+        result?: (this: any, result: Awaited<ReturnType<methods[Property]>>, assert: Tap.Test, $meta?: meta) => void,
+        error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void,
+        steps?: () => (Step<methods> | string)[]
+    } : never
+}[keyof methods];
+
 type Imported<methods> = {
     [name: string]: any;
     (...args: any): (string | Step<methods>)
@@ -396,3 +413,9 @@ export type test<methods> = () => Record<string, (
     ports: {}[],
     steps: Record<string, Imported<methods>>
 ) => unknown>;
+
+export type steps<methods> =
+    (params: {callSite: () => {callSite: unknown}}) => Record<
+        `steps.${string}`,
+        () => (StepCallSite<methods>) | string
+    >;
