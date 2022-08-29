@@ -39,7 +39,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
                 try {
                     moduleChangelogLocation = require.resolve(path.join(moduleName, 'CHANGELOG.md'), {paths: [tree.path]});
                 } catch (e) {
-                    return reject(e);
+                    return resolve('');
                 }
                 fs.open(moduleChangelogLocation, (err, fd) => {
                     if (err) return reject(err);

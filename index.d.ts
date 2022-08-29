@@ -382,8 +382,8 @@ type Step<methods> = {
 
 type StepCallSite<methods> = {
     callSite: unknown,
-    name: string,
-    params?: () => boolean,
+    name?: string,
+    params?: unknown,
     steps?: () => (Step<methods> | string)[]
 } | {
     [Property in keyof methods]: methods[Property] extends ((...args: any) => any) ? {
@@ -415,7 +415,7 @@ export type test<methods> = () => Record<string, (
 ) => unknown>;
 
 export type steps<methods> =
-    (params: {callSite: () => {callSite: unknown}}) => Record<
+    (params: {version: (minVersion: string) => boolean, callSite: () => {callSite: unknown}}) => Record<
         `steps.${string}`,
-        () => (StepCallSite<methods>) | string
+        (() => (StepCallSite<methods>) | string) | Record<string, unknown>
     >;
