@@ -14,7 +14,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
         }, envConfig), vfs)
     ]);
     const {record} = await serviceBus.importMethod('tools.record.get')({
-        moduleName: tree.name,
+        moduleName: tree.packageName,
         moduleVersion: utChangelog?.fromVersion,
         recordKey: 'utDependencies'
     });
@@ -60,7 +60,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
 
     await serviceBus.importMethod('tools.record.add')({
         record: {
-            moduleName: tree.name,
+            moduleName: tree.packageName,
             moduleVersion: tree.version,
             recordKey: 'utDependencies',
             recordValue,
