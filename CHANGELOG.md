@@ -1,3 +1,12 @@
+## [10.70.13](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.12...v10.70.13) (2022-08-29)
+
+
+### Bug Fixes
+
+* use package name, not dir name ([d74e560](https://github.com/softwaregroup-bg/ut-run/commit/d74e56067e4a4fd3ccfedfa04c0347f7d54904d8))
+
+
+
 ## [10.70.12](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.11...v10.70.12) (2022-08-29)
 
 
