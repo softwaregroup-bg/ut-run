@@ -1,3 +1,12 @@
+## [10.70.12](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.11...v10.70.12) (2022-08-29)
+
+
+### Bug Fixes
+
+* **changelog:** do not throw for no CHANGELOG.md ([ca04c89](https://github.com/softwaregroup-bg/ut-run/commit/ca04c89bea7761317670c11b3b620063b8502b28))
+
+
+
 ## [10.70.11](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.10...v10.70.11) (2022-08-28)
 
 
