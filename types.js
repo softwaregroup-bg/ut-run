@@ -50,17 +50,25 @@ module.exports = async function types(serviceConfig, envConfig, assert, vfs) {
         ...envConfig
     }, vfs);
     const ports = await service.create(serviceConfig, mergedConfig, assert);
-    const validations = {};
-    serviceBus.attachHandlers(validations, [mergedConfig.utRun.types.validation]);
-    const importedErrors = {};
-    serviceBus.attachHandlers(importedErrors, [mergedConfig.utRun.types.error]);
+    const validations = {imported: {}};
+    [].concat(mergedConfig.utRun.types.validation).forEach(validation => {
+        const item = {};
+        serviceBus.attachHandlers(item, [validation]);
+        Object.assign(validations.imported, item.imported);
+    });
+    const importedErrors = {imported: {}};
+    [].concat(mergedConfig.utRun.types.error).forEach(error => {
+        const item = {};
+        serviceBus.attachHandlers(item, [error]);
+        Object.assign(importedErrors.imported, item.imported);
+    });
     const indent = (string, spaces = 2) => string.split('\n').join('\n' + ' '.repeat(spaces));
     const any = (string, name) => string === 'any' ? `export type ${name} = any;` : string;
     const portMethods = {};
     for (const port of ports) {
         Object.assign(portMethods, await port?.types?.());
     }
-    fs.writeFileSync('handlers.d.ts', `declare namespace ${mergedConfig.utRun.types.validation.match(/^ut(.*)\./)[1].toLowerCase()}TableTypes {}\n`);
+    fs.writeFileSync('handlers.d.ts', `declare namespace ${[].concat(mergedConfig.utRun.types.validation)[0].match(/^ut(.*)\./)[1].toLowerCase()}TableTypes {}\n`);
     Object.entries(sortKeys({...portMethods, ...validations.imported})).forEach(([name, validation]) => {
         const schema = validation();
         const params = schema?.params?.meta && convertSchema({commentEverything: false}, schema.params.meta({className: 'params'}), undefined, true);

@@ -16,6 +16,7 @@ export interface meta {
     httpResponse?: {
         type?: string,
         redirect?: string,
+        code?: number,
         state?: any[],
         header?: string[]
     },
@@ -270,10 +271,9 @@ export type validationFactory = (api: validation) => {
         security?: security | boolean,
         params: joi.Schema,
         result: joi.Schema
-    } | {
+    } | ({
         description?: string,
         method: 'GET' | 'PUT' | 'POST' | 'DELETE',
-        path: string,
         auth?: auth,
         cors?: cors,
         timeout?: timeout,
@@ -289,7 +289,7 @@ export type validationFactory = (api: validation) => {
          * @deprecated
          */
         isRpc?: boolean
-    }
+    } & ({route: string} | {path: string}))
 }
 
 export type validationLib = (api: validation) => {

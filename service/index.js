@@ -10,10 +10,10 @@ const clone = require('lodash.clonedeep');
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
     const watch = (filename, fn) => {
         const cwd = path.dirname(filename);
-        const fsWatcher = require('chokidar').watch(['**/*.js', '**/*.yaml', '**/*.sql'], {
+        const fsWatcher = require('chokidar').watch(['**/*.js', '**/*.yaml', '**/*.sql', '**/*.html'], {
             cwd,
             ignoreInitial: true,
-            ignored: ['.git/**', 'node_modules/**', 'ui/**']
+            ignored: ['.git/**', 'node_modules/**', 'ui/**', '.lint/**', 'dist/**']
         });
         fsWatcher.on('error', error => log && log.error && log.error(error));
         fsWatcher.on('all', async(event, file) => {
