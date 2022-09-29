@@ -1,3 +1,12 @@
+## [10.70.16](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.15...v10.70.16) (2022-09-29)
+
+
+### Bug Fixes
+
+* db debug during unit tests ([d05a407](https://github.com/softwaregroup-bg/ut-run/commit/d05a4078c00f6f413607c41b870da2fb568d56e7))
+
+
+
 ## [10.70.15](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.14...v10.70.15) (2022-09-14)
 
 
