@@ -3,6 +3,7 @@ const create = require('./create');
 const merge = require('ut-function.merge');
 const fs = require('fs');
 const path = require('path');
+const semverCoerce = require('semver/functions/coerce');
 module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     const arb = new Arborist({path: process.cwd()});
     const [tree, {serviceBus, mergedConfig: {utChangelog, utJenkins}}] = await Promise.all([
@@ -15,7 +16,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     ]);
     const {record} = await serviceBus.importMethod('tools.record.get')({
         moduleName: tree.packageName,
-        moduleVersion: utChangelog?.fromVersion,
+        moduleVersion: semverCoerce(utChangelog?.fromVersion)?.version,
         recordKey: 'utDependencies'
     });
 
