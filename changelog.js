@@ -3,6 +3,7 @@ const create = require('./create');
 const merge = require('ut-function.merge');
 const fs = require('fs');
 const path = require('path');
+const semverCoerce = require('semver/functions/coerce');
 module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     const arb = new Arborist({path: process.cwd()});
     const [tree, {serviceBus, mergedConfig: {utChangelog, utJenkins}}] = await Promise.all([
@@ -35,6 +36,8 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     const excerpts = await Promise.all(
         updatedModules
             .map(({moduleName, fromVersion, toVersion}) => new Promise((resolve, reject) => {
+                const fromVersionCoerced = semverCoerce(fromVersion)?.version;
+                if (!fromVersionCoerced) return reject(new Error(`Previous version for '${moduleName}' could not be detected`));
                 let moduleChangelogLocation;
                 try {
                     moduleChangelogLocation = require.resolve(path.join(moduleName, 'CHANGELOG.md'), {paths: [tree.path]});
@@ -47,8 +50,8 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
                         if (err) return reject(err);
                         fs.close(fd, err => {
                             if (err) return reject(err);
-                            const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersion.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
-                            const content = buffer.toString().replace(/#+/g, x => x + '##').match(match);
+                            const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersionCoerced.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
+                            const content = buffer.toString().replace(/^#+/gm, x => x + '##').match(match);
                             resolve(`## ${moduleName} (${fromVersion} -> ${toVersion})\n\n${content}`);
                         });
                     });
