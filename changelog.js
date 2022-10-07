@@ -48,7 +48,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
                         fs.close(fd, err => {
                             if (err) return reject(err);
                             const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersion.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
-                            const content = buffer.toString().replace(/#+/g, x => x + '##').match(match);
+                            const content = buffer.toString().replace(/^#+/m, x => x + '##').match(match);
                             resolve(`## ${moduleName} (${fromVersion} -> ${toVersion})\n\n${content}`);
                         });
                     });
