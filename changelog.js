@@ -16,7 +16,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     ]);
     const {record} = await serviceBus.importMethod('tools.record.get')({
         moduleName: tree.packageName,
-        moduleVersion: semverCoerce(utChangelog?.fromVersion)?.version,
+        moduleVersion: utChangelog?.fromVersion,
         recordKey: 'utDependencies'
     });
 
@@ -36,6 +36,8 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     const excerpts = await Promise.all(
         updatedModules
             .map(({moduleName, fromVersion, toVersion}) => new Promise((resolve, reject) => {
+                const fromVersionCoerced = semverCoerce(fromVersion)?.version;
+                if (!fromVersionCoerced) return reject(new Error(`Previous version for '${moduleName}' could not be detected`));
                 let moduleChangelogLocation;
                 try {
                     moduleChangelogLocation = require.resolve(path.join(moduleName, 'CHANGELOG.md'), {paths: [tree.path]});
@@ -48,7 +50,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
                         if (err) return reject(err);
                         fs.close(fd, err => {
                             if (err) return reject(err);
-                            const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersion.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
+                            const match = new RegExp(`#+\\s\\[${toVersion.replace(/\./g, '\\.')}\\][\\s\\S]+(\\r?\\n|\\r)#+\\s\\[${fromVersionCoerced.replace(/\./g, '\\.')}\\].*(\\r?\\n|\\r)`, 'gm');
                             const content = buffer.toString().replace(/^#+/m, x => x + '##').match(match);
                             resolve(`## ${moduleName} (${fromVersion} -> ${toVersion})\n\n${content}`);
                         });
