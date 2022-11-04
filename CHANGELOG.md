@@ -1,3 +1,12 @@
+## [10.70.20](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.19...v10.70.20) (2022-11-04)
+
+
+### Bug Fixes
+
+* update ut-port ([8224150](https://github.com/softwaregroup-bg/ut-run/commit/82241507fb8661aecf59cbbf102be5039cce5d04))
+
+
+
 ## [10.70.19](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.18...v10.70.19) (2022-10-21)
 
 
