@@ -2,12 +2,27 @@
     "debug.node.autoAttach": "on",
     "cSpell.words": [
         "apidoc",
+        "apprc",
+        "auths",
+        "backoff",
+        "certmanager",
+        "clonedeep",
+        "dockerconfigjson",
+        "etcrc",
+        "fluentd",
+        "healthz",
         "hsts",
+        "Kustomization",
+        "kustomizations",
         "kustomize",
+        "letsencrypt",
         "mlek",
         "mlsk",
+        "npmcli",
         "preauthorized",
         "sameorigin",
+        "traefik",
+        "utportconsole",
         "xframe"
     ]
 }
