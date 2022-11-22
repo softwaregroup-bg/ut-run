@@ -36,6 +36,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     const mountPath = `/etc/${appname}`;
     const mountPathAppRc = `/app/.${appname}rc`;
     const mountPathEtcRc = `/etc/${appname}rc`;
+    const allDeployments = Object.values(layers).join(',').split(/\s*,\s*/).filter((l, i, a) => l !== '*' && a.indexOf(l) === i);
     const commonLabels = merge({
         'app.kubernetes.io/part-of': config.implementation,
         'app.kubernetes.io/managed-by': 'ut-run'
@@ -228,7 +229,9 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             protocol: port.protocol || 'TCP',
             containerPort: port.containerPort
         }));
-        const deploymentNames = (layers[layer] || '').split(',').filter(x => x);
+        const deploymentNames = layers[layer] === '*'
+            ? allDeployments
+            : (layers[layer] || '').split(/\s*,\s*/).filter(x => x);
         const addIngress = ({path, host, name, servicePort, serviceName, pathType = 'Prefix', apiVersion = 'networking.k8s.io/v1', tls}) => {
             const ingressKey = `ingresses/${name}.yaml`;
             const ingress = prev.ingresses[ingressKey] || {
