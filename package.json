@@ -1,6 +1,6 @@
 {
   "name": "ut-run",
-  "version": "10.70.22",
+  "version": "10.70.23",
   "dependencies": {
     "@npmcli/arborist": "5.6.0",
     "@types/tap": "^15.0.7",

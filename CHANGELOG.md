@@ -1,3 +1,12 @@
+## [10.70.23](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.22...v10.70.23) (2022-11-22)
+
+
+### Bug Fixes
+
+* possibility to load a layer in all deployments #UTCORE-121 ([#102](https://github.com/softwaregroup-bg/ut-run/issues/102)) ([dc41731](https://github.com/softwaregroup-bg/ut-run/commit/dc417311e136516c00d266ae11a9778ad33cd399)), closes [#UTCORE-121](https://github.com/softwaregroup-bg/ut-run/issues/UTCORE-121)
+
+
+
 ## [10.70.22](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.21...v10.70.22) (2022-11-21)
 
 
