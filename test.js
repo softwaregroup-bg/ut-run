@@ -459,7 +459,7 @@ module.exports = function(params, cache) {
             promise
                 .then(value => {
                     clearTimeout(timeout);
-                    assert.ok(true, 'destroy[' + steps.join(',') + ']');
+                    assert.ok(true, 'destroy');
                     resolve(value);
                     return value;
                 })

@@ -339,6 +339,7 @@ export function run(params: {
     params?: {}
 } | {
     method: 'unit',
+    env?: 'test',
     params?: {},
     version?: string,
     root?: string,
@@ -384,6 +385,8 @@ type StepCallSite<methods> = {
     callSite: unknown,
     name?: string,
     params?: unknown,
+    result?: (this: any, result: any, assert: Tap.Test, $meta?: meta) => void,
+    error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void,
     steps?: () => (Step<methods> | string)[]
 } | {
     [Property in keyof methods]: methods[Property] extends ((...args: any) => any) ? {
