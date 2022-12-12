@@ -1,3 +1,12 @@
+## [10.70.25](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.24...v10.70.25) (2022-12-12)
+
+
+### Bug Fixes
+
+* update ut-bus ([681d9ab](https://github.com/softwaregroup-bg/ut-run/commit/681d9aba4bb19092ea018d17ceb2dcbe5ef77958))
+
+
+
 ## [10.70.24](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.23...v10.70.24) (2022-11-28)
 
 
