@@ -1,3 +1,12 @@
+## [10.70.27](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.26...v10.70.27) (2022-12-15)
+
+
+### Bug Fixes
+
+* avoid putting steps.filter(Boolean) everywhere in tests and just ignore falsy steps #UTCORE-121 ([#103](https://github.com/softwaregroup-bg/ut-run/issues/103)) ([c1478c7](https://github.com/softwaregroup-bg/ut-run/commit/c1478c7ba7c7107eb37df958551696834209934d)), closes [#UTCORE-121](https://github.com/softwaregroup-bg/ut-run/issues/UTCORE-121)
+
+
+
 ## [10.70.26](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.25...v10.70.26) (2022-12-12)
 
 
