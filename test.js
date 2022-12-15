@@ -40,7 +40,7 @@ function sequence(options, test, bus, flow, params, parent) {
         return previous.concat(name).join(' / ');
     }
     function buildSteps(flow) {
-        return flow.reduce((steps, step) => {
+        return flow.filter(Boolean).reduce((steps, step) => {
             step = cucumber.convertStep(step, options);
             if (Array.isArray(step)) {
                 return steps.concat(buildSteps(step));
