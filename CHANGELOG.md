@@ -1,3 +1,7 @@
+## [10.70.28](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.27...v10.70.28) (2023-01-20)
+
+
+
 ## [10.70.27](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.26...v10.70.27) (2022-12-15)
 
 
