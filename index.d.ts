@@ -297,7 +297,7 @@ export type validationLib = (api: validation) => {
 }
 type validationOrLib = validationFactory | validationLib
 
-export type validationSet = () => validationOrLib[]
+export type validationSet = () => validationOrLib[] | Record<string, string>
 export type validationMap = {
     [name: string]: validationFactory
 }
