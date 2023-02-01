@@ -1,3 +1,12 @@
+# [10.71.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.28...v10.71.0) (2023-02-01)
+
+
+### Features
+
+* test hot reload ([942fa39](https://github.com/softwaregroup-bg/ut-run/commit/942fa39efd9c4cb8a532c021d86ee9630824234b))
+
+
+
 ## [10.70.28](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.27...v10.70.28) (2023-01-20)
 
 
