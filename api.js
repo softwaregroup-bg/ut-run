@@ -36,12 +36,15 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
                 const filename = path.join(pathname, 'openapi.json');
                 log.info && log.info('saving ' + filename);
                 const doc = await got(`${api}/${namespace}/openapi.json`).json();
+                doc.servers = [{url: 'http://localhost'}];
                 fs.writeFileSync(filename, JSON.stringify(doc, null, 4));
             }
             if (swagger) {
                 const filename = path.join(pathname, 'swagger.json');
                 log.info && log.info('saving ' + filename);
                 const doc = await got(`${api}/${namespace}/swagger.json`).json();
+                doc.host = 'localhost';
+                doc.schemes = ['http', 'https'];
                 fs.writeFileSync(filename, JSON.stringify(doc, null, 4));
             }
         }
