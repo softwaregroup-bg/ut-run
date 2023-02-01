@@ -1,8 +1,9 @@
 const inquirer = require('inquirer');
 const fuzzy = require('fuzzy');
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
+const last = {name: null};
 
-module.exports = jobs => inquirer.prompt({
+module.exports = jobs => last.name ? jobs.filter(({name}) => name === last.name) : inquirer.prompt({
     type: 'autocomplete',
     name: 'job',
     message: 'select job to run (type for fuzzy search)',
@@ -14,4 +15,7 @@ module.exports = jobs => inquirer.prompt({
                 extract: job => job.name
             }).map(s => ({ name: s.string, value: s.original }));
     }
-}).then(selected => [selected.job]);
+}).then(selected => {
+    last.name = selected.job.name;
+    return [selected.job];
+});

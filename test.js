@@ -10,6 +10,14 @@ const lowercase = (match, word1, word2, letter) => `${word1}.${word2.toLowerCase
 const capitalWords = /^([^A-Z]+)([A-Z][^A-Z]+)([A-Z])?/;
 const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-Z0-9]+)*(#\[[0+?^]?])?$/;
 
+const watcher = (watch, callback) => {
+    return async() => {
+        do {
+            await callback();
+        } while (await watch());
+    };
+};
+
 const proxy = imported => new Proxy({}, {
     get(target, key) {
         if (!importKeyRegexp.test(key)) throw new Error('wrong import proxy key format');
@@ -121,12 +129,17 @@ function sequence(options, test, bus, flow, params, parent) {
                                     .then(() => step.steps(context, proxy(options.imported)))
                                     .then(steps => sequence(options, assert, bus, steps, undefined, context));
                             }
+                            if (options.output) {
+                                process.stdout.clearLine(0);
+                                process.stdout.write(`\r${step.name} (${step.methodName})\r`);
+                            }
                             const promise = step.$meta
                                 ? step.$meta(context).then($meta => step.method(buildParams(params, context), buildMeta($meta)))
                                 : step.method(buildParams(params, context), buildMeta(context.$meta));
                             return promise
                                 .then(function([result, $meta]) {
                                     duration && duration(Date.now() - start);
+                                    if (options.output) process.stdout.clearLine(0);
                                     passed && passed((result && result._isOk) ? 1 : 0);
                                     performanceWrite();
                                     context[step.name] = result;
@@ -140,6 +153,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                     return result;
                                 }, function(error) {
                                     duration && duration(Date.now() - start);
+                                    if (options.output) process.stdout.clearLine(0);
                                     passed && passed(0);
                                     performanceWrite();
                                     if (typeof step.error === 'function') {
@@ -343,18 +357,29 @@ module.exports = function(params, cache) {
 
     const testAny = clientConfig ? testClient : testServer;
     let imported;
+    const setImported = () => {
+        const target = {};
+        serverObj.serviceBus.attachHandlers(target, [params.imports]);
+        imported = target.imported;
+    };
 
     if (params.imports) {
         tests = tests.then(t => {
-            const target = {};
-            serverObj.serviceBus.attachHandlers(target, [params.imports]);
-            imported = target.imported;
+            setImported();
             return t;
         });
     }
     tests = tests.then(() => cucumber.testFeatures(tap, params, serverObj, cucumberReport, imported, testAny));
     if (params.jobs) {
-        tests = tests.then(() => tap.test('jobs', {jobs: 100}, test => {
+        tests = tests.then(watcher(async() => {
+            if (!serverObj.config.run?.hotReload) return false;
+            process.stdout.clearLine(0);
+            process.stdout.write('Watching...\r');
+            await serverObj.watch();
+            process.stdout.clearLine(0);
+            setImported();
+            return true;
+        }, () => tap.test('jobs', {jobs: 100, silent: !!serverObj.config.run?.hotReload}, test => {
             let jobs = params.jobs;
             if (typeof jobs === 'string' || jobs instanceof RegExp) {
                 const target = {};
@@ -396,12 +421,12 @@ module.exports = function(params, cache) {
                     test.plan(selectedJobs.length);
                     selectedJobs.forEach(job => {
                         if (!job) return;
-                        test.test(job.name, testAny({imported, ...job}));
+                        test.test(job.name, {buffered: !serverObj.config.run?.hotReload}, testAny({output: serverObj.config.run?.hotReload, imported, ...job}));
                     });
                     return selectedJobs;
                 })
                 .catch(test.threw);
-        }));
+        })));
     } else {
         tests = tests.then(() => testAny({...params, imported})(tap));
     }
@@ -422,11 +447,7 @@ module.exports = function(params, cache) {
                 .then(result => {
                     steps.push(name);
                     return result;
-                }, error => {
-                    assert.comment(steps.join('\r\n'));
-                    assert.fail(name);
-                    return error;
-                });
+                }, error => assert.error(error, name));
         };
 
         if (params.cluster) {
@@ -451,7 +472,7 @@ module.exports = function(params, cache) {
         [...x.ports].reverse().forEach(port => step((port.config ? port.config.id : '?'), () => port.destroy()));
         x.serviceBus && step('bus', () => x.serviceBus.destroy());
         x.broker && step('broker', () => x.broker.destroy());
-        x.log && x.log.destroy && step('main loger', () => x.log.destroy());
+        x.log && x.log.destroy && step('main logger', () => x.log.destroy());
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 reject(new Error('Timed out on ' + current + '.destroy'));

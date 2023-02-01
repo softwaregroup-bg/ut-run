@@ -8,8 +8,22 @@ const merge = require('ut-function.merge');
 const clone = require('lodash.clonedeep');
 
 module.exports = ({serviceBus, logFactory, log, vfs}) => {
+    const watcher = {
+        reload: null,
+        resolve: null,
+        start(filename) {
+            this.resolve?.(filename);
+            this.reload = new Promise(resolve => {
+                this.resolve = resolve;
+            });
+        },
+        async watch() {
+            return this.reload;
+        }
+    };
     const watch = (filename, fn) => {
         const cwd = path.dirname(filename);
+        watcher.start(filename);
         const fsWatcher = require('chokidar').watch(['**/*.js', '**/*.yaml', '**/*.sql', '**/*.html'], {
             cwd,
             ignoreInitial: true,
@@ -28,6 +42,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             } catch (error) {
                 log && log.error && log.error(error);
             }
+            watcher.start(file);
         });
     };
 
@@ -204,5 +219,13 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         }
     }, 'ut');
 
-    return {create, start, install, schema};
+    return {
+        create,
+        start,
+        install,
+        schema,
+        watch() {
+            return watcher.watch();
+        }
+    };
 };

@@ -17,6 +17,7 @@ module.exports = async function(serviceConfig, envConfig, assert, vfs) {
             log: logFactory,
             logger: log,
             config: mergedConfig,
+            watch: service?.watch,
             stop: () => {
                 let innerPromise = Promise.resolve();
                 ports
