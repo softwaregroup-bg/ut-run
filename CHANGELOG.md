@@ -1,3 +1,12 @@
+## [10.71.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.71.0...v10.71.1) (2023-02-01)
+
+
+### Bug Fixes
+
+* api lint ([00d122f](https://github.com/softwaregroup-bg/ut-run/commit/00d122fd67969c3e7df8ced525f41237b41124ad))
+
+
+
 # [10.71.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.70.28...v10.71.0) (2023-02-01)
 
 
