@@ -98,6 +98,7 @@ export interface port {
         now: () => hrtime
     },
     fireEvent(event: string, data: any, mapper?: 'asyncMap' | 'reduce'),
+    config: Record<string, unknown>,
     [name: string]: any
 }
 
@@ -112,6 +113,29 @@ interface vfs {
     readdir: typeof readdir;
     isFile: (fileName: string) => boolean;
     readFileSync: typeof readFileSync;
+}
+
+type info = () => {
+    encrypt: object,
+    sign: object,
+    uri: string,
+    port: number | string,
+    host: string,
+    address: undefined | string,
+    protocol: 'http' | 'https' | 'socket'
+}
+
+interface serviceBus {
+    config: Record<string, unknown>,
+    jsonrpc: object,
+    rpc: {
+        info: info
+    },
+    publicApi: {
+        config: Record<string, unknown>,
+        importMethod: (name: string) => (params, $meta) => any
+        info: info
+    }
 }
 
 type api<imports> = {
@@ -166,20 +190,7 @@ type api<imports> = {
     version: (version: string) => boolean,
     vfs: vfs,
     callSite: () => CallSiteLike,
-    utBus: {
-        config: {
-            workDir: string
-        },
-        info: () => {
-            encrypt: object,
-            sign: object,
-            uri: string,
-            port: number | string,
-            host: string,
-            address: undefined | string,
-            protocol: 'http' | 'https' | 'socket'
-        }
-    }
+    utBus: serviceBus['publicApi']
 }
 
 interface genericExport {
@@ -345,13 +356,9 @@ export function run(params: {
     root?: string,
     resolve?: (string) => string
 }): Promise<{
-    ports: {}[],
-    portsMap: Record<string, any>,
-    serviceBus: {
-        publicApi: {
-            importMethod: (name: string) => (params, $meta) => any
-        }
-    },
+    ports: port[],
+    portsMap: Record<string, port>,
+    serviceBus: serviceBus,
     log: any,
     logger: any,
     config: {},
@@ -368,8 +375,10 @@ export function microservice(module: Partial<NodeJS.Module>, require: NodeJS.Req
 
 type Step<methods> = {
     name: string,
-    params?: () => boolean,
+    params?: any,
     steps?: () => (Step<methods> | string)[]
+    result?: (this: any, result: any, assert: Tap.Test, $meta?: meta) => void,
+    error?: (this: any, error: any, assert: Tap.Test, $meta?: meta) => void
 } | {
     [Property in keyof methods]: methods[Property] extends ((...args: any) => any) ? {
         method: Property,
@@ -407,13 +416,13 @@ type Imported<methods> = {
 
 export type test<methods> = () => Record<string, (
     test: unknown,
-    bus: unknown,
+    bus: serviceBus,
     run: (
         test: unknown,
-        bus: unknown,
+        bus: serviceBus,
         steps: (Step<methods> | string)[]
     ) => unknown,
-    ports: {}[],
+    ports: port[],
     steps: Record<string, Imported<methods>>
 ) => unknown>;
 

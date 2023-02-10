@@ -12,7 +12,14 @@ module.exports = function unit(serviceConfig, {params, ...envConfig}, assert, vf
         implementation: 'test',
         repl: false,
         run: {
-            logLevel: 'warn'
+            logLevel: 'warn',
+            ...params.watch && {
+                hotReload: true,
+                logLevel: 'trace',
+                test: {
+                    prompt: 1
+                }
+            }
         },
         db: {
             debug: true
