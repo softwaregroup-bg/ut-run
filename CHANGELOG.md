@@ -1,3 +1,12 @@
+# [10.72.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.71.1...v10.72.0) (2023-02-10)
+
+
+### Features
+
+* unit test watch ([42c46ff](https://github.com/softwaregroup-bg/ut-run/commit/42c46ff4d82fd9e850257cd8320a912548b61a3f))
+
+
+
 ## [10.71.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.71.0...v10.71.1) (2023-02-01)
 
 
