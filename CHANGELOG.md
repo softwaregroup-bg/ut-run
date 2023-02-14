@@ -1,3 +1,12 @@
+# [10.73.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.72.0...v10.73.0) (2023-02-14)
+
+
+### Features
+
+* integration test watch ([bca65cf](https://github.com/softwaregroup-bg/ut-run/commit/bca65cf0aff7094bfb034fcee013c771fa0d133b))
+
+
+
 # [10.72.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.71.1...v10.72.0) (2023-02-10)
 
 
