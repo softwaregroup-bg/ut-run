@@ -1,6 +1,7 @@
 // require('crypto');
 const tap = require('tap');
 const log = process.env.WHY_IS_NODE_RUNNING && require('why-is-node-running'); // eslint-disable-line no-process-env
+const watch = process.env.UT_WATCH; // eslint-disable-line no-process-env
 const run = require('./index');
 const util = require('util');
 const hrtime = require('browser-process-hrtime');
@@ -274,6 +275,15 @@ module.exports = function(params, cache) {
     const serverConfig = {
         main: params.server,
         config: [].concat(params.serverConfig, {
+            ...watch && {
+                run: {
+                    hotReload: true,
+                    logLevel: 'trace',
+                    test: {
+                        prompt: 1
+                    }
+                }
+            },
             utRun: {
                 test: {
                     type: params.type
