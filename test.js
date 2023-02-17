@@ -10,6 +10,7 @@ const uuid = require('uuid').v4;
 const lowercase = (match, word1, word2, letter) => `${word1}.${word2.toLowerCase()}${letter ? ('.' + letter.toLowerCase()) : ''}`;
 const capitalWords = /^([^A-Z]+)([A-Z][^A-Z]+)([A-Z])?/;
 const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-Z0-9]+)*(#\[[0+?^]?])?$/;
+const fs = require('fs');
 
 const watcher = (watch, callback) => {
     return async() => {
@@ -330,6 +331,7 @@ module.exports = function(params, cache) {
     tests = tests.then(() => tap.test('server start', {bufferred: false, bail: true}, assert => {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
+            if (server.config.run?.saveConfig) fs.writeFileSync('.lint/config.json', JSON.stringify(server.config, null, 4));
             serverObj = server;
             !clientConfig && cache && (cache.serviceBus = server.serviceBus) && (cache.ports = server.ports);
             const result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
