@@ -1,3 +1,12 @@
+# [10.74.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.73.0...v10.74.0) (2023-02-21)
+
+
+### Features
+
+* sql watch ([aee1230](https://github.com/softwaregroup-bg/ut-run/commit/aee123056c4564d2c5f5c0a83c6bc6a2a51df499))
+
+
+
 # [10.73.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.72.0...v10.73.0) (2023-02-14)
 
 
