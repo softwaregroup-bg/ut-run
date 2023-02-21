@@ -76,7 +76,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
                 .filter(value => value)
                 .map(create => ({create, moduleName, pkg: {...pkg, layer}}));
         }));
-    };
+    }
 
     const invokeModule = (utModule, pkg, config) => {
         let moduleConfig;
@@ -154,7 +154,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             });
 
             return requireWithMeta();
-        };
+        }
 
         if (typeof utModule === 'string') utModule = [utModule];
         let pkgJson;
@@ -224,8 +224,9 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         start,
         install,
         schema,
-        watch() {
-            return watcher.watch();
+        async watch() {
+            await watcher.watch();
+            await servicePorts.connected(this.ports);
         }
     };
 };

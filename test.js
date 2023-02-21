@@ -295,6 +295,7 @@ module.exports = function(params, cache) {
                 }
             },
             utPort: {
+                ...watch && {watch},
                 test: true
             }
         }),
