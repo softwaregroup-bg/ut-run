@@ -1,3 +1,12 @@
+## [10.74.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.1...v10.74.2) (2023-02-22)
+
+
+### Bug Fixes
+
+* maxBufferLength configuration ([#105](https://github.com/softwaregroup-bg/ut-run/issues/105)) ([4eeb625](https://github.com/softwaregroup-bg/ut-run/commit/4eeb625e2fb6f3d8dbc1f17225a78a2685b06275))
+
+
+
 ## [10.74.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.0...v10.74.1) (2023-02-21)
 
 
