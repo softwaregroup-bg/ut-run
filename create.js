@@ -124,6 +124,7 @@ module.exports = function(envConfig, vfs) {
             transformData: mergedConfig.utLog.transformData,
             maxFieldLength: mergedConfig.utLog.maxFieldLength,
             maxArrayLength: mergedConfig.utLog.maxArrayLength,
+            maxBufferLength: mergedConfig.utLog.maxBufferLength,
             streams: Object.values(mergedConfig.utLog.streams)
         });
 
