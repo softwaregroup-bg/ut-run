@@ -21,13 +21,13 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             return this.reload;
         }
     };
-    const watch = (filename, fn) => {
+    const watch = (filename, options, fn) => {
         const cwd = path.dirname(filename);
         watcher.start(filename);
         const fsWatcher = require('chokidar').watch(['**/*.js', '**/*.yaml', '**/*.sql', '**/*.html'], {
             cwd,
             ignoreInitial: true,
-            ignored: ['.git/**', 'node_modules/**', 'ui/**', '.lint/**', 'dist/**']
+            ignored: ['.git/**', 'node_modules/**', 'ui/**', '.lint/**', 'dist/**', ...(options.ignored || [])]
         });
         fsWatcher.on('error', error => log && log.error && log.error(error));
         fsWatcher.on('all', async(event, file) => {
@@ -146,7 +146,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             }
 
             if (!filenames) return [];
-            !process.browser && !require('./serverRequire').utCompile && config && config.run && !config.run.stop && config.run.hotReload && watch(main, async() => {
+            !process.browser && !require('./serverRequire').utCompile && config && config.run && !config.run.stop && config.run.hotReload && watch(main, config.run.hotReload, async() => {
                 clearCache(main);
                 [utModule, pkgJson] = requireWithMeta();
                 await servicePorts.destroy(utModule.name);
