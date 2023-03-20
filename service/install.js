@@ -391,9 +391,11 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                 initContainers: [{
                                     name: 'db-create-wait',
                                     image: 'd3fk/kubectl:v1.18',
-                                    requests: {
-                                        memory: '100M',
-                                        cpu: '0.10'
+                                    resources: {
+                                        requests: {
+                                            memory: '100M',
+                                            cpu: '0.10'
+                                        }
                                     },
                                     args: ['wait', '--for=condition=complete', '--timeout=300s', 'job/db-create']
                                 }],
