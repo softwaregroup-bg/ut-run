@@ -1,3 +1,12 @@
+## [10.74.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.8...v10.74.9) (2023-03-20)
+
+
+### Bug Fixes
+
+* init container requests ([0aa57f3](https://github.com/softwaregroup-bg/ut-run/commit/0aa57f3cccd5615b8ae9e0285951c559db7a55f0))
+
+
+
 ## [10.74.8](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.7...v10.74.8) (2023-03-13)
 
 
