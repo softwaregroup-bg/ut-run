@@ -1,3 +1,12 @@
+# [10.75.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.10...v10.75.0) (2023-03-24)
+
+
+### Features
+
+* log process termination ([5998078](https://github.com/softwaregroup-bg/ut-run/commit/599807803ec7ba5af426119146649762cb214a0a))
+
+
+
 ## [10.74.10](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.9...v10.74.10) (2023-03-20)
 
 
