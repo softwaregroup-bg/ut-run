@@ -54,6 +54,10 @@ module.exports = {
                     if (log) setTimeout(log, 10000);
                 }
             }
+            function terminate(signal) {
+                result.logger?.fatal?.(new Error('Terminating process with ' + signal));
+                stop();
+            }
             process.send && process.send('ready');
             if (
                 (config.run && config.run.stop) ||
@@ -62,8 +66,8 @@ module.exports = {
                 await stop();
             } else if (!test && process.getMaxListeners) {
                 if (process.getMaxListeners() < 15) process.setMaxListeners(15);
-                process.once('SIGTERM', () => stop());
-                process.once('SIGINT', () => stop());
+                process.once('SIGTERM', terminate);
+                process.once('SIGINT', terminate);
             }
             return result;
         } catch (err) {
