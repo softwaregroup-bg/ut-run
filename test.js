@@ -60,17 +60,18 @@ function sequence(options, test, bus, flow, params, parent) {
             if (!step.name) {
                 throw new Error('step name is required');
             }
-            const {method: stepMethod, $meta: stepMeta, params: stepParams, formData, ...rest} = step;
+            const {method: stepMethod, $meta: stepMeta, $http: stepHttp, params: stepParams, formData, ...rest} = step;
             steps.push({
                 methodName: stepMethod,
                 method: stepMethod ? bus.importMethod(stepMethod, {returnMeta: true}) : async(params, $meta) => [params, $meta],
                 async params() {
+                    const $http = typeof stepHttp === 'function' ? stepHttp(...arguments) : stepHttp;
                     if (formData) {
                         if (
                             global.window
                                 ? formData instanceof window.FormData
                                 : formData.constructor.name === 'FormData'
-                        ) return {formData};
+                        ) return {formData, $http};
 
                         const data = new FormData();
                         const fields = typeof formData === 'function' ? formData(...arguments) : stepMeta;
@@ -95,9 +96,11 @@ function sequence(options, test, bus, flow, params, parent) {
                             data.append(key, value, options);
                         });
 
-                        return {formData: data};
+                        return {formData: data, $http};
                     }
-                    return typeof stepParams === 'function' ? stepParams(...arguments) : stepParams;
+                    const params = typeof stepParams === 'function' ? stepParams(...arguments) : stepParams;
+                    if ($http && !params.$http) params.$http = $http;
+                    return params;
                 },
                 ...stepMeta && {
                     async $meta() {
