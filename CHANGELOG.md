@@ -1,3 +1,12 @@
+## [10.75.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.0...v10.75.1) (2023-03-27)
+
+
+### Bug Fixes
+
+* send form-data requests from tests ([#107](https://github.com/softwaregroup-bg/ut-run/issues/107)) ([5e46e61](https://github.com/softwaregroup-bg/ut-run/commit/5e46e6158711b12367a460717cb6fd02f750f391))
+
+
+
 # [10.75.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.74.10...v10.75.0) (2023-03-24)
 
 
