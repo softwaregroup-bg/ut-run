@@ -74,7 +74,7 @@ function sequence(options, test, bus, flow, params, parent) {
                         ) return {formData, $http};
 
                         const data = new FormData();
-                        const fields = typeof formData === 'function' ? formData(...arguments) : stepMeta;
+                        const fields = typeof formData === 'function' ? formData(...arguments) : formData;
                         Object.entries(fields).forEach(([key, value]) => {
                             const options = {};
                             if (typeof value === 'string' && value.indexOf(path.sep) !== -1) {
