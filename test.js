@@ -10,7 +10,6 @@ const uuid = require('uuid').v4;
 const lowercase = (match, word1, word2, letter) => `${word1}.${word2.toLowerCase()}${letter ? ('.' + letter.toLowerCase()) : ''}`;
 const capitalWords = /^([^A-Z]+)([A-Z][^A-Z]+)([A-Z])?/;
 const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-Z0-9]+)*(#\[[0+?^]?])?$/;
-const FormData = require('form-data');
 const path = require('path');
 const fs = require('fs');
 
