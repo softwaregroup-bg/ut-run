@@ -67,18 +67,13 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
             }))
     );
 
-    const filePath = path.join(tree.path, 'UT-CHANGELOG.md');
+    const file = path.join(tree.path, 'UT-CHANGELOG.md');
     const data = `# ${tree.version}\n\n${excerpts.join('\n\n')}`;
-
-    if (fs.existsSync(filePath)) {
-        const oldData = fs.readFileSync(filePath);
-        const newData = Buffer.from(data);
-        const fd = fs.openSync(filePath, 'w+');
-        fs.writeSync(fd, newData, 0, newData.length, 0);
-        fs.writeSync(fd, oldData, 0, oldData.length, newData.length);
-        fs.closeSync(fd);
-    } else {
-        fs.writeFileSync(filePath, data);
+    try {
+        fs.writeFileSync(file, Buffer.concat(Buffer.from(data), fs.readFileSync(file)));
+    } catch (e) {
+        if (e.code === 'ENOENT') fs.writeFileSync(file, data);
+        else throw e;
     }
 
     await serviceBus.importMethod('tools.record.add')({
