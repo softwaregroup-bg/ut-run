@@ -14,11 +14,19 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
             utLog: { streams: { udp: false } }
         }, envConfig), vfs)
     ]);
-    const {record} = await serviceBus.importMethod('tools.record.get')({
-        moduleName: tree.packageName,
-        moduleVersion: utChangelog?.fromVersion,
-        recordKey: 'utDependencies'
-    });
+
+    let record;
+    try {
+        const recordResult = await serviceBus.importMethod('tools.record.get')({
+            moduleName: tree.packageName,
+            moduleVersion: utChangelog?.fromVersion,
+            recordKey: 'utDependencies'
+        });
+        record = recordResult.record;
+    } catch (e) {
+        serviceBus.log.error(e);
+        return serviceBus.stop();
+    }
 
     const recordValue = {};
     const updatedModules = [];
@@ -59,7 +67,19 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
             }))
     );
 
-    await fs.appendFileSync(path.join(tree.path, 'UT-CHANGELOG.md'), `# ${tree.version}\n\n${excerpts.join('\n\n')}`);
+    const filePath = path.join(tree.path, 'UT-CHANGELOG.md');
+    const data = `# ${tree.version}\n\n${excerpts.join('\n\n')}`;
+
+    if (fs.existsSync(filePath)) {
+        const oldData = fs.readFileSync(filePath);
+        const newData = Buffer.from(data);
+        const fd = fs.openSync(filePath, 'w+');
+        fs.writeSync(fd, newData, 0, newData.length, 0);
+        fs.writeSync(fd, oldData, 0, oldData.length, newData.length);
+        fs.closeSync(fd);
+    } else {
+        fs.writeFileSync(filePath, data);
+    }
 
     await serviceBus.importMethod('tools.record.add')({
         record: {
