@@ -14,11 +14,19 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
             utLog: { streams: { udp: false } }
         }, envConfig), vfs)
     ]);
-    const {record} = await serviceBus.importMethod('tools.record.get')({
-        moduleName: tree.packageName,
-        moduleVersion: utChangelog?.fromVersion,
-        recordKey: 'utDependencies'
-    });
+
+    let record;
+    try {
+        const recordResult = await serviceBus.importMethod('tools.record.get')({
+            moduleName: tree.packageName,
+            moduleVersion: utChangelog?.fromVersion,
+            recordKey: 'utDependencies'
+        });
+        record = recordResult.record;
+    } catch (e) {
+        serviceBus.log.error(e);
+        return serviceBus.stop();
+    }
 
     const recordValue = {};
     const updatedModules = [];
@@ -59,7 +67,14 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
             }))
     );
 
-    await fs.appendFileSync(path.join(tree.path, 'UT-CHANGELOG.md'), `# ${tree.version}\n\n${excerpts.join('\n\n')}`);
+    const file = path.join(tree.path, 'UT-CHANGELOG.md');
+    const data = `# ${tree.version}\n\n${excerpts.join('\n\n')}`;
+    try {
+        fs.writeFileSync(file, Buffer.concat(Buffer.from(data), fs.readFileSync(file)));
+    } catch (e) {
+        if (e.code === 'ENOENT') fs.writeFileSync(file, data);
+        else throw e;
+    }
 
     await serviceBus.importMethod('tools.record.add')({
         record: {
