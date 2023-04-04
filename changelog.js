@@ -70,7 +70,7 @@ module.exports = async function doc(serviceConfig, envConfig, assert, vfs) {
     const file = path.join(tree.path, 'UT-CHANGELOG.md');
     const data = `# ${tree.version}\n\n${excerpts.join('\n\n')}`;
     try {
-        fs.writeFileSync(file, Buffer.concat(Buffer.from(data), fs.readFileSync(file)));
+        fs.writeFileSync(file, Buffer.concat([Buffer.from(data), fs.readFileSync(file)]));
     } catch (e) {
         if (e.code === 'ENOENT') fs.writeFileSync(file, data);
         else throw e;

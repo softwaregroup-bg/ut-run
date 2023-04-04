@@ -427,6 +427,11 @@ module.exports = function(params, cache) {
             await serverObj.watch();
             process.stdout.clearLine(0);
             setImported();
+            Object.getOwnPropertySymbols(tap).forEach(symbol => {
+                if (symbol.toString() === 'Symbol(_snapshot)') {
+                    tap[symbol].indexes.clear(); // reset snapshot name counters
+                }
+            });
             return true;
         }, () => tap.test('jobs', {jobs: 100, silent: !!serverObj.config.run?.hotReload}, test => {
             let jobs = params.jobs;
