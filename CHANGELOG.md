@@ -1,3 +1,12 @@
+## [10.75.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.5...v10.75.6) (2023-04-19)
+
+
+### Bug Fixes
+
+* job cpu ([97199cc](https://github.com/softwaregroup-bg/ut-run/commit/97199cc694e966067835f28d8a8528081524b03e))
+
+
+
 ## [10.75.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.4...v10.75.5) (2023-04-19)
 
 
