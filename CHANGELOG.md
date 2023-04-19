@@ -1,3 +1,12 @@
+## [10.75.5](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.4...v10.75.5) (2023-04-19)
+
+
+### Bug Fixes
+
+* stop using deprecated kustomization.yaml bases ([ed3644b](https://github.com/softwaregroup-bg/ut-run/commit/ed3644b641ef50ad894885470a51cf9f7dfef2eb))
+
+
+
 ## [10.75.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.3...v10.75.4) (2023-04-04)
 
 
