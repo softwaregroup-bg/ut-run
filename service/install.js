@@ -122,7 +122,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     }) => merge({}, rest, {
         resources: {
             requests: {
-                cpu: '0.01'
+                cpu: '0.001'
             }
         }
     }, k8s.job))(containerDefaults());
