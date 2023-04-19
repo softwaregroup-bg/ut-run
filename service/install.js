@@ -485,7 +485,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 apiVersion: 'kustomize.config.k8s.io/v1beta1',
                 kind: 'Kustomization',
                 namespace: namespace.metadata.name,
-                bases: [],
+                resources: [],
                 commonLabels
             }
         },
@@ -622,7 +622,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                     kind: 'Kustomization',
                     ...resources.length && {resources}
                 };
-                result.kustomizations['kustomization.yaml'].bases.push(name);
+                result.kustomizations['kustomization.yaml'].resources.push(name);
             }
         });
         Object.assign(result.kustomizations['deployments/kustomization.yaml'], {
