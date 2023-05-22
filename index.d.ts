@@ -350,6 +350,8 @@ export function run(params: {
     params?: {}
 } | {
     method: 'unit',
+    main?: (() => {})[],
+    config?: {},
     env?: 'test',
     params?: {},
     version?: string,
