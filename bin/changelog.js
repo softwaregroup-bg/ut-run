@@ -1,5 +1,5 @@
 const Arborist = require('@npmcli/arborist');
-const create = require('./create');
+const create = require('../create');
 const merge = require('ut-function.merge');
 const fs = require('fs');
 const path = require('path');

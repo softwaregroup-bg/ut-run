@@ -21,8 +21,10 @@
         "npmcli",
         "preauthorized",
         "sameorigin",
+        "traceid",
         "traefik",
         "utportconsole",
+        "uttest",
         "xframe"
     ]
 }

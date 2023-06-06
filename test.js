@@ -13,6 +13,7 @@ const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-
 const FormData = require('form-data');
 const path = require('path');
 const fs = require('fs');
+let passed, duration;
 
 const watcher = (watch, callback) => {
     return async() => {
@@ -123,26 +124,13 @@ function sequence(options, test, bus, flow, params, parent) {
         };
 
         const steps = buildSteps(flow);
-        const passed = options.type && bus.performance &&
-            bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'p', 'Passed tests');
-        const duration = options.type && bus.performance &&
-            bus.performance.register(bus.config.implementation + '_test_' + options.type, 'gauge', 'd', 'Test duration');
 
         let promise = Promise.resolve();
         let passing = true;
-        steps.forEach(function(step, index) {
+        steps.forEach(function(step) {
             promise = promise.then(function() {
-                const start = Date.now();
-                const starthr = hrtime();
+                const startHr = hrtime();
                 let skip = false;
-                function performanceWrite() {
-                    bus.performance && bus.performance.write({
-                        testName: options.name,
-                        stepName: step.name,
-                        method: step.methodName,
-                        step: index
-                    });
-                }
                 const fn = assert => {
                     return step.params(context, {
                         sequence: function() {
@@ -177,13 +165,11 @@ function sequence(options, test, bus, flow, params, parent) {
                                 : step.method(buildParams(params, context), buildMeta(context.$meta));
                             return promise
                                 .then(function([result, $meta]) {
-                                    duration && duration(Date.now() - start);
                                     if (options.output) process.stdout.clearLine(0);
-                                    passed && passed((result && result._isOk) ? 1 : 0);
-                                    performanceWrite();
                                     context[step.name] = result;
                                     if (typeof step.result === 'function') {
-                                        return step.result.call(context, result, assert, $meta);
+                                        result = step.result.call(context, result, assert, $meta);
+                                        passed && passed(1);
                                     } else if (typeof step.error === 'function') {
                                         assert.fail('Result is expected to be an error');
                                     } else {
@@ -191,10 +177,7 @@ function sequence(options, test, bus, flow, params, parent) {
                                     }
                                     return result;
                                 }, function(error) {
-                                    duration && duration(Date.now() - start);
                                     if (options.output) process.stdout.clearLine(0);
-                                    passed && passed(0);
-                                    performanceWrite();
                                     if (typeof step.error === 'function') {
                                         if (error && error.type === 'portHTTP') { // temp workaround
                                             error.type = 'PortHTTP';
@@ -202,7 +185,9 @@ function sequence(options, test, bus, flow, params, parent) {
                                         if (error && error.type === 'httpServerPort.notPermitted') { // temp workaround
                                             error.type = 'HttpServer.NotPermitted';
                                         }
-                                        return step.error.call(context, error, assert);
+                                        const result = step.error.call(context, error, assert);
+                                        passed && passed(1);
+                                        return result;
                                     } else {
                                         throw error;
                                     }
@@ -210,11 +195,11 @@ function sequence(options, test, bus, flow, params, parent) {
                         })
                         .then(result => {
                             if (passing && step.bail !== false) passing = assert.passing();
-                            report && report.push(cucumber.reportStep(step, starthr, skip ? 'skipped' : passing ? 'passed' : 'failed'));
+                            report && report.push(cucumber.reportStep(step, startHr, skip ? 'skipped' : passing ? 'passed' : 'failed'));
                             return result;
                         }, error => {
                             if (step.bail !== false) passing = false;
-                            report && report.push(cucumber.reportStep(step, starthr, 'failed'));
+                            report && report.push(cucumber.reportStep(step, startHr, 'failed'));
                             throw error;
                         });
                 };
@@ -227,13 +212,14 @@ function sequence(options, test, bus, flow, params, parent) {
 }
 
 module.exports = function(params, cache) {
+    const start = Date.now();
     const cucumberReport = {};
 
     if (cache && cache.uttest) {
         if (!cache.first) {
             cache.first = true;
             if (params.peerImplementations) {
-                tap.test('Starting peer implementations...', (assert) => Promise.all(params.peerImplementations));
+                tap.test('Starting peer implementations...', () => Promise.all(params.peerImplementations));
             }
         } else {
             return {
@@ -242,11 +228,11 @@ module.exports = function(params, cache) {
         }
     }
     const services = [];
-    const stopServices = (test) => {
+    const stopServices = () => {
         if (!services.length) {
             return Promise.resolve();
         }
-        return tap.test('Stopping services...', {bufferred: false}, (assert) => {
+        return tap.test('Stopping services...', {buffered: false}, (assert) => {
             return services.reduce((promise, service) => {
                 return promise.then(() => {
                     return service.app.stop()
@@ -260,7 +246,7 @@ module.exports = function(params, cache) {
 
     let tests = tap.test('Starting tests', () => Promise.resolve());
     if (params.cluster) {
-        tests = tests.then(() => tap.test('workers', {bufferred: false, bail: true}, assert =>
+        tests = tests.then(() => tap.test('workers', {buffered: false, bail: true}, assert =>
             Promise.all(Object.values(params.cluster.workers).map(worker => new Promise((resolve, reject) => {
                 worker.once('listening', () => {
                     assert.ok(true, `worker ${worker.id} listening`);
@@ -287,14 +273,14 @@ module.exports = function(params, cache) {
             env: 'test',
             method: 'debug'
         };
-        tests = tests.then(() => tap.test('broker start', {bufferred: false, bail: true}, assert => {
+        tests = tests.then(() => tap.test('broker start', {buffered: false, bail: true}, assert => {
             brokerRun = run.run(brokerConfig, module.parent, assert);
             return brokerRun;
         }));
     }
 
     if (Array.isArray(params.services)) {
-        tests = tests.then(() => tap.test('Starting services...', {bufferred: false, bail: true}, (assert) => {
+        tests = tests.then(() => tap.test('Starting services...', {buffered: false, bail: true}, (assert) => {
             return params.services.reduce((promise, service) => {
                 return promise.then(() => {
                     return service()
@@ -366,10 +352,12 @@ module.exports = function(params, cache) {
     let serverRun;
     let serverObj;
     // tap.jobs = 1;
-    tests = tests.then(() => tap.test('server start', {bufferred: false, bail: true}, assert => {
+    tests = tests.then(() => tap.test('server start', {buffered: false, bail: true}, assert => {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             serverObj = server;
+            passed = server?.serviceBus?.performance?.register('passed', 'counter', 'count', 'Passed tests', 'standard', {name: 'utRun.test'});
+            duration = server?.serviceBus?.performance?.register('duration', 'counter', 'sum', 'Test duration', 'standard', {name: 'utRun.test'});
             !clientConfig && cache && (cache.serviceBus = server.serviceBus) && (cache.ports = server.ports);
             const result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
@@ -507,7 +495,7 @@ module.exports = function(params, cache) {
         if (params.cluster) {
             Object.values(params.cluster.workers).forEach(worker => {
                 step(`stop worker ${worker.id}`, () => {
-                    return worker.isDead() || new Promise((resolve, reject) => {
+                    return worker.isDead() || new Promise(resolve => {
                         const force = setTimeout(() => {
                             assert.ok(true, `worker ${worker.id} kill`);
                             worker.process.kill();
@@ -544,7 +532,7 @@ module.exports = function(params, cache) {
 
     const stopAll = function(test) {
         stopServices(test);
-        params.peerImplementations && test.test('Stopping peer implementations', {bufferred: false}, (assert) => {
+        params.peerImplementations && test.test('Stopping peer implementations', {buffered: false}, () => {
             let x = Promise.resolve();
             params.peerImplementations.forEach((promise) => {
                 x = x.then(() => (promise.then((impl) => (impl.stop()))));
@@ -552,13 +540,21 @@ module.exports = function(params, cache) {
             return x;
         });
         return Promise.resolve()
-            .then(() => test.test('server stop', {bufferred: false}, assert => serverRun
+            .then(() => test.test('server stop', {buffered: false}, assert => serverRun
                 .then(result => stop(assert, result)))
                 // .then(() => setTimeout(log, 2000))
                 .catch(() => Promise.reject(new Error('Server did not start'))))
-            .then(() => brokerRun && test.test('broker stop', {bufferred: false}, assert => brokerRun
+            .then(() => brokerRun && test.test('broker stop', {buffered: false}, assert => brokerRun
                 .then(result => stop(assert, result)))
-                .catch(() => Promise.reject(new Error('Broker did not start'))));
+                .catch(() => Promise.reject(new Error('Broker did not start'))))
+            .then(result => {
+                if (duration && serverObj.serviceBus.performance.counters) {
+                    duration(Date.now() - start);
+                    const testName = path.relative('.', require.main.filename).trim().replace(/[^a-zA-Z0-9._-]+/g, '-');
+                    fs.writeFileSync(`.lint/stats-${testName}.txt`, serverObj.serviceBus.performance.counters());
+                }
+                return result;
+            });
     };
 
     const running = function() {
