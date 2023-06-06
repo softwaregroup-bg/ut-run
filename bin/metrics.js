@@ -15,8 +15,10 @@ module.exports = async function metrics(params, envConfig, vfs) {
         }, envConfig), vfs)
     ]);
     try {
-        if (fs.existsSync('.lint/build.json')) {
-            const {branchName, buildNumber, startDate} = JSON.parse(fs.readFileSync('.lint/build.json'));
+        const branchName = process.env.GIT_BRANCH; // eslint-disable-line no-process-env
+        const buildNumber = process.env.BUILD_NUMBER; // eslint-disable-line no-process-env
+        const startDate = process.env.BUILD_DATE; // eslint-disable-line no-process-env
+        if (branchName && buildNumber && startDate) {
             const duration = startDate ? (Date.now() - new Date(startDate).getTime()) / 1000 : 0;
             await serviceBus.importMethod('tools.measure.add')({
                 build: {
