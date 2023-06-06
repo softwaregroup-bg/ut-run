@@ -1,3 +1,12 @@
+# [10.76.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.7...v10.76.0) (2023-06-06)
+
+
+### Features
+
+* ut-run metrics ([3322e5b](https://github.com/softwaregroup-bg/ut-run/commit/3322e5b6a899bba95c819ea1d3df637915e9d99a))
+
+
+
 ## [10.75.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.75.6...v10.75.7) (2023-05-22)
 
 
