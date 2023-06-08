@@ -1,3 +1,12 @@
+## [10.76.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.76.1...v10.76.2) (2023-06-08)
+
+
+### Bug Fixes
+
+* optimize counters ([1374688](https://github.com/softwaregroup-bg/ut-run/commit/137468889d6786b4600acdf31a9d249e05986f4f))
+
+
+
 ## [10.76.1](https://github.com/softwaregroup-bg/ut-run/compare/v10.76.0...v10.76.1) (2023-06-06)
 
 
