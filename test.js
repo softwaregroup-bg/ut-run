@@ -13,7 +13,7 @@ const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-
 const FormData = require('form-data');
 const path = require('path');
 const fs = require('fs');
-let passed, duration;
+const start = hrtime();
 
 const watcher = (watch, callback) => {
     return async() => {
@@ -169,7 +169,6 @@ function sequence(options, test, bus, flow, params, parent) {
                                     context[step.name] = result;
                                     if (typeof step.result === 'function') {
                                         result = step.result.call(context, result, assert, $meta);
-                                        passed && passed(1);
                                     } else if (typeof step.error === 'function') {
                                         assert.fail('Result is expected to be an error');
                                     } else {
@@ -186,7 +185,6 @@ function sequence(options, test, bus, flow, params, parent) {
                                             error.type = 'HttpServer.NotPermitted';
                                         }
                                         const result = step.error.call(context, error, assert);
-                                        passed && passed(1);
                                         return result;
                                     } else {
                                         throw error;
@@ -212,7 +210,6 @@ function sequence(options, test, bus, flow, params, parent) {
 }
 
 module.exports = function(params, cache) {
-    const start = Date.now();
     const cucumberReport = {};
 
     if (cache && cache.uttest) {
@@ -356,8 +353,6 @@ module.exports = function(params, cache) {
         serverRun = run.run(serverConfig, module.parent, assert);
         return serverRun.then((server) => {
             serverObj = server;
-            passed = server?.serviceBus?.performance?.register('passed', 'counter', 'count', 'Passed tests', 'standard', {name: 'utRun.test'});
-            duration = server?.serviceBus?.performance?.register('duration', 'counter', 'sum', 'Test duration', 'standard', {name: 'utRun.test'});
             !clientConfig && cache && (cache.serviceBus = server.serviceBus) && (cache.ports = server.ports);
             const result = clientConfig ? server : Promise.all(server.ports.map(port => port.isConnected));
             return result;
@@ -548,10 +543,17 @@ module.exports = function(params, cache) {
                 .then(result => stop(assert, result)))
                 .catch(() => Promise.reject(new Error('Broker did not start'))))
             .then(result => {
-                if (duration && serverObj.serviceBus.performance.counters) {
-                    duration(Date.now() - start);
+                if (serverObj.serviceBus.performance.counters) {
                     const testName = path.relative('.', require.main.filename).trim().replace(/[^a-zA-Z0-9._-]+/g, '-');
-                    fs.writeFileSync(`.lint/stats-${testName}.txt`, serverObj.serviceBus.performance.counters());
+                    fs.writeFileSync(
+                        `.lint/stats-${testName}.txt`,
+                        `utRun.test/duration_amount ${hrtime(start)[0]}\n` +
+                        `utRun.test/fail_count ${tap.counts.fail}\n` +
+                        `utRun.test/pass_count ${tap.counts.pass}\n` +
+                        `utRun.test/skip_count ${tap.counts.skip}\n` +
+                        `utRun.test/todo_count ${tap.counts.todo}\n` +
+                        serverObj.serviceBus.performance.counters()
+                    );
                 }
                 return result;
             });
