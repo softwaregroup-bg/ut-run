@@ -543,7 +543,7 @@ module.exports = function(params, cache) {
                 .then(result => stop(assert, result)))
                 .catch(() => Promise.reject(new Error('Broker did not start'))))
             .then(result => {
-                if (serverObj.serviceBus.performance.counters) {
+                if (serverObj?.serviceBus?.performance?.counters) {
                     const testName = path.relative('.', require.main.filename).trim().replace(/[^a-zA-Z0-9._-]+/g, '-');
                     fs.writeFileSync(
                         `.lint/stats-${testName}.txt`,

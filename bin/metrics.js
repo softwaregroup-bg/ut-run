@@ -36,7 +36,7 @@ module.exports = async function metrics(params, envConfig, vfs) {
 
             const files = fs.readdirSync('.lint');
             for (const file of files) {
-                if (/^stats-.*.txt$/.test(file)) {
+                if (/^stats-.*\.txt$/.test(file)) {
                     const metric = fs
                         .readFileSync(path.join('.lint', file))
                         .toString()
