@@ -3,6 +3,7 @@ const create = require('../create');
 const merge = require('ut-function.merge');
 const fs = require('fs');
 const path = require('path');
+const {parse} = require('csv-parse');
 
 module.exports = async function metrics(params, envConfig, vfs) {
     const arb = new Arborist({path: process.cwd()});
@@ -34,6 +35,29 @@ module.exports = async function metrics(params, envConfig, vfs) {
                 ]
             });
 
+            const coverage = {};
+            const fileName = 'coverage/lcov.info';
+            if (fs.existsSync(fileName)) {
+                const parser = fs.createReadStream(fileName).pipe(parse({relax_column_count: true}));
+                let type;
+                for await (const record of parser) {
+                    const [name, value] = record?.[0].split?.(':') || [];
+                    if (name === 'SF') type = path.extname(value);
+                    const metric = {
+                        FNF: 'utRun.cover/functions.found',
+                        FNH: 'utRun.cover/functions.hit',
+                        LF: 'utRun.cover/lines.found',
+                        LH: 'utRun.cover/lines.hit',
+                        BRF: 'utRun.cover/branches.found',
+                        BRH: 'utRun.cover/branches.hit'
+                    }[name];
+                    if (type && metric) {
+                        const count = Number(value);
+                        if (!isNaN(count)) coverage[metric + type] = (coverage[metric + type] ?? 0) + count;
+                    }
+                }
+            }
+
             const files = fs.readdirSync('.lint');
             for (const file of files) {
                 if (/^stats-.*\.txt$/.test(file)) {
@@ -54,7 +78,10 @@ module.exports = async function metrics(params, envConfig, vfs) {
                             moduleName: tree.packageName,
                             moduleVersion: tree.version
                         },
-                        metric
+                        metric: [
+                            ...Object.entries(coverage).map(([metricName, metricValue]) => ({metricName, metricValue})),
+                            ...metric
+                        ]
                     });
                 }
             }

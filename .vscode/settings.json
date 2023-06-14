@@ -15,6 +15,7 @@
         "Kustomization",
         "kustomizations",
         "kustomize",
+        "lcov",
         "letsencrypt",
         "mlek",
         "mlsk",
