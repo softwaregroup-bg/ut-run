@@ -1,3 +1,12 @@
+# [10.77.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.76.3...v10.77.0) (2023-06-14)
+
+
+### Features
+
+* record coverage metrics ([a1ab924](https://github.com/softwaregroup-bg/ut-run/commit/a1ab924d0672c8e96f73df5a4ab71ac61f771204))
+
+
+
 ## [10.76.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.76.2...v10.76.3) (2023-06-09)
 
 
