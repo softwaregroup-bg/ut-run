@@ -79,7 +79,7 @@ module.exports = async function metrics(params, envConfig, vfs) {
                             moduleVersion: tree.version
                         },
                         metric: [
-                            ...Object.entries(coverage).map(([metricName, metricValue]) => ({metricName, metricValue})),
+                            ...Object.entries(coverage).map(([metricKey, metricValue]) => ({metricKey, metricValue})),
                             ...metric
                         ]
                     });
