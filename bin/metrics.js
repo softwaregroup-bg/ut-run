@@ -60,7 +60,7 @@ module.exports = async function metrics(params, envConfig, vfs) {
                     build: {
                         branchName,
                         buildNumber,
-                        testName: '*',
+                        testName: 'cover',
                         moduleName: tree.packageName,
                         moduleVersion: tree.version
                     },
