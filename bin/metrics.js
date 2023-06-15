@@ -56,6 +56,16 @@ module.exports = async function metrics(params, envConfig, vfs) {
                         if (!isNaN(count)) coverage[metric + type] = (coverage[metric + type] ?? 0) + count;
                     }
                 }
+                await serviceBus.importMethod('tools.measure.add')({
+                    build: {
+                        branchName,
+                        buildNumber,
+                        testName: '*',
+                        moduleName: tree.packageName,
+                        moduleVersion: tree.version
+                    },
+                    metric: Object.entries(coverage).map(([metricKey, metricValue]) => ({metricKey, metricValue}))
+                });
             }
 
             const files = fs.readdirSync('.lint');
@@ -78,10 +88,7 @@ module.exports = async function metrics(params, envConfig, vfs) {
                             moduleName: tree.packageName,
                             moduleVersion: tree.version
                         },
-                        metric: [
-                            ...Object.entries(coverage).map(([metricKey, metricValue]) => ({metricKey, metricValue})),
-                            ...metric
-                        ]
+                        metric
                     });
                 }
             }
