@@ -21,8 +21,8 @@
     "ut-bus": "^7.64.5",
     "ut-config": "^7.10.0",
     "ut-function.merge": "^1.5.6",
-    "ut-log": "^6.11.2",
-    "ut-port": "^6.45.1",
+    "ut-log": "^6.11.3",
+    "ut-port": "^6.45.2",
     "uuid": "8.3.2",
     "yaml": "1.10.0"
   },
@@ -33,7 +33,7 @@
     "inquirer": "7.3.3",
     "inquirer-autocomplete-prompt": "1.2.0",
     "tap": "^16.2.0",
-    "ut-function.dispatch": "^1.4.1",
+    "ut-function.dispatch": "^1.4.2",
     "ut-port-script": "^7.2.0"
   },
   "peerDependencies": {
