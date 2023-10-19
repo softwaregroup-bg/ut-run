@@ -92,7 +92,8 @@ module.exports = {
                     v: 0
                 }));
             }
-            process.exit(1); // this should be removed
+            process.exit?.(1); // node
+            throw err; // browser
         }
     },
     microservice(mod, req, fn) {

@@ -17,7 +17,7 @@
     "semver": "7.3.2",
     "sort-keys": "4.1.0",
     "stack-utils": "2.0.5",
-    "through2": "2.0.3",
+    "through2": "4.0.2",
     "ut-bus": "^7.64.5",
     "ut-config": "^7.10.0",
     "ut-function.merge": "^1.5.6",
