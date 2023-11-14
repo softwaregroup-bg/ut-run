@@ -18,7 +18,7 @@
     "sort-keys": "4.1.0",
     "stack-utils": "2.0.5",
     "through2": "4.0.2",
-    "ut-bus": "^7.64.5",
+    "ut-bus": "^7.64.6",
     "ut-config": "^7.10.0",
     "ut-function.merge": "^1.5.6",
     "ut-log": "^6.11.3",
