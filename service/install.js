@@ -57,6 +57,12 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
             name: 'UT_ENV',
             value: config.params.env
         }],
+        envFrom: [{
+            secretRef: {
+                name: 'ut-env',
+                optional: true
+            }
+        }],
         volumeMounts: [{
             name: 'config',
             mountPath
