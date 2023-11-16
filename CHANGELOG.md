@@ -1,3 +1,12 @@
+# [10.78.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.77.6...v10.78.0) (2023-11-16)
+
+
+### Features
+
+* generate envFrom ([8a9f031](https://github.com/softwaregroup-bg/ut-run/commit/8a9f0315b4b2424d99798f2c04b07fb67b3f6a53))
+
+
+
 ## [10.77.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.77.5...v10.77.6) (2023-11-14)
 
 
