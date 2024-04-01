@@ -1,3 +1,12 @@
+## [10.78.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.2...v10.78.3) (2024-04-01)
+
+
+### Bug Fixes
+
+* CVE-2023-28155 Vulnerability UATBDC-358 ([#111](https://github.com/softwaregroup-bg/ut-run/issues/111)) ([0e9109b](https://github.com/softwaregroup-bg/ut-run/commit/0e9109b44f043a5938727a75af523ff7d5abc540))
+
+
+
 ## [10.78.2](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.1...v10.78.2) (2024-02-28)
 
 
