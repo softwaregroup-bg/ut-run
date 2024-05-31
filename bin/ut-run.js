@@ -45,6 +45,31 @@ program
     }, undefined, vfs));
 
 program
+    .command('license')
+    .description('Generate license key')
+    .option('--toolsUrl <toolsUrl>', 'url to access impl-tools running instance', process.env.IMPL_TOOLS_URL)
+    .option('--licenseUsername <licenseUsername>', 'username to login to impl-tools running instance', process.env.IMPL_LICENSE_USR)
+    .option('--licensePassword <licensePassword>', 'password to login to impl-tools running instance', process.env.IMPL_LICENSE_PSW)
+    .option('--projectName <projectName>', 'project name')
+    .option('--repository <repository>', 'repository')
+    .action(({toolsUrl, licenseUsername, licensePassword, projectName, repository}) => require('./license')(serviceConfig, {
+        utLicense: {projectName, repository},
+        utBus: {
+            serviceBus: {
+                jsonrpc: {
+                    gateway: {
+                        license: {
+                            url: toolsUrl,
+                            username: licenseUsername,
+                            password: licensePassword
+                        }
+                    }
+                }
+            }
+        }
+    }, undefined, vfs));
+
+program
     .command('metrics')
     .description('Submit build metrics')
     .option('--toolsUrl <toolsUrl>', 'url to access impl-tools running instance', process.env.IMPL_TOOLS_URL)
