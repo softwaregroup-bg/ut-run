@@ -55,7 +55,7 @@
             }
         },
         {
-            "name": "bin script",
+            "name": "changelog",
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/bin/ut-run.js",
@@ -67,6 +67,21 @@
                 "--toolsPassword=***",
                 "--branchName=test",
                 "--buildNumber=1"
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "name": "license",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/ut-run.js",
+            "args": [
+                "license",
+                "--toolsUrl=http://localhost:8090",
+                "--licenseUsername=lp",
+                "--licensePassword=***",
+                "--projectName=ut-run",
+                "--repository=git@github.com:softwaregroup-bg/ut-run.git"
             ],
             "outputCapture": "std"
         }
