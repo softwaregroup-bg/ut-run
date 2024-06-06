@@ -1,3 +1,12 @@
+## [10.78.4](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.3...v10.78.4) (2024-06-06)
+
+
+### Bug Fixes
+
+* ut-run license ([8d35c95](https://github.com/softwaregroup-bg/ut-run/commit/8d35c958812a0d15611d62c90d91fe53a22be5a2))
+
+
+
 ## [10.78.3](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.2...v10.78.3) (2024-04-01)
 
 
