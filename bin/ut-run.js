@@ -48,8 +48,8 @@ program
     .command('license')
     .description('Generate license key')
     .option('--toolsUrl <toolsUrl>', 'url to access impl-tools running instance', process.env.IMPL_TOOLS_URL)
-    .option('--licenseUsername <licenseUsername>', 'username to login to impl-tools running instance', process.env.IMPL_LICENSE_USR)
-    .option('--licensePassword <licensePassword>', 'password to login to impl-tools running instance', process.env.IMPL_LICENSE_PSW)
+    .option('--licenseUsername <licenseUsername>', 'username to login to impl-tools running instance', process.env.IMPL_TOOLS_LICENSE_USR)
+    .option('--licensePassword <licensePassword>', 'password to login to impl-tools running instance', process.env.IMPL_TOOLS_LICENSE_PSW)
     .option('--projectName <projectName>', 'project name')
     .option('--repository <repository>', 'repository')
     .action(({toolsUrl, licenseUsername, licensePassword, projectName, repository}) => require('./license')(serviceConfig, {
