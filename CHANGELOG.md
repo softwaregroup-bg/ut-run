@@ -1,3 +1,7 @@
+## [10.78.7](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.6...v10.78.7) (2024-07-10)
+
+
+
 ## [10.78.6](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.5...v10.78.6) (2024-07-04)
 
 
