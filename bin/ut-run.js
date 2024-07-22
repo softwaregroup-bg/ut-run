@@ -47,7 +47,7 @@ program
 program
     .command('license')
     .description('Generate license key')
-    .option('--toolsUrl <toolsUrl>', 'url to access impl-tools running instance', process.env.IMPL_TOOLS_URL)
+    .option('--toolsUrl <toolsUrl>', 'url to access impl-tools running instance', process.env.IMPL_TOOLS_LICENSE_URL)
     .option('--licenseUsername <licenseUsername>', 'username to login to impl-tools running instance', process.env.IMPL_TOOLS_LICENSE_USR)
     .option('--licensePassword <licensePassword>', 'password to login to impl-tools running instance', process.env.IMPL_TOOLS_LICENSE_PSW)
     .option('--projectName <projectName>', 'project name')
