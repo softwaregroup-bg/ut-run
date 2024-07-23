@@ -1,3 +1,12 @@
+## [10.78.10](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.9...v10.78.10) (2024-07-23)
+
+
+### Bug Fixes
+
+* write parsed license data in stdout #UTCORE-409 ([#115](https://github.com/softwaregroup-bg/ut-run/issues/115)) ([db87b71](https://github.com/softwaregroup-bg/ut-run/commit/db87b7122677f597a8856271c1c1f0f6a86b47ae)), closes [#UTCORE-409](https://github.com/softwaregroup-bg/ut-run/issues/UTCORE-409)
+
+
+
 ## [10.78.9](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.8...v10.78.9) (2024-07-23)
 
 
