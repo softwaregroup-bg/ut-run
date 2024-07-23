@@ -11,19 +11,19 @@ module.exports = async function license(serviceConfig, envConfig, assert, vfs) {
         utLog: { streams: { udp: false } }
     }, envConfig), vfs);
 
+    const result = {};
     try {
         const {project} = await serviceBus.importMethod('license.project.add')({
             projectName,
             repository
         });
-
-        process.env.AEGIS_BUILD = 1;
-        process.env.AEGIS_KEY = project.encryptionKey;
-        process.env.AEGIS_IV = project.encryptionIV;
-        process.env.AEGIS_CIPHER = project.encryptionCipher;
+        result.encryptionKey = project.encryptionKey;
+        result.encryptionIV = project.encryptionIV;
+        result.encryptionCipher = project.encryptionCipher;
     } catch (e) {
         serviceBus.log.error(e);
     }
 
-    return serviceBus.stop();
+    await serviceBus.stop();
+    return JSON.stringify(result);
 };
