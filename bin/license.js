@@ -1,4 +1,3 @@
-/* eslint no-process-env:0 */
 const create = require('../create');
 const merge = require('ut-function.merge');
 module.exports = async function license(serviceConfig, envConfig, assert, vfs) {
@@ -8,22 +7,19 @@ module.exports = async function license(serviceConfig, envConfig, assert, vfs) {
     } = await create(merge({
         implementation: 'license',
         repl: false,
-        utLog: { streams: { udp: false } }
+        log: false
     }, envConfig), vfs);
 
-    const result = {};
     try {
-        const {project} = await serviceBus.importMethod('license.project.add')({
-            projectName,
-            repository
-        });
-        result.encryptionKey = project.encryptionKey;
-        result.encryptionIV = project.encryptionIV;
-        result.encryptionCipher = project.encryptionCipher;
+        const {project} = await serviceBus.importMethod('license.project.add')({ projectName, repository});
+        process.stdout.write(JSON.stringify({
+            encryptionKey: project.encryptionKey,
+            encryptionIV: project.encryptionIV,
+            encryptionCipher: project.encryptionCipher
+        }));
     } catch (e) {
-        serviceBus.log.error(e);
+        process.stderr.write(e);
     }
 
-    await serviceBus.stop();
-    return JSON.stringify(result);
+    return serviceBus.stop();
 };
