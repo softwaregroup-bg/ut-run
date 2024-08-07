@@ -48,17 +48,18 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
 
     const servicePorts = utport.ports({bus: serviceBus.publicApi, logFactory, vfs, joi, version: wanted => gte(version, wanted)});
 
-    function configure(obj = {}, config, moduleName, pkg) {
-        return [].concat(...Object.entries(obj).map(([name, value]) => {
+    async function configure(obj = {}, config, moduleName, pkg) {
+        const result = [];
+        for (let [name, value] of Object.entries(obj)) {
             let layer;
-            if (name === 'config') return [];
+            if (name === 'config') continue;
             if (value instanceof Function) {
                 const serviceName = value.name || name;
                 const propConfig = (config || {})[serviceName];
                 const startTime = hrtime();
                 layer = moduleName ? moduleName + '.' + serviceName : serviceName;
                 try {
-                    value = propConfig && value(propConfig);
+                    value = propConfig && await value(propConfig);
                 } finally {
                     const endTime = hrtime(startTime);
                     propConfig && log && log.debug && log.debug({
@@ -71,11 +72,13 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
             } else {
                 layer = moduleName ? moduleName + '.' + name : name;
             }
-            return []
+            result.push(...[]
                 .concat(value)
                 .filter(value => value)
-                .map(create => ({create, moduleName, pkg: {...pkg, layer}}));
-        }));
+                .map(create => ({create, moduleName, pkg: {...pkg, layer}}))
+            );
+        }
+        return result;
     }
 
     const invokeModule = (utModule, pkg, config) => {
@@ -150,7 +153,7 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
                 clearCache(main);
                 [utModule, pkgJson] = requireWithMeta();
                 await servicePorts.destroy(utModule.name);
-                return servicePorts.start(await servicePorts.create(invokeModule(utModule, pkgJson, config), config, test));
+                return servicePorts.start(await servicePorts.create(await invokeModule(utModule, pkgJson, config), config, test));
             });
 
             return requireWithMeta();
@@ -168,10 +171,13 @@ module.exports = ({serviceBus, logFactory, log, vfs}) => {
         return serviceConfig;
     };
 
-    const load = async(serviceConfig, config, test) => (await init(serviceConfig, config, test)).reduce((prev, utModule) => {
-        const loaded = loadModule(utModule, config, test);
-        if (loaded) prev.push(...loaded);
-        return prev;
+    const load = async(serviceConfig, config, test) => (
+        await init(serviceConfig, config, test)
+    ).reduce(async(prev, utModule) => {
+        const modules = await prev;
+        const loaded = await loadModule(utModule, config, test);
+        if (loaded) modules.push(...loaded);
+        return modules;
     }, []);
 
     const create = async(serviceConfig, config, test) => {
