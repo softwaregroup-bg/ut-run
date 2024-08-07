@@ -1,3 +1,12 @@
+## [10.78.13](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.12...v10.78.13) (2024-08-07)
+
+
+### Bug Fixes
+
+* possibility to load layers asynchronously ([#117](https://github.com/softwaregroup-bg/ut-run/issues/117)) ([e8ca46f](https://github.com/softwaregroup-bg/ut-run/commit/e8ca46f2ba54b1b3043ef8fcb464a495527928fd))
+
+
+
 ## [10.78.12](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.11...v10.78.12) (2024-07-25)
 
 
