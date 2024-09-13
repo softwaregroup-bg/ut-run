@@ -37,7 +37,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
     const mountPathAppRc = `/app/.${appname}rc`;
     const mountPathEtcRc = `/etc/${appname}rc`;
     const allDeployments = Object.values(layers).join(',').split(/\s*,\s*/).filter((l, i, a) => l !== '*' && a.indexOf(l) === i);
-    const commonLabels = merge({
+    const labels = merge({
         'app.kubernetes.io/part-of': config.implementation,
         'app.kubernetes.io/managed-by': 'ut-run'
     }, k8s.labels);
@@ -324,7 +324,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                             'app.kubernetes.io/component': portOrModule.config.pkg.name,
                             'app.kubernetes.io/version': portOrModule.config.pkg.version,
                             'app.kubernetes.io/instance': `${deploymentName}_${portOrModule.config.pkg.version}`,
-                            ...!kustomization && commonLabels
+                            ...!kustomization && labels
                         }
                     },
                     spec: {
@@ -337,7 +337,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         }],
                         selector: {
                             'app.kubernetes.io/name': deploymentName,
-                            ...!kustomization && commonLabels
+                            ...!kustomization && labels
                         },
                         ...clusterIP && {clusterIP},
                         ...loadBalancerIP && {loadBalancerIP}
@@ -367,7 +367,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         labels: {
                             'app.kubernetes.io/name': deploymentName,
                             ...deploymentLabels,
-                            ...!kustomization && commonLabels
+                            ...!kustomization && labels
                         }
                     },
                     spec: {
@@ -375,7 +375,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         selector: {
                             matchLabels: {
                                 'app.kubernetes.io/name': deploymentName,
-                                ...!kustomization && commonLabels
+                                ...!kustomization && labels
                             }
                         },
                         template: {
@@ -387,7 +387,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                                     app: deploymentName,
                                     'app.kubernetes.io/name': deploymentName,
                                     ...deploymentLabels,
-                                    ...!kustomization && commonLabels
+                                    ...!kustomization && labels
                                 }
                             },
                             spec: {
@@ -492,7 +492,7 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 kind: 'Kustomization',
                 namespace: namespace.metadata.name,
                 resources: [],
-                commonLabels
+                labels
             }
         },
         namespaces: {
