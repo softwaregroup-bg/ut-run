@@ -1,3 +1,12 @@
+## [10.78.14](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.13...v10.78.14) (2024-09-14)
+
+
+### Bug Fixes
+
+* rename commonLabels -> labels in kustomization.yaml ([#118](https://github.com/softwaregroup-bg/ut-run/issues/118)) ([5f1f399](https://github.com/softwaregroup-bg/ut-run/commit/5f1f3998fdc22c6f903c543aa011af21dea6f3c4))
+
+
+
 ## [10.78.13](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.12...v10.78.13) (2024-08-07)
 
 
