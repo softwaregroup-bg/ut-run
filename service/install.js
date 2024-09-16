@@ -492,10 +492,10 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                 kind: 'Kustomization',
                 namespace: namespace.metadata.name,
                 resources: [],
-                labels: {
+                labels: [{
                     pairs: labels,
                     includeSelectors: true
-                }
+                }]
             }
         },
         namespaces: {
