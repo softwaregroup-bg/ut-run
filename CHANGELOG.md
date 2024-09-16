@@ -1,3 +1,12 @@
+## [10.78.15](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.14...v10.78.15) (2024-09-16)
+
+
+### Bug Fixes
+
+* k8s kustomization labels seciton to include pairs and includeSelectors ([f45259c](https://github.com/softwaregroup-bg/ut-run/commit/f45259ceacde9df8b5dcefe95d3e95e66aa17ad6))
+
+
+
 ## [10.78.14](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.13...v10.78.14) (2024-09-14)
 
 
