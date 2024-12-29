@@ -1,131 +1,90 @@
-/* eslint no-console:0, no-process-exit:0 */
-const log = process.env.WHY_IS_NODE_RUNNING && require('why-is-node-running'); // eslint-disable-line no-process-env
-const methods = require('./methods');
-const {load} = require('ut-config');
-const vfs = require('./vfs');
-const { dirname } = require('path');
+/* eslint no-process-env:0, no-console:0, no-process-exit:0 */
+var serverRequire = require;// hide some of the requires from lasso
+var run = require('./debug');
+var rc = require('rc');
+var merge = require('lodash.merge');
+
+function mount(parent, m) {
+    if (m && process.pkg) {
+        var fs = require('fs');
+        var path = require('path');
+        if (fs.existsSync(path.resolve(m))) {
+            console.log(path.resolve(path.dirname(parent.filename), m), path.resolve(m));
+            process.pkg.mount(path.resolve(path.dirname(parent.filename), m), path.resolve(m));
+        }
+    }
+}
 
 module.exports = {
-    getConfig: load,
-    runParams: async function(params = {}, test, config) {
-        if (!config) config = await load(params);
-        const method = config.params.method;
-        let cluster;
-        if (config.cluster) {
-            cluster = require('./serverRequire')('cluster');
-            if (cluster.isMaster) {
-                const workerCount = config.cluster.workers || require('os').cpus().length;
-                for (let i = 0; i < workerCount; i += 1) {
-                    cluster.setupMaster({args: [...process.argv.slice(2), `--service=${config.service}(${i})`]});
-                    cluster.fork();
-                }
-                if (!['unit', 'load'].includes(method)) return Promise.resolve();
-            } else {
-                if (config.runBroker) { // ensure that multiple brokers don't try to use the same socket / pipe.
-                    if (typeof config.broker.socket === 'string') {
-                        config.broker.socketPid = true;
-                    } else if (typeof config.broker.socket === 'number') {
-                        config.broker.socket += cluster.worker.id;
-                    } else if (config.broker.socket.port) {
-                        config.broker.socket.port += cluster.worker.id;
-                    } else {
-                        const printableConfigValue = require('./serverRequire')('util').inspect(config.broker.socket);
-                        throw new Error(`Unsupported broker.socket configuration: ${printableConfigValue}`);
-                    }
-                }
-                config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
-            }
-        }
-        const main = params.main || require('./serverRequire')(params.resolve('./' + config.params.app));
-        return methods[method](main, config, test, vfs, cluster);
-    },
-    run: async function(params, test, assert) {
+    runParams: function(params, parent, test) {
+        params = params || {};
+        parent = parent || module.parent;
         if (process.type === 'browser') {
-            return require('./serverRequire')('ut-front/electron')({main: params.root});
-        }
-        let config = {service: 'undefined'};
-        try {
-            config = await load(params);
-            const result = await this.runParams(params, test, config);
-            async function stop() {
-                try {
-                    await result.stop();
-                } finally {
-                    if (log) setTimeout(log, 10000);
+            serverRequire('ut-front/electron')({main: parent.filename});
+        } else {
+            var config = params.config;
+            if (!config) {
+                config = {params: {}, runMaster: true, runWorker: true, version: params.version};
+                var argv = require('minimist')(process.argv.slice(2));
+                var busMode = process.env.UT_BUS_MODE || params.busMode;
+                if (busMode === 'master') {
+                    config.runWorker = false;
+                    params.main = {};
+                } else if (busMode === 'worker') {
+                    config.runMaster = false;
                 }
+                config.params.app = process.env.UT_APP || params.app || argv._[0] || 'server';
+                config.params.method = process.env.UT_METHOD || params.method || argv._[1] || 'debug';
+                config = Object.assign(config, parent.require('./' + config.params.app + '/config'));
             }
-            function terminate(signal) {
-                result.logger?.fatal?.(new Error('Terminating process with ' + signal));
-                stop();
-            }
-            process.send && process.send('ready');
-            if (
-                (config.run && config.run.stop) ||
-                (!process.browser && require('./serverRequire').utCompile && require('./serverRequire').utCompile.compiling)
-            ) {
-                await stop();
-            } else if (!test && process.getMaxListeners) {
-                if (process.getMaxListeners() < 15) process.setMaxListeners(15);
-                process.once('SIGTERM', terminate);
-                process.once('SIGINT', terminate);
-            }
-            return result;
-        } catch (err) {
-            if (assert) {
-                assert.threw(err);
-            } else if (err && err.message !== 'silent') {
-                console.error(JSON.stringify({
-                    error: {...err, stack: err.stack && err.stack.split && err.stack.split('\n')},
-                    level: 50,
-                    service: config.service,
-                    pid: process.pid,
-                    hostname: require('os').hostname(),
-                    name: 'run',
-                    context: 'run',
-                    mtd: 'error',
-                    $meta: {
-                        method: 'utRun.run',
-                        mtid: 'error'
-                    },
-                    msg: err.message,
-                    time: (new Date()).toISOString(),
-                    v: 0
-                }));
-            }
-            process.exit?.(1); // node
-            throw err; // browser
-        }
-    },
-    microservice(mod, req, fn) {
-        const run = params => module.exports.run({
-            version: req('./package.json').version,
-            root: dirname(mod.filename),
-            resolve: req.resolve,
-            defaultConfig: {
-                repl: false,
-                utPort: {
-                    concurrency: 200,
-                    ...(params?.method !== 'unit') && {logLevel: 'debug'}
-                },
-                utBus: {
-                    serviceBus: {
-                        ...(params?.method !== 'unit') && {logLevel: 'debug'},
-                        jsonrpc: {
-                            debug: true,
-                            host: 'localhost',
-                            port: 8090
+            var main = params.main || parent.require('./' + config.params.app);
+
+            config = rc(['ut', (config.implementation || 'ut5').replace(/[-/\\]/g, '_'), process.env.UT_ENV || params.env || 'dev'].join('_'), config);
+
+            if (config.cluster && config.masterBus && config.masterBus.socket) {
+                var cluster = serverRequire('cluster');
+                if (cluster.isMaster) {
+                    var workerCount = config.cluster.workers || require('os').cpus().length;
+                    for (var i = 1; i <= workerCount; i += 1) {
+                        var env = { isSpecialWorker: i === 1 };
+                        let worker = cluster.fork(env);
+                        worker.process.env = env;
+                    }
+                    cluster.on('exit', function(worker, code, signal) {
+                        console.error(`Worker ${worker.process.pid} died with code/signal ${signal || code}. Restarting worker...` );
+                        var env = worker.process.env;
+                        let newWorker = cluster.fork(env);
+                        newWorker.process.env = env;
+                    });
+                    return Promise.resolve();
+                } else {
+                    if (config.runMaster) { // ensure that multiple master bus instances don't try to use the same socket / pipe.
+                        if (typeof config.masterBus.socket === 'string') {
+                            config.masterBus.socketPid = true;
+                        } else if (typeof config.masterBus.socket === 'number') {
+                            config.masterBus.socket += cluster.worker.id;
+                        } else if (config.masterBus.socket.port) {
+                            config.masterBus.socket.port += cluster.worker.id;
+                        } else {
+                            var printableConfigValue = serverRequire('util').inspect(config.masterBus.socket);
+                            throw new Error(`Unsupported masterBus.socket configuration: ${printableConfigValue}`);
                         }
                     }
-                },
-                run: {
-                    ...(params?.method !== 'unit') && {logLevel: 'debug'}
+                    config.console && config.console.port && (config.console.port = config.console.port + cluster.worker.id);
                 }
-            },
-            ...params
-        });
-        if (!fn) throw new Error('Missing parameter: microservice function');
-        fn.run = run;
-        if (require.main === mod) setImmediate(() => run(process.argv[3]?.match(/^[a-z]+$/) ? {} : {defaultOverlays: 'microservice'}));
-        return fn;
+            }
+            return run[params.method || config.params.method](main, config, test);
+        }
+    },
+    run: function(params, parent, test) {
+        return this.runParams(params, parent, test)
+            .then((result) => {
+                process.send && process.send('ready');
+                return result;
+            })
+            .catch((err) => {
+                console.error(err);
+                process.exit(1); // this should be removed
+            });
     }
 };

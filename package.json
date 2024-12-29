@@ -1,48 +1,11 @@
 {
   "name": "ut-run",
-  "version": "10.78.16",
+  "version": "9.2.0-zeus.0",
   "dependencies": {
-    "@npmcli/arborist": "5.6.0",
-    "@types/tap": "^15.0.7",
-    "browser-process-hrtime": "1.0.0",
-    "chokidar": "3.5.3",
-    "commander": "^7.2.0",
-    "csv-parse": "5.0.4",
-    "escape-string-regexp": "4.0.0",
-    "got": "11.8.5",
-    "joi": "17.4.2",
-    "joi-to-typescript": "2.2.1",
-    "loadtest": "5.1.0",
-    "lodash.clonedeep": "4.5.0",
-    "semver": "7.5.4",
-    "sort-keys": "4.1.0",
-    "stack-utils": "2.0.5",
-    "through2": "4.0.2",
-    "ut-bus": "^7.65.2",
-    "ut-config": "^7.10.0",
-    "ut-function.merge": "^1.5.6",
-    "ut-log": "^6.11.3",
-    "ut-port": "^6.45.2",
-    "uuid": "8.3.2",
-    "yaml": "1.10.0"
-  },
-  "devDependencies": {
-    "@cucumber/gherkin": "11.0.0",
-    "form-data": "^2.5.1",
-    "fuzzy": "0.1.3",
-    "inquirer": "7.3.3",
-    "inquirer-autocomplete-prompt": "1.2.0",
-    "tap": "^16.2.0",
-    "ut-function.dispatch": "^1.4.2",
-    "ut-port-script": "^7.2.0"
   },
   "peerDependencies": {
-    "form-data": "^2.5.1",
-    "json-schema-to-markdown": "1.1.1",
-    "why-is-node-running": "^2.2.0"
   },
-  "bin": {
-    "ut-run": "./bin/ut-run.js"
+  "devDependencies": {
   },
   "scripts": {
     "lint": "ut-lint .",
@@ -57,7 +20,6 @@
     "prepublish": "ut-prepublish",
     "prepush": "ut-prepush",
     "pretest": "ut-pretest",
-    "precover": "ut-precover",
     "preversion": "ut-preversion",
     "test": "ut-test",
     "version": "ut-version",
@@ -65,29 +27,6 @@
     "gitlab": "ut-gitlab"
   },
   "description": "UT run module",
-  "browser": {
-    "./install": "./browser/install",
-    "./kustomize": "./browser/kustomize",
-    "./api": "./browser/api",
-    "./types": "./browser/types",
-    "./doc": "./browser/doc",
-    "./service/install": false,
-    "./unit": "./browser/unit",
-    "./vfs": false,
-    "./serverRequire": false,
-    "./service/serverRequire": false,
-    "ut-front/electron": false,
-    "why-is-node-running": false,
-    "chokidar": false,
-    "cluster": false,
-    "repl": false
-  },
-  "types": "index",
-  "engines": {
-    "node": "^14.15.3 || ^16.14.0",
-    "npm": "^6.14.9 || ^8.1.3",
-    "yarn": "^1.22.5"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:softwaregroup-bg/ut-run.git"
