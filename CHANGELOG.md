@@ -1,3 +1,12 @@
+## [10.78.19](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.18...v10.78.19) (2025-08-18)
+
+
+### Bug Fixes
+
+* **LS-92:** stringify error for stderr stream ([0db4b2f](https://github.com/softwaregroup-bg/ut-run/commit/0db4b2f8cce6934d6368087ec93fea7f094fd262))
+
+
+
 ## [10.78.18](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.17...v10.78.18) (2025-08-06)
 
 
