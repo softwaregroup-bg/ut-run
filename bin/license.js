@@ -18,7 +18,7 @@ module.exports = async function license(serviceConfig, envConfig, assert, vfs) {
             encryptionCipher: project.encryptionCipher
         }));
     } catch (e) {
-        process.stderr.write(e);
+        process.stderr.write(JSON.stringify(e));
     }
 
     return serviceBus.stop();
