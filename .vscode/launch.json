@@ -94,7 +94,8 @@
             "index.test.js",
             "error.test.js",
             "override.test.js",
-            "unit.test.js"
+            "unit.test.js",
+            "joi.test.js"
         ]
     }]
 }
