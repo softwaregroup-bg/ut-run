@@ -4,7 +4,7 @@
 
 The module is used to start UT applications by initializing
 logging, starting bus and optional broker and then creating and initializing ports,
-modules and validations.
+modules and validations. R.
 
 ## Usage
 
