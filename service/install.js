@@ -268,6 +268,18 @@ module.exports = ({portsAndModules, log, layers, config, secret, kustomization})
                         ingress.metadata.annotations['cert-manager.io/cluster-issuer'] = tls.issuer || 'letsencrypt';
                     };
                 }
+                // Add security headers for NGINX ingress controller (configurable via k8s.ingress.securityHeaders)
+                // Only apply security headers if `k8s.ingress.securityHeaders` is explicitly set.
+                // Supported values: object (headers) or false.
+                if (ingressConfig.securityHeaders && Object.keys(ingressConfig.securityHeaders).length > 0) {
+                    // ensure annotations object exists
+                    ingress.metadata.annotations = ingress.metadata.annotations || {};
+                    const headers = ingressConfig.securityHeaders;
+                    const headerSnippet = Object.entries(headers)
+                        .map(([name, value]) => `more_set_headers "${name}: ${value}";`)
+                        .join('\n');
+                    ingress.metadata.annotations['nginx.ingress.kubernetes.io/configuration-snippet'] = headerSnippet + '\n';
+                }
                 switch (apiVersion) {
                     case 'extensions/v1beta1':
                     case 'networking.k8s.io/v1beta1':
