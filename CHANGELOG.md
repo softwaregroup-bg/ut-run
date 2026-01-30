@@ -1,3 +1,12 @@
+# [10.79.0](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.19...v10.79.0) (2026-01-30)
+
+
+### Features
+
+* **APEXG-4847:** add securityHeaders configuration for nginx ingress controllers ([b142496](https://github.com/softwaregroup-bg/ut-run/commit/b142496ba652e79fe146c98872ec2ccbb60f3fc0))
+
+
+
 ## [10.78.19](https://github.com/softwaregroup-bg/ut-run/compare/v10.78.18...v10.78.19) (2025-08-18)
 
 
