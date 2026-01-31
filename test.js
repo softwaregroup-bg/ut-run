@@ -10,7 +10,6 @@ const uuid = require('uuid').v4;
 const lowercase = (match, word1, word2, letter) => `${word1}.${word2.toLowerCase()}${letter ? ('.' + letter.toLowerCase()) : ''}`;
 const capitalWords = /^([^A-Z]+)([A-Z][^A-Z]+)([A-Z])?/;
 const importKeyRegexp = /^([a-z][a-z0-9]*\/)?[a-z][a-zA-Z0-9$]+(\.[a-z0-9][a-zA-Z0-9]+)*(#\[[0+?^]?])?$/;
-const FormData = require('form-data');
 const path = require('path');
 const fs = require('fs');
 const start = hrtime();
@@ -61,43 +60,46 @@ function sequence(options, test, bus, flow, params, parent) {
             if (!step.name) {
                 throw new Error('step name is required');
             }
-            const {method: stepMethod, $meta: stepMeta, $http: stepHttp, params: stepParams, formData, ...rest} = step;
+            const {method: stepMethod, $meta: stepMeta, $http: stepHttp, params: stepParams, formData: stepFormData, ...rest} = step;
             steps.push({
                 methodName: stepMethod,
                 method: stepMethod ? bus.importMethod(stepMethod, {returnMeta: true}) : async(params, $meta) => [params, $meta],
                 async params() {
                     const $http = typeof stepHttp === 'function' ? stepHttp(...arguments) : stepHttp;
-                    if (formData) {
-                        if (
-                            global.window
-                                ? formData instanceof window.FormData
-                                : formData.constructor.name === 'FormData'
-                        ) return {formData, $http};
-
-                        const data = new FormData();
-                        const fields = typeof formData === 'function' ? formData(...arguments) : formData;
+                    if (stepFormData) {
+                        const isAbsolutePath = str => typeof str === 'string' && path.isAbsolute(str);
+                        const fields = typeof stepFormData === 'function' ? stepFormData(...arguments) : stepFormData;
+                        const formData = {};
                         Object.entries(fields).forEach(([key, value]) => {
-                            const options = {};
-                            if (typeof value === 'string' && value.indexOf(path.sep) !== -1) {
+                            if (isAbsolutePath(value)) {
                                 value = fs.createReadStream(value);
+                            } else if (Array.isArray(value)) {
+                                value = value.map(v => isAbsolutePath(v) ? fs.createReadStream(v) : v);
                             } else if (typeof value === 'object') {
-                                if (value.value) {
-                                    const {value: val, ...opts} = value;
-                                    Object.assign(options, {
-                                        filename: key + '.txt',
-                                        contentType: 'text/plain'
-                                    }, opts);
-                                    value = Buffer.from(val);
-                                } else {
-                                    options.filename = key + '.json';
-                                    options.contentType = 'application/json';
-                                    value = Buffer.from(JSON.stringify(value));
+                                if (isAbsolutePath(value.value)) {
+                                    value.value = fs.createReadStream(value.value);
+                                } else if (!value.value) {
+                                    value = {
+                                        value: Buffer.from(JSON.stringify(value)),
+                                        options: {
+                                            filename: key + '.json',
+                                            contentType: 'application/json'
+                                        }
+                                    };
+                                } else if (value.value.constructor === Object) {
+                                    value = {
+                                        value: Buffer.from(JSON.stringify(value.value)),
+                                        options: {
+                                            filename: key + '.json',
+                                            contentType: 'application/json',
+                                            ...value.options
+                                        }
+                                    };
                                 }
                             }
-                            data.append(key, value, options);
+                            formData[key] = value;
                         });
-
-                        return {formData: data, $http};
+                        return { formData, $http };
                     }
                     const params = typeof stepParams === 'function' ? stepParams(...arguments) : stepParams;
                     if ($http && !params.$http) params.$http = $http;
