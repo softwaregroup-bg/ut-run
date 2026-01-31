@@ -3,7 +3,7 @@ const merge = require('ut-function.merge');
 const path = require('path');
 const {Broker, ServiceBus} = require('ut-bus');
 const through2 = require('through2');
-const joi = require('joi');
+const joi = require('./joi');
 
 function getDataDirectory() {
     if (process.browser) return '/';
